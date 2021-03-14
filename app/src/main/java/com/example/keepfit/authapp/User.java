@@ -1,14 +1,14 @@
 package com.example.keepfit.authapp;
 
 public class User {
-    public String name, email;
+    public String username, email;
 
     public User(){
 
     }
 
-    public User(String name, String email){
-        this.name = name;
+    public User(String username, String email){
+        this.username = username;
         this.email = email;
     }
 }

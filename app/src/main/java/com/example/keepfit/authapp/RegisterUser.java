@@ -18,14 +18,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
     //private TextView banner
     private Button register;
-    private EditText editTextName, editTextEmail, editTextPassword;
+    private EditText editTextUsername, editTextEmail, editTextPassword;
     //private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
@@ -40,7 +45,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 //        banner = (TextView) findViewById(R.id.banner);
 //        banner.setOnClickListener(this);
 
-        editTextName = (EditText) findViewById(R.id.name);
+        editTextUsername = (EditText) findViewById(R.id.username);
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
 
@@ -60,15 +65,33 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     }
 
     private void registerUsers(){
-        String name = editTextName.getText().toString().trim();
+        String name = editTextUsername.getText().toString().trim();
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString().trim();
 
         if(name.isEmpty()){
-            editTextName.setError("Name is required!");
-            editTextName.requestFocus();
+            editTextUsername.setError("Name is required!");
+            editTextUsername.requestFocus();
             return;
         }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query query = ref.child("Users").orderByChild("username").equalTo(name);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    editTextUsername.setError("Username in use. Please create a new username!");
+                    editTextUsername.requestFocus();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         if(email.isEmpty()){
             editTextEmail.setError("Email is required!");
             editTextEmail.requestFocus();
@@ -105,7 +128,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                             if(task.isSuccessful()){
                                                 Toast.makeText(RegisterUser.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
                                                 //progressBar.setVisibility(View.VISIBLE);
-                                                setContentView(R.layout.activity_main);
+                                                setContentView(R.layout.activity_profile);
                                                 //redirect user to profile
                                             }
                                             else{
