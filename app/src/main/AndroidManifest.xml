@@ -10,8 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".authapp.ProfileActivity"></activity>
-        <!-- <activity -->
+        <activity android:name=".data.MainActivity"></activity>
+        <activity android:name=".authapp.ForgotPassword" />
+        <activity android:name=".authapp.ProfileActivity" /> <!-- <activity -->
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->
