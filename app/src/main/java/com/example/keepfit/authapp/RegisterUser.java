@@ -74,7 +74,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String password = editTextPassword.getText().toString().trim();
 
         if(name.isEmpty()){
-            editTextUsername.setError("Name is required!");
+            editTextUsername.setError("Username is required!");
             editTextUsername.requestFocus();
             return;
         }

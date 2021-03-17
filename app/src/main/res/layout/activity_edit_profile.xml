@@ -192,4 +192,28 @@
             android:text="Edit" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/changepasslogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="550dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnchangepass"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Change Password"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnlogout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout" />
+    </LinearLayout>
+
 </RelativeLayout>

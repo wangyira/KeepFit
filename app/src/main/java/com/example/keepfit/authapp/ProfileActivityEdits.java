@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnChoose, btnUpload, btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight;
+    private Button btnChoose, btnUpload, btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout;
     private ImageView imageView;
 
     private Uri filePath;
@@ -62,6 +62,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnEditGender = findViewById(R.id.btnEditGender);
         btnEditWeight= findViewById(R.id.btnEditWeight);
         btnEditHeight= findViewById(R.id.btnEditHeight);
+        btnChangePass = findViewById(R.id.btnchangepass);
+        btnLogout = findViewById(R.id.btnlogout);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -128,6 +130,21 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             public void onClick(View v) {
                 which = "height";
                 OpenDialog();
+            }
+        });
+
+        btnChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivityEdits.this, ForgotPassword.class));
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ProfileActivityEdits.this, FirebaseMainActivity.class));
             }
         });
 

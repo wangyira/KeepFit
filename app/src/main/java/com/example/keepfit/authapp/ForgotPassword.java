@@ -3,6 +3,7 @@ package com.example.keepfit.authapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.util.Patterns;
@@ -64,6 +65,7 @@ public class ForgotPassword extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(ForgotPassword.this, "Check your email to reset your password!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(ForgotPassword.this, FirebaseMainActivity.class));
                 }
                 else{
                     Toast.makeText(ForgotPassword.this, "Try again! Something wrong happened.", Toast.LENGTH_LONG).show();
