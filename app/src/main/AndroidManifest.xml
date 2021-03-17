@@ -21,6 +21,7 @@
         <!-- <activity -->
         <activity android:name="MainActivity"></activity>
         <activity android:name=".authapp.ForgotPassword" />
+        <activity android:name=".authapp.ProfileActivityEdits" />
        <!-- <activity -->
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
