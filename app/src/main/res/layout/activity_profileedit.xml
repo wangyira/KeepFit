@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".authapp.ProfileActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="192dp"
+        android:layout_width="match_parent">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:toolbarId="@+id/toolbar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/update_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="182dp"
+                android:gravity="center_vertical"
+                android:src="@drawable/defavatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:foreground="@drawable/rounded_fg"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent">
+                </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/create_profile"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                
+            <TextView
+                android:id="@+id/TextViewName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName|textCapSentences"
+                android:hint="@string/enter_your_name"/>
+
+            <TextView
+                android:id="@+id/TextViewUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Username"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonUsername|textCapSentences"
+                android:hint="@string/enter_your_Username"/>
+
+            <TextView
+                android:id="@+id/TextViewPhoneNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/phone_number"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextPhoneNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/enter_your_phone_number"
+                android:inputType="number"/>
+
+            <TextView
+                android:id="@+id/TextViewGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Gender"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonGender|textCapSentences"
+                android:hint="@string/enter_your_Gender"/>
+
+            <TextView
+                android:id="@+id/TextViewBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Gender"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:hint="@string/enter_your_birthday_in_mmddyyyy"/>
+
+            <TextView
+                android:id="@+id/TextViewWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/weight"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/enter_your_weight_in_pounds"
+                android:inputType="number"/>
+
+            <TextView
+                android:id="@+id/TextViewHeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Height"
+                android:textColor="@color/colorPrimaryDark"/>
+            <EditText
+                android:id="@+id/EditTextHeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/enter_your_height_in_inches"
+                android:inputType="number"/>
+
+            <TextView
+                android:id="@+id/TextViewEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/e_mail"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/textViewEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/email_address"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ok"
+                android:id="@+id/btnSaveButton"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/colorPrimaryDark"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
