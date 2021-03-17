@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnChoose, btnUpload, btnEditUsername, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight;
+    private Button btnChoose, btnUpload, btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight;
     private ImageView imageView;
 
     private Uri filePath;
@@ -56,7 +56,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         setContentView(R.layout.activity_edit_profile);
         btnChoose = findViewById(R.id.btnChoose);
         btnUpload = findViewById(R.id.btnUpload);
-        btnEditUsername = findViewById(R.id.btnEditUsername);
+        btnEditName = findViewById(R.id.btnEditName);
         btnEditPhoneNumber = findViewById(R.id.btnEditPhoneNumber);
         btnEditBirthday = findViewById(R.id.btnEditBirthday);
         btnEditGender = findViewById(R.id.btnEditGender);
@@ -82,10 +82,10 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        btnEditUsername.setOnClickListener(new View.OnClickListener() {
+        btnEditName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                which = "username";
+                which = "name";
                 OpenDialog();
 
             }

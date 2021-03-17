@@ -36,6 +36,9 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
 
+        forgotPass = (TextView) findViewById(R.id.forgotPassword);
+        forgotPass.setOnClickListener(this);
+
         login = (Button) findViewById(R.id.loginUser);
         login.setOnClickListener(this);
 
@@ -55,6 +58,9 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.loginUser:
                 userLogin();
+                break;
+            case R.id.forgotPassword:
+                startActivity(new Intent(this, ForgotPassword.class));
                 break;
 
         }

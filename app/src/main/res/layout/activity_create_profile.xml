@@ -54,13 +54,13 @@
         android:layout_marginTop="200dp">
 
         <TextView
-            android:id="@+id/TextViewUsername"
+            android:id="@+id/TextViewName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="Name"
             android:textColor="@color/colorPrimaryDark"/>
         <EditText
-            android:id="@+id/EditTextUsername"
+            android:id="@+id/EditTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

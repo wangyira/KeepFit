@@ -50,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String EMAIL = "email";
     private static final String PREF_FILENAME = "main";
 
-    private EditText editTextUsername, editTextPhoneNumber, editTextGender, editTextWeight, editTextHeight, editTextBirthday;
+    private EditText editTextName, editTextPhoneNumber, editTextGender, editTextWeight, editTextHeight, editTextBirthday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        editTextUsername =  findViewById(R.id.EditTextUsername);
+        editTextName =  findViewById(R.id.EditTextName);
         editTextPhoneNumber = findViewById(R.id.EditTextPhoneNo);
         editTextBirthday = findViewById(R.id.EditTextBirthday);
         editTextGender = findViewById(R.id.EditTextGender);
@@ -163,16 +163,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void uploadProfile() {
-        String username = editTextUsername.getText().toString().trim();
+        String name = editTextName.getText().toString().trim();
         String phonenumber = editTextPhoneNumber.getText().toString().trim();
         String birthday = editTextBirthday.getText().toString().trim();
         String gender = editTextGender.getText().toString().trim();
         String height = editTextHeight.getText().toString();
         String weight = editTextWeight.getText().toString().trim();
 
-        if(username.isEmpty()){
-            editTextUsername.setError("Username is required!");
-            editTextUsername.requestFocus();
+        if(name.isEmpty()){
+            editTextName.setError("Name is required!");
+            editTextName.requestFocus();
             return;
         }
         if(phonenumber.length() < 10){
@@ -208,7 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         String sharedemail = sharedPreferences.getString(EMAIL, "");
 
-        UserInformation userinfo = new UserInformation(sharedemail, username, phonenumber, gender, birthday, weight, height, pickey);
+        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey);
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
         Intent intent = new Intent(ProfileActivity.this, FirebaseMainActivity.class);
         startActivity(intent);
