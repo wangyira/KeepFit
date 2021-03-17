@@ -5,7 +5,8 @@ public class LivestreamMember {
     private int maxNumberOfPeople;
     private String type;
     private String endTime;
-    private String zoomRoomId;
+    private String zoomLink;
+    private String imageUrl;
 
     public LivestreamMember(){
 
@@ -43,12 +44,19 @@ public class LivestreamMember {
         this.endTime = time;
     }
 
-    public String getZoomRoomId(){
-        return zoomRoomId;
+    public String getZoomLink(){
+        return zoomLink;
     }
 
-    public void setZoomRoomId(String zoom){
-        this.zoomRoomId = zoom;
+    public void setZoomLink(String zoom){
+        this.zoomLink = zoom;
     }
 
+    public String getImageUrl(){
+        return imageUrl;
+    }
+
+    public void setImageUrl(String url){
+        this.imageUrl = url;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.keepfit;
 
+import android.icu.text.SymbolTable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -8,7 +9,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
+import android.net.Uri;
 
+import java.util.Calendar;
+import android.util.Log;
+import java.util.Arrays;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,6 +37,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     String selectedType;
     TextView time;
     TextView zoom;
+    Button uploadImage;
 
     LivestreamMember member;
 
@@ -61,6 +68,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         databaseReference = database.getReference("Livestream Details");
         spinner = findViewById(R.id.livestream_exercise_spinner);
         spinner.setOnItemSelectedListener(this);
+        uploadImage = button.findViewById(R.id.selectImageButton);
 
         member = new LivestreamMember();
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, exerciseTypes);
@@ -71,7 +79,11 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                SaveDetails(selectedType);
+                String zoomLink = SaveDetails(selectedType);
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(zoomLink));
+                startActivity(viewIntent);
             }
         });
     }
@@ -86,7 +98,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
 
     }
 
-    void SaveDetails(String selectedType){
+    String SaveDetails(String selectedType){
         String titleText = title.getText().toString();
         String peopleText = maxPeople.getText().toString();
         String timeText = time.getText().toString();
@@ -95,11 +107,20 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         //need to store username
 
         //check for time inputted correctly, is after current time
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        String[] timeArr = timeText.split(":");
 
-        //check zoom id is 9 digit long?
-        
+        Log.d("MYINT","value: "+hour+ minute);
+        System.out.println("arr: " + Arrays.toString(timeArr));
 
-
+        if(hour > Integer.parseInt(timeArr[0])){
+            Toast.makeText(this, "end time need to be later than current time", Toast.LENGTH_SHORT).show();
+        }
+        if(hour == Integer.parseInt(timeArr[0]) && minute > Integer.parseInt(timeArr[1])){
+            Toast.makeText(this, "end time need to be later than current time2", Toast.LENGTH_SHORT).show();
+        }
         if(titleText.isEmpty()){
             Toast.makeText(this, "title cannot be empty", Toast.LENGTH_SHORT).show();
         }
@@ -120,12 +141,12 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             member.setMaxNumberOfPeople(Integer.parseInt(peopleText));
             member.setExerciseType(selectedType);
             member.setEndTime(timeText);
-            member.setZoomRoomId(zoomText);
+            member.setZoomLink(zoomText);
 
             String id = databaseReference.push().getKey();
             databaseReference.child(id).setValue(member);
             Toast.makeText(this, "livestream started", Toast.LENGTH_SHORT).show();
         }
-
+        return zoomText;
     }
 }
