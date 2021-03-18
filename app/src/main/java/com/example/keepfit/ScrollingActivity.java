@@ -1,21 +1,19 @@
-package com.example.keepfitvideolist;
-
+package com.example.keepfit;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.MediaController;
-import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
+
+import java.io.File;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -31,9 +29,27 @@ public class ScrollingActivity extends AppCompatActivity {
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" +
-                R.raw.testvideo));
-        videoView.start();
+        //videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" +
+         //       R.raw.testvideo));
+        //videoView.start();
+
+        try{
+            findViewById(R.id.videoView).setVisibility(View.VISIBLE);
+            final File localFile = File.createTempFile("testing1", "mp4");
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference videoRef = storageRef.child("/videos/no_metadata_test_1.4ce2db05-b0b2-4f6c-b5db-00d09356665c.mp4");
+            videoRef.getFile(localFile).addOnSuccessListener(
+                    (OnSuccessListener) (TaskSnapshot) -> {
+                        Toast.makeText(ScrollingActivity.this, "Download complete", Toast.LENGTH_LONG).show();
+                        //final VideoView videoView = (VideoView) findViewById(R.id.videoView);
+                        videoView.setVideoURI(Uri.fromFile(localFile));
+                        videoView.start();
+                    }
+            );
+        } catch(Exception e){
+            System.out.println("could not download");
+        }
+
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
