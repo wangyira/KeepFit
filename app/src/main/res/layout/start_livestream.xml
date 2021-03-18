@@ -157,14 +157,14 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         app:layout_constraintTop_toBottomOf="@+id/endTime" />
 
     <Button
-        android:id="@+id/selectImageButton"
+        android:id="@+id/upload_image_btn"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="240dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
         android:text="Select Thumbnail Image"
         android:textSize="14dp"
         app:backgroundTint="#7A8EFF"
+        app:layout_constraintBottom_toTopOf="@+id/save_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/zoom" />
