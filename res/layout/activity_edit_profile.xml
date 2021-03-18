@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
+    android:padding="16dp"
+    tools:context=".authapp.ProfileActivityEdits">
+
+    <TextView
+        android:id="@+id/editprofile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Edit Profile!"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor= "@color/purple_700" />
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center_vertical"
+        android:src="@drawable/defavatar"
+        android:layout_marginTop="40dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="150dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnChoose"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Choose New profile picture" />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Upload New Profile Picture" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="225dp"
+        android:weightSum="2">
+
+    <TextView
+        android:id="@+id/TextViewUsername"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:text="Username:"
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditUsername"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit"  />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/phonenumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="275dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/TextViewPhoneNumber"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:text="Phone Number: "
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditPhoneNumber"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="325dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/TextViewBirthday"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:text="Birthday"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditBirthday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="375dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/TextViewGender"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditGender"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="425dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/TextViewWeight"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:text="Weight"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditWeight"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="475dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/TextViewHeight"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:text="Height"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btnEditHeight"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
+</RelativeLayout>
