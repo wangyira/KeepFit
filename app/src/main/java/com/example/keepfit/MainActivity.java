@@ -36,6 +36,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -76,51 +78,82 @@ public class MainActivity extends AppCompatActivity {
         Button getImagebtn = (Button) findViewById(R.id.selectImageButton);
         Spinner tagSpinner = (Spinner) findViewById(R.id.tagDropDown);
         Spinner diffSpinner = (Spinner) findViewById(R.id.difficultyDropDown);
+        Button watchVideobtn = (Button) findViewById(R.id.watchVideo);
 
         //SET VISIBILITY
         findViewById(R.id.progress_bar).setVisibility(View.GONE);
         findViewById(R.id.success_message).setVisibility(View.GONE);
+        findViewById(R.id.videoView).setVisibility(View.GONE);
 
-        getVideobtn.setOnClickListener(new View.OnClickListener() {@Override public void onClick(View v) { chooseVideoFromGallery(); }});
-        getImagebtn.setOnClickListener(new View.OnClickListener(){@Override public void onClick(View v){ chooseImageFromGallery(); }});
-        uploadbtn.setOnClickListener(new View.OnClickListener() {@Override public void onClick(View v){ upload(); }});
+        watchVideobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download();
+            }
+        });
+        getVideobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseVideoFromGallery();
+            }
+        });
+        getImagebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageFromGallery();
+            }
+        });
+        uploadbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload();
+            }
+        });
         tagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) { tag = (String) parent.getItemAtPosition(pos); }
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                tag = (String) parent.getItemAtPosition(pos);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
         diffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) { difficulty = (String) parent.getItemAtPosition(pos); }
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                difficulty = (String) parent.getItemAtPosition(pos);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
     //checks if the required values have been entered
     //returns 1 if valid or 0 if something is missing
-    private boolean validValues(){
+    private boolean validValues() {
         //get values
         EditText mEdit = (EditText) findViewById(R.id.titleInput);
         title = mEdit.getText().toString();
         mEdit = (EditText) findViewById(R.id.editTextTime2);
         time = mEdit.getText().toString();
 
-        if(title==null || title.length() < 1 || title.length() > 60){
+        if (title == null || title.length() < 1 || title.length() > 60) {
             AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
             titleDialog.setTitle("Please enter a title between 1-60 characters in length.");
-            String[] pictureDialogItems = {"OK" };
+            String[] pictureDialogItems = {"OK"};
             titleDialog.setItems(pictureDialogItems,
                     new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {}
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     });
             titleDialog.show();
             return false;
-        }
-        else if(videoPath==null){
+        } else if (videoPath == null) {
             AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
             videoDialog.setTitle("Please select a video.");
 
             String[] pictureDialogItems = {
-                    "OK" };
+                    "OK"};
             videoDialog.setItems(pictureDialogItems,
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -130,13 +163,12 @@ public class MainActivity extends AppCompatActivity {
 
             videoDialog.show();
             return false;
-        }
-        else if(imagePath==null){
+        } else if (imagePath == null) {
             AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
             videoDialog.setTitle("Please select a thumbnail image.");
 
             String[] pictureDialogItems = {
-                    "OK" };
+                    "OK"};
             videoDialog.setItems(pictureDialogItems,
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -146,16 +178,15 @@ public class MainActivity extends AppCompatActivity {
 
             videoDialog.show();
             return false;
-        }
-
-        else if(time.length() > 6 || (time.length() > 0 && time.length() < 4)){
+        } else if (time.length() > 6 || (time.length() > 0 && time.length() < 4)) {
             AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
             titleDialog.setTitle("Please enter a time of the form min:sec, i.e. 00:05 ");
-            String[] pictureDialogItems = {"OK" };
+            String[] pictureDialogItems = {"OK"};
             titleDialog.setItems(pictureDialogItems,
                     new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {}
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     });
             titleDialog.show();
             return false;
@@ -163,30 +194,33 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void upload(){
+    private void upload() {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         Button uploadButton = (Button) findViewById(R.id.uploadVideoButton);
         TextView successMessage = (TextView) findViewById(R.id.success_message);
         UUID randomUUID = UUID.randomUUID();
 
-        if(!validValues()){return;}
+        if (!validValues()) {
+            return;
+        }
         String noSpaceTitle = title.replaceAll("\\s", "_");
 
         //upload video to storage
         File file = new File(videoPath);
         StorageReference videoRef = storage.getReference("videos/" + noSpaceTitle + "." + randomUUID + ".mp4");
-        StorageMetadata metadata = new StorageMetadata.Builder()
+        /*StorageMetadata metadata = new StorageMetadata.Builder()
                 .setCustomMetadata("title", title)
                 .setCustomMetadata("tag", tag)
                 .setCustomMetadata("difficulty", difficulty)
                 .setCustomMetadata("time", time)
-                .build();
+                .build();*/
 
 
         progressBar.setVisibility(View.VISIBLE);
         uploadButton.setEnabled(false);
 
-        UploadTask uploadTask = videoRef.putFile(videoURI, metadata);
+        //UploadTask uploadTask = videoRef.putFile(videoURI, metadata);
+        UploadTask uploadTask = videoRef.putFile(videoURI);
         uploadTask.addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -228,6 +262,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void download(){
+        try{
+            findViewById(R.id.videoView).setVisibility(View.VISIBLE);
+            final File localFile = File.createTempFile("testing1", "mp4");
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference videoRef = storageRef.child("/videos/no_metadata_test_1.4ce2db05-b0b2-4f6c-b5db-00d09356665c.mp4");
+            videoRef.getFile(localFile).addOnSuccessListener(
+                    (OnSuccessListener) (TaskSnapshot) -> {
+                        Toast.makeText(MainActivity.this, "Download complete", Toast.LENGTH_LONG).show();
+                        final VideoView videoView = (VideoView) findViewById(R.id.videoView);
+                        videoView.setVideoURI(Uri.fromFile(localFile));
+                        videoView.start();
+                    }
+            );
+        } catch(Exception e){
+            System.out.println("could not download");
+        }
+    }
+
     public void chooseVideoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
@@ -247,19 +300,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d("result",""+resultCode);
+        Log.d("result", "" + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("what","gale");
+        Log.d("what", "gale");
 
-        if(requestCode==1){
+        if (requestCode == 1) {
             if (data != null) {
                 videoURI = data.getData();
 
                 videoPath = getPath(videoURI);
             }
-        }
-        else if(requestCode==2){
-            if(data != null){
+        } else if (requestCode == 2) {
+            if (data != null) {
                 imageURI = data.getData();
                 imagePath = getPath(imageURI);
             }
@@ -268,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA };
+        String[] projection = {MediaStore.Video.Media.DATA};
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
             // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
