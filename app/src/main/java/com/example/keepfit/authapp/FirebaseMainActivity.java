@@ -101,7 +101,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     //redirect to user profile
-                    startActivity(new Intent(FirebaseMainActivity.this, ProfileActivity.class));
+                    startActivity(new Intent(FirebaseMainActivity.this, ProfileActivityEdits.class));
                 }
                 else{
                     Toast.makeText(FirebaseMainActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();

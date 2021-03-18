@@ -1,6 +1,7 @@
 package com.example.keepfit.authapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -30,7 +31,10 @@ import org.w3c.dom.Text;
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
     //private TextView banner
     private Button register;
-    private EditText editTextUsername, editTextEmail, editTextPassword;
+    private EditText editTextEmail, editTextPassword;
+    private static final String EMAIL = "email";
+    private static final String PREF_FILENAME = "main";
+    private EditText editTextUsername;
     //private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
@@ -70,7 +74,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String password = editTextPassword.getText().toString().trim();
 
         if(name.isEmpty()){
-            editTextUsername.setError("Name is required!");
+            editTextUsername.setError("Username is required!");
             editTextUsername.requestFocus();
             return;
         }
@@ -128,7 +132,13 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                             if(task.isSuccessful()){
                                                 Toast.makeText(RegisterUser.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
                                                 //progressBar.setVisibility(View.VISIBLE);
-                                                setContentView(R.layout.activity_profile);
+                                                SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putString(EMAIL, email);
+                                                editor.commit();
+                                                Intent intent = new Intent(RegisterUser.this, ProfileActivity.class);
+                                                startActivity(intent);
+                                                //setContentView(R.layout.activity_profile);
                                                 //redirect user to profile
                                             }
                                             else{

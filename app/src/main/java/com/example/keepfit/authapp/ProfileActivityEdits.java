@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.keepfit.R;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -33,33 +35,40 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.UUID;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnChoose, btnUpload, btnSave;
+    private Button btnChoose, btnUpload, btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout;
     private ImageView imageView;
 
     private Uri filePath;
 
     private final int PICK_IMAGE_REQUEST = 71;
 
-    private FirebaseAuth mAuth;
     FirebaseStorage storage;
     StorageReference storageReference;
     String pickey;
 
-    private static final String EMAIL = "email";
-    private static final String PREF_FILENAME = "main";
-
-    private EditText editTextName, editTextPhoneNumber, editTextGender, editTextWeight, editTextHeight, editTextBirthday;
+    String which = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_profile);
+        setContentView(R.layout.activity_edit_profile);
         btnChoose = findViewById(R.id.btnChoose);
         btnUpload = findViewById(R.id.btnUpload);
-        btnSave = findViewById(R.id.btnSave);
-        imageView = findViewById(R.id.imgView);
+        btnEditName = findViewById(R.id.btnEditName);
+        btnEditPhoneNumber = findViewById(R.id.btnEditPhoneNumber);
+        btnEditBirthday = findViewById(R.id.btnEditBirthday);
+        btnEditGender = findViewById(R.id.btnEditGender);
+        btnEditWeight= findViewById(R.id.btnEditWeight);
+        btnEditHeight= findViewById(R.id.btnEditHeight);
+        btnChangePass = findViewById(R.id.btnchangepass);
+        btnLogout = findViewById(R.id.btnlogout);
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        //mAuth = FirebaseAuth.getInstance();
+
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,26 +84,83 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-        mAuth = FirebaseAuth.getInstance();
-
-        editTextName =  findViewById(R.id.EditTextName);
-        editTextPhoneNumber = findViewById(R.id.EditTextPhoneNo);
-        editTextBirthday = findViewById(R.id.EditTextBirthday);
-        editTextGender = findViewById(R.id.EditTextGender);
-        editTextWeight = findViewById(R.id.EditTextWeight);
-        editTextHeight = findViewById(R.id.EditTextHeight);
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        btnEditName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadProfile();
+                which = "name";
+                OpenDialog();
+
+            }
+        });
+
+        btnEditPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = "phonenumber";
+                OpenDialog();
+            }
+        });
+
+        btnEditBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = "birthday";
+                OpenDialog();
+            }
+        });
+
+        btnEditGender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = "gender";
+                OpenDialog();
+            }
+        });
+
+        btnEditWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = "weight";
+                OpenDialog();
+            }
+        });
+
+        btnEditHeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                which = "height";
+                OpenDialog();
+            }
+        });
+
+        btnChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivityEdits.this, ForgotPassword.class));
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ProfileActivityEdits.this, FirebaseMainActivity.class));
             }
         });
 
     }
 
+    public void OpenDialog() {
+        DialogExample exampleDialog = new DialogExample();
+        exampleDialog.show(getSupportFragmentManager(), "hi");
+
+    }
+
+    @Override
+    public void applyTexts(String edits) {
+
+        FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(which).setValue(edits);
+    }
 
     private void chooseImage() {
         Intent intent = new Intent();
@@ -135,7 +201,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(ProfileActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivityEdits.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri downloadUrl) {
@@ -148,7 +214,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(ProfileActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivityEdits.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -160,58 +226,5 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     });
         }
-    }
-
-    private void uploadProfile() {
-        String name = editTextName.getText().toString().trim();
-        String phonenumber = editTextPhoneNumber.getText().toString().trim();
-        String birthday = editTextBirthday.getText().toString().trim();
-        String gender = editTextGender.getText().toString().trim();
-        String height = editTextHeight.getText().toString();
-        String weight = editTextWeight.getText().toString().trim();
-
-        if(name.isEmpty()){
-            editTextName.setError("Name is required!");
-            editTextName.requestFocus();
-            return;
-        }
-        if(phonenumber.length() < 10){
-            editTextPhoneNumber.setError("Valid phone number is required!");
-            editTextPhoneNumber.requestFocus();
-            return;
-        }
-        if(birthday.length() < 8) {
-            editTextBirthday.setError("Valid Birthday is required!");
-            editTextBirthday.requestFocus();
-            return;
-        }
-        /*
-        if((gender != "Male") && (gender != "Female") && (gender != "Non binary")){
-            editTextGender.setError("Enter Male, Female or Non binary!");
-            editTextGender.requestFocus();
-            return;
-        }
-
-        if(weight.matches("[0-9]+") && weight.length() > 1){
-            editTextWeight.setError("Valid Weight is required!");
-            editTextWeight.requestFocus();
-            return;
-        }
-
-        if(height.matches("[0-9]+") && height.length() > 1 && height.length() < 3){
-            editTextHeight.setError("Valid Height is required!");
-            editTextHeight.requestFocus();
-            return;
-        }
-        */
-
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
-        String sharedemail = sharedPreferences.getString(EMAIL, "");
-
-        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey);
-        FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
-        Intent intent = new Intent(ProfileActivity.this, FirebaseMainActivity.class);
-        startActivity(intent);
-
     }
 }
