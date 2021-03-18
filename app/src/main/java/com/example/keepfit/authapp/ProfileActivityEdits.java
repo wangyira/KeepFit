@@ -25,13 +25,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -49,6 +56,10 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     String pickey;
 
     String which = "";
+
+    private FirebaseUser user;
+    private DatabaseReference dbreference;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +156,83 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(ProfileActivityEdits.this, FirebaseMainActivity.class));
+            }
+        });
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        dbreference = FirebaseDatabase.getInstance().getReference("UserInformation");
+        userId = user.getUid();
+
+        final TextView greetingTextView = (TextView) findViewById(R.id.editprofile);
+        final TextView nameTextView = (TextView) findViewById(R.id.TextViewName);
+        final TextView phoneTextView = (TextView) findViewById(R.id.TextViewPhoneNumber);
+        final TextView bdayTextView = (TextView) findViewById(R.id.TextViewBirthday);
+        final TextView genderTextView = (TextView) findViewById(R.id.TextViewGender);
+        final TextView weightTextView = (TextView) findViewById(R.id.TextViewWeight);
+        final TextView heightTextView = (TextView) findViewById(R.id.TextViewHeight);
+        //final TextView
+
+        dbreference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserInformation info = snapshot.getValue(UserInformation.class);
+                if(info!= null){
+                    String name = info.name;
+                    String phone = info.phonenumber;
+                    String bday = info.birthday;
+                    String gender = info.gender;
+                    String weight = info.weight;
+                    String height = info.height;
+
+                    if(name != null) {
+                        greetingTextView.setText("Welcome, " + name + "!");
+                        nameTextView.setText("Name: " + name);
+                    }
+                    else{
+                        nameTextView.setError("Please enter your name.");
+                        nameTextView.requestFocus();
+                        return;
+                    }
+
+                    if(phone!= null) phoneTextView.setText("Phone Number: " + phone);
+                    else{
+                        phoneTextView.setError("Please enter your phone number.");
+                        phoneTextView.requestFocus();
+                        return;
+                    }
+                    if(bday != null) bdayTextView.setText("Birthday: " + bday);
+                    else{
+                        bdayTextView.setError("Please enter your birthday.");
+                        bdayTextView.requestFocus();
+                        return;
+                    }
+                    if(gender != null) genderTextView.setText("Gender: " + gender);
+                    else{
+                        genderTextView.setError("Please enter your gender.");
+                        genderTextView.requestFocus();
+                        return;
+                    }
+                    if(weight != null) weightTextView.setText("Weight: " + weight);
+                    else{
+                        weightTextView.setError("Please enter your weight.");
+                        weightTextView.requestFocus();
+                        return;
+                    }
+                    if(height!=null) heightTextView.setText("Height: " + height);
+                    else{
+                        heightTextView.setError("Please enter your height.");
+                        heightTextView.requestFocus();
+                        return;
+                    }
+
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 

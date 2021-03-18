@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="0dp"
     android:padding="16dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
     tools:context=".authapp.ProfileActivityEdits">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
     <TextView
         android:id="@+id/editprofile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_horizontal"
-        android:text="Edit Profile!"
+        android:text="@string/profileGreeting"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor= "@color/purple_700" />
 
@@ -20,6 +39,9 @@
         android:id="@+id/imgView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:src="@drawable/defavatar"
         android:layout_marginTop="40dp" />
@@ -28,6 +50,9 @@
         android:id="@+id/layout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="150dp"
         android:weightSum="2">
@@ -51,6 +76,9 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="225dp"
         android:weightSum="2">
@@ -76,6 +104,9 @@
         android:id="@+id/phonenumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="275dp"
         android:weightSum="2">
@@ -100,6 +131,9 @@
         android:id="@+id/birthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="325dp"
         android:weightSum="2">
@@ -124,6 +158,9 @@
         android:id="@+id/gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="375dp"
         android:weightSum="2">
@@ -148,6 +185,9 @@
         android:id="@+id/weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="425dp"
         android:weightSum="2">
@@ -172,6 +212,9 @@
         android:id="@+id/height"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="475dp"
         android:weightSum="2">
@@ -196,6 +239,9 @@
         android:id="@+id/changepasslogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_marginTop="550dp"
         android:weightSum="2">
@@ -216,4 +262,20 @@
             android:text="Logout" />
     </LinearLayout>
 
-</RelativeLayout>
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/mobile_navigation" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
