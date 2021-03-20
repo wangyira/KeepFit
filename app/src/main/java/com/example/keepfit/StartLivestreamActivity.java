@@ -235,14 +235,15 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             imageUploadTask.addOnSuccessListener(StartLivestreamActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
-                    imageUrl = imageTaskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                    System.out.println("image url"+imageUrl);
+                    //imageUrl = imageTaskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                    //System.out.println("image url"+imageUrl);
                     member.setTitle(titleText);
                     member.setMaxNumberOfPeople(Integer.parseInt(peopleText));
                     member.setExerciseType(selectedType);
                     member.setEndTime(timeText);
                     member.setZoomLink(zoomText);
-                    member.setImageUrl(imageUrl);
+                    //member.setImageUrl(imageUrl);
+                    member.setReferenceTitle(randomUUID + ".jpg");
                     String id = databaseReference.push().getKey();
                     databaseReference.child(id).setValue(member);
                 }
