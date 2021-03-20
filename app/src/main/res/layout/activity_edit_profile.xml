@@ -37,13 +37,14 @@
 
     <ImageView
         android:id="@+id/imgView"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:src="@drawable/defavatar"
+        android:scaleType="centerCrop"
         android:layout_marginTop="40dp" />
 
     <LinearLayout

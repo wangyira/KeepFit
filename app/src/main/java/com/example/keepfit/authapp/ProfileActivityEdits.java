@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,6 +37,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -170,6 +172,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         final TextView genderTextView = (TextView) findViewById(R.id.TextViewGender);
         final TextView weightTextView = (TextView) findViewById(R.id.TextViewWeight);
         final TextView heightTextView = (TextView) findViewById(R.id.TextViewHeight);
+        final ImageView profilePicture = findViewById(R.id.imgView);
         //final TextView
 
         dbreference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -183,6 +186,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     String gender = info.gender;
                     String weight = info.weight;
                     String height = info.height;
+                    String imgLink = info.pickey;
+
+                    Picasso.get().load(imgLink).into(profilePicture);
 
                     if(name != null) {
                         greetingTextView.setText("Welcome, " + name + "!");
@@ -200,7 +206,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         phoneTextView.requestFocus();
                         return;
                     }
-                    if(bday != null) bdayTextView.setText("Birthday: " + bday);
+                    if(bday != null) bdayTextView.setText("Birthday: " + bday.substring(0,2) + "/" + bday.substring(2,4) + "/" + bday.substring(4));
                     else{
                         bdayTextView.setError("Please enter your birthday.");
                         bdayTextView.requestFocus();
@@ -212,13 +218,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         genderTextView.requestFocus();
                         return;
                     }
-                    if(weight != null) weightTextView.setText("Weight: " + weight);
+                    if(weight != null) weightTextView.setText("Weight: " + weight + "lbs");
                     else{
                         weightTextView.setError("Please enter your weight.");
                         weightTextView.requestFocus();
                         return;
                     }
-                    if(height!=null) heightTextView.setText("Height: " + height);
+                    if(height!=null) heightTextView.setText("Height: " + height + "in");
                     else{
                         heightTextView.setError("Please enter your height.");
                         heightTextView.requestFocus();
