@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,10 +47,20 @@ import java.util.logging.Logger;
 public class ContentScrollingActivity extends AppCompatActivity{
         ImageButton video;
         ImageButton livestream;
+
+        ArrayList<ImageButton> thumbnailButtons = new ArrayList<ImageButton>();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.content_scrolling);
+
+
+            thumbnailButtons.add(findViewById(R.id.imageButton1));
+            thumbnailButtons.add(findViewById(R.id.imageButton2));
+
+            for(ImageButton ib : thumbnailButtons){
+                ib.setVisibility(View.GONE);
+            }
 
             //retrieve thumbnail image from firebase
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,38 +70,36 @@ public class ContentScrollingActivity extends AppCompatActivity{
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     ArrayList<String> titleList = new ArrayList<String>();
-                    //Map<String, Map<String, String>> valueMap = (Map<String, Map<String, String>>) snapshot.getValue(Map.class);
                     GenericTypeIndicator<Map<String, Map<String, String>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Map<String, String> >>() {};
                     Map<String, Map<String, String>> valueMap = snapshot.getValue(genericTypeIndicator);
-                    Iterator it = valueMap.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry) it.next();
-                        Map<String, String> videoMap = (Map<String, String>) pair.getValue();
-                        Iterator itVid = videoMap.entrySet().iterator();
-                        String title = null;
-                        while (itVid.hasNext()) {
-                            Map.Entry<String, String> metaPair = (Map.Entry<String, String>) itVid.next();
-                            if (metaPair.getKey() == "reference title") {
-                                titleList.add((String) metaPair.getValue());
+                    for(Map.Entry<String, Map<String, String>> entry : valueMap.entrySet()){
+                        Map<String, String> videoMap = entry.getValue();
+                        for(Map.Entry<String, String> data : videoMap.entrySet()){
+                            if(data.getKey().equals("\"reference title\"")){
+                                titleList.add(data.getValue());
                                 break;
                             }
-                            itVid.remove();
                         }
-                        it.remove(); // avoids a ConcurrentModificationException
                     }
+
                     //titleList now contains titles of all videos (and images)
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    Iterator<String> tnIt = titleList.iterator();
-                    while(tnIt.hasNext()){
-                        StorageReference imageRef = storageRef.child("thumbnail images/" + tnIt.next().toString());
+                    int i=0;
+                    for(String title : titleList){
+                        String titleWithoutExtension = title.substring(0, title.length()-4);
+                        StorageReference imageRef = storageRef.child("/thumbnail_images/" + titleWithoutExtension + ".jpg");
                         try{
-                            final File localFile = File.createTempFile( tnIt.toString(), "jpg");
-                            imageRef.getFile(localFile).addOnSuccessListener(
-                                    (OnSuccessListener) (TaskSnapshot) -> {
-                                        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton1);
-                                        Bitmap bm = imgToBitmap(localFile);
-                                        imageButton.setImageBitmap(bm);
-                                    });
+                            final File localFile = File.createTempFile( title, "jpg");
+                            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    ImageButton ib = thumbnailButtons.get(i);
+                                    Bitmap bm = imgToBitmap(localFile);
+                                    ib.setImageBitmap(bm);
+                                    ib.setVisibility(View.VISIBLE);
+                                }
+                            });
+
                         }catch(Exception e){
                             AlertDialog.Builder videoDialog = new AlertDialog.Builder(ContentScrollingActivity.this);
                             videoDialog.setTitle("ERROR.");
@@ -106,7 +115,6 @@ public class ContentScrollingActivity extends AppCompatActivity{
 
                             videoDialog.show();
                         }
-
                     }
                 }
 
