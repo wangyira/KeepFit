@@ -253,8 +253,9 @@ public class MainActivity extends AppCompatActivity {
                         vidRef.put("difficulty", difficulty);
                         vidRef.put("tag", tag);
                         vidRef.put("title", title);
-                        vidRef.put("video url", url);
-                        vidRef.put("image url", imageUrl);
+                        //vidRef.put("video url", url);
+                        //vidRef.put("image url", imageUrl);
+                        vidRef.put("reference title", noSpaceTitle + "." + randomUUID);
 
                         mVideosRef.push().setValue(vidRef);
                     }
