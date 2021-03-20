@@ -224,15 +224,16 @@ public class MainActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                String url = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                //String url = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
 
                 StorageReference imageRef = storage.getReference("thumbnail_images/" + noSpaceTitle + "." + randomUUID + ".jpg");
-                StorageMetadata metadataI = new StorageMetadata.Builder()
-                        .setCustomMetadata("title", title)
-                        .setCustomMetadata("video reference", url)
-                        .build();
+                //StorageMetadata metadataI = new StorageMetadata.Builder()
+                        //.setCustomMetadata("title", title)
+                        //.setCustomMetadata("video reference", url)
+                        //.build();
 
-                UploadTask imageUploadTask = imageRef.putFile(imageURI, metadataI);
+                //UploadTask imageUploadTask = imageRef.putFile(imageURI, metadataI);
+                UploadTask imageUploadTask = imageRef.putFile(imageURI);
                 imageUploadTask.addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
