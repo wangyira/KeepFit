@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
                     ib.setVisibility(View.VISIBLE);
 
                     TextView tv = textViews.get(numVideos);
-                    tv.setText("LIVESTREAM : test");
+                    tv.setText("LIVESTREAM : workout with me");
                     tv.setVisibility(View.VISIBLE);
                 }
             });
