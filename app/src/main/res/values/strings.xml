@@ -16,4 +16,5 @@
         <item>@string/tag3</item>
         <item>@string/tag4</item>
     </string-array>
+    <string name="like">Like</string>
 </resources>
