@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalorieActivity extends AppCompatActivity {
 
@@ -185,12 +186,42 @@ public class CalorieActivity extends AppCompatActivity {
 
                 DatabaseReference myMET = mRootRef.child("METValues").child(myFirstValue).child(mySecondValue);
 
-                String MET_String;
+                Log.d("myTag", myFirstValue);
+                Log.d("myTag", mySecondValue);
 
                 myMET.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         myCurrentValue = snapshot.getValue().toString();
+                        if (myCurrentValue == null){
+                            Toast.makeText(CalorieActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.d("myTag", myCurrentValue);
+
+                        double MET_Exercise = Double.parseDouble(myCurrentValue);
+
+                        double weight = 100.0; //lb
+
+
+                        long millis = timeInPause;
+                        int seconds = (int) (millis / 1000);
+                        int minutes = seconds / 60;
+
+                        double doubleSeconds = (double) seconds;
+
+                        double time = doubleSeconds / 3600.0;
+
+                        //////////////
+
+                        weight = weight/2.205; //Weight in kg.
+
+                        double hours = doubleSeconds/3600.0; //Time in hours
+
+                        double NewMETValue = MET_Exercise * weight * hours;
+
+                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+
+                        mConditionRef.setValue(myMETValue);
                     }
 
                     @Override
@@ -199,26 +230,7 @@ public class CalorieActivity extends AppCompatActivity {
                     }
                 });
 
-                MET_String = myCurrentValue;
 
-                double MET_Exercise = Double.parseDouble(MET_String);
-
-                double weight = 100.0; //kg
-
-
-                long millis = timeInPause;
-                int seconds = (int) (millis / 1000);
-                int minutes = seconds / 60;
-
-                double doubleSeconds = (double) seconds;
-
-                double time = doubleSeconds / 3600.0;
-
-                double NewMETValue = MET_Exercise * weight * doubleSeconds;
-
-                METValue myMETValue = new METValue("TestUser", NewMETValue);
-
-                mConditionRef.setValue(myMETValue);
 
             }
         });
@@ -237,12 +249,36 @@ public class CalorieActivity extends AppCompatActivity {
 
                 DatabaseReference myMET = mRootRef.child("METValues").child(myFirstValue).child(mySecondValue);
 
-                String MET_String;
 
                 myMET.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         myCurrentValue = snapshot.getValue().toString();
+
+                        double MET_Exercise = Double.parseDouble(myCurrentValue);
+
+                        double weight = 100.0; //kg
+
+                        String myString = editTextTime.getText().toString();
+
+                        String[] myParsedString = myString.split(":");
+
+                        int myMinutes = (Integer.parseInt(myParsedString[0]))*60;
+                        int mySeconds = (Integer.parseInt(myParsedString[1]));
+                        double doubleSeconds = (double) myMinutes + (double) mySeconds;
+
+                        ////////////////////////////////////////////////
+
+                        weight = weight/2.205; //Weight in kg.
+
+                        double hours = doubleSeconds/3600.0; //Time in hours
+
+                        double NewMETValue = MET_Exercise * weight * hours;
+
+                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+
+                        mConditionRef.setValue(myMETValue);
+
                     }
 
                     @Override
@@ -251,25 +287,6 @@ public class CalorieActivity extends AppCompatActivity {
                     }
                 });
 
-                MET_String = myCurrentValue;
-
-                double MET_Exercise = Double.parseDouble(MET_String);
-
-                double weight = 100.0; //kg
-
-                String myString = editTextTime.getText().toString();
-
-                String[] myParsedString = myString.split(":");
-
-                int myMinutes = (Integer.parseInt(myParsedString[0]))*60;
-                int mySeconds = (Integer.parseInt(myParsedString[1]));
-                double doubleSeconds = (double) myMinutes + (double) mySeconds;
-
-                double NewMETValue = MET_Exercise * weight * doubleSeconds;
-
-                METValue myMETValue = new METValue("TestUser", NewMETValue);
-
-                mConditionRef.setValue(myMETValue);
 
 
 
