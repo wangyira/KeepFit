@@ -15,9 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.keepfit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,8 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -59,6 +61,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     String which = "";
 
+    ImageButton video;
+
     private FirebaseUser user;
     private DatabaseReference dbreference;
     private String userId;
@@ -73,8 +77,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnEditPhoneNumber = findViewById(R.id.btnEditPhoneNumber);
         btnEditBirthday = findViewById(R.id.btnEditBirthday);
         btnEditGender = findViewById(R.id.btnEditGender);
-        btnEditWeight= findViewById(R.id.btnEditWeight);
-        btnEditHeight= findViewById(R.id.btnEditHeight);
+        btnEditWeight = findViewById(R.id.btnEditWeight);
+        btnEditHeight = findViewById(R.id.btnEditHeight);
         btnChangePass = findViewById(R.id.btnchangepass);
         btnLogout = findViewById(R.id.btnlogout);
 
@@ -173,13 +177,14 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         final TextView weightTextView = (TextView) findViewById(R.id.TextViewWeight);
         final TextView heightTextView = (TextView) findViewById(R.id.TextViewHeight);
         final ImageView profilePicture = findViewById(R.id.imgView);
-        //final TextView
+        final TextView usernameTextView = (TextView) findViewById(R.id.TextViewUsername);
+        final TextView emailTextView = (TextView) findViewById(R.id.TextViewEmail);
 
         dbreference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserInformation info = snapshot.getValue(UserInformation.class);
-                if(info!= null){
+                if (info != null) {
                     String name = info.name;
                     String phone = info.phonenumber;
                     String bday = info.birthday;
@@ -187,52 +192,67 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     String weight = info.weight;
                     String height = info.height;
                     String imgLink = info.pickey;
+                    String username = info.username;
+                    String email = info.email;
 
                     Picasso.get().load(imgLink).into(profilePicture);
 
-                    if(name != null) {
+                    if (username != null) {
+                        usernameTextView.setText("Username: " + username);
+                    } else {
+                        usernameTextView.setError("Please enter your username.");
+                        usernameTextView.requestFocus();
+                        return;
+                    }
+
+                    if (email != null) {
+                        emailTextView.setText("Email: " + email);
+                    } else {
+                        emailTextView.setError("Please enter your email.");
+                        emailTextView.requestFocus();
+                        return;
+                    }
+
+                    if (name != null) {
                         greetingTextView.setText("Welcome, " + name + "!");
                         nameTextView.setText("Name: " + name);
-                    }
-                    else{
+                    } else {
                         nameTextView.setError("Please enter your name.");
                         nameTextView.requestFocus();
                         return;
                     }
 
-                    if(phone!= null) phoneTextView.setText("Phone Number: " + phone);
-                    else{
+                    if (phone != null) phoneTextView.setText("Phone Number: " + phone);
+                    else {
                         phoneTextView.setError("Please enter your phone number.");
                         phoneTextView.requestFocus();
                         return;
                     }
-                    if(bday != null) bdayTextView.setText("Birthday: " + bday.substring(0,2) + "/" + bday.substring(2,4) + "/" + bday.substring(4));
-                    else{
+                    if (bday != null)
+                        bdayTextView.setText("Birthday: " + bday.substring(0, 2) + "/" + bday.substring(2, 4) + "/" + bday.substring(4));
+                    else {
                         bdayTextView.setError("Please enter your birthday.");
                         bdayTextView.requestFocus();
                         return;
                     }
-                    if(gender != null) genderTextView.setText("Gender: " + gender);
-                    else{
+                    if (gender != null) genderTextView.setText("Gender: " + gender);
+                    else {
                         genderTextView.setError("Please enter your gender.");
                         genderTextView.requestFocus();
                         return;
                     }
-                    if(weight != null) weightTextView.setText("Weight: " + weight + "lbs");
-                    else{
+                    if (weight != null) weightTextView.setText("Weight: " + weight + "lbs");
+                    else {
                         weightTextView.setError("Please enter your weight.");
                         weightTextView.requestFocus();
                         return;
                     }
-                    if(height!=null) heightTextView.setText("Height: " + height + "in");
-                    else{
+                    if (height != null) heightTextView.setText("Height: " + height + "in");
+                    else {
                         heightTextView.setError("Please enter your height.");
                         heightTextView.requestFocus();
                         return;
                     }
-
-
-
                 }
             }
 
@@ -242,6 +262,19 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
+        video = (ImageButton) findViewById(R.id.imageButton);
+        video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if(video)
+                openNewActivity();
+            }
+        });
+    }
+
+    public void openNewActivity(){
+        Intent intent = new Intent(this, ScrollingActivity.class);
+        startActivity(intent);
     }
 
     public void OpenDialog() {

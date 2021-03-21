@@ -5,9 +5,7 @@ public class UserInformation {
 
     public String email, name, phonenumber, gender, birthday, weight, height, pickey, username;
 
-    public UserInformation(){
-
-    }
+    public UserInformation() {}
 
     public String getName() {
         return name;
@@ -24,5 +22,4 @@ public class UserInformation {
         this.pickey = pickey;
         this.username = username;
     }
-
 }

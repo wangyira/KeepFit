@@ -191,29 +191,27 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
         if(birthday.length() < 8) {
-            editTextBirthday.setError("Valid Birthday is required!");
+            editTextBirthday.setError("Valid birthday is required!");
             editTextBirthday.requestFocus();
             return;
         }
-        /*
-        if((gender != "Male") && (gender != "Female") && (gender != "Non binary")){
+        if(gender == null){
             editTextGender.setError("Enter Male, Female or Non binary!");
             editTextGender.requestFocus();
             return;
         }
 
-        if(weight.matches("[0-9]+") && weight.length() > 1){
-            editTextWeight.setError("Valid Weight is required!");
+        if(android.text.TextUtils.isDigitsOnly(weight)){
+            editTextWeight.setError("Valid weight is required!");
             editTextWeight.requestFocus();
             return;
         }
 
-        if(height.matches("[0-9]+") && height.length() > 1 && height.length() < 3){
-            editTextHeight.setError("Valid Height is required!");
+        if(android.text.TextUtils.isDigitsOnly(height)){
+            editTextHeight.setError("Valid height is required!");
             editTextHeight.requestFocus();
             return;
         }
-        */
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         String sharedemail = sharedPreferences.getString(EMAIL, "");
