@@ -13,6 +13,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="enter_your_email">Enter Your Email</string>
+
     <string name="myTitle">Calorie Tracker</string>
 
     <string-array name="tagEntries">
@@ -40,4 +41,9 @@
     </string-array>
 
     <string name="editTime">Custom Time</string>
+
+
+    <string name="profileGreeting">Welcome,</string>
+    <string name="uploadedVideos">Uploaded Videos</string>
 </resources>
+
