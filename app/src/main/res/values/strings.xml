@@ -13,6 +13,37 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="enter_your_email">Enter Your Email</string>
+
+    <string name="myTitle">Calorie Tracker</string>
+
+    <string-array name="tagEntries">
+            <item>Aerobic</item>
+            <item>Anaerobic</item>
+            <item>Flexibility</item>
+            <item>Stability</item>
+    </string-array>
+
+    <string-array name="tagEntries2">
+            <item>Exercise1</item>
+            <item>Exercise2</item>
+    </string-array>
+    <string-array name="tagEntries3">
+            <item>Exercise3</item>
+            <item>Exercise4</item>
+    </string-array>
+    <string-array name="tagEntries4">
+            <item>Exercise5</item>
+            <item>Exercise6</item>
+    </string-array>
+    <string-array name="tagEntries5">
+            <item>Exercise7</item>
+            <item>Exercise8</item>
+    </string-array>
+
+    <string name="editTime">Custom Time</string>
+
+
     <string name="profileGreeting">Welcome,</string>
     <string name="uploadedVideos">Uploaded Videos</string>
 </resources>
+
