@@ -16,7 +16,7 @@
         <activity android:name=".SearchResultsActivity"></activity>
         <activity android:name=".authapp.PublicProfile"></activity>
         <activity android:name=".authapp.ProfileActivity"></activity> <!-- <activity -->
-        <activity android:name=".MainActivity" />
+        <!--<activity android:name=".MainActivity" /> -->
         <activity android:name=".authapp.ForgotPassword" />
         <activity android:name=".authapp.ProfileActivityEdits" />
         <activity android:name=".authapp.ScrollingActivity" /> <!-- <activity -->
@@ -30,9 +30,10 @@
 
         <!--            android:name=".authapp.FirebaseMainActivity"-->
 
+
         <activity
 
-            android:name=".calories.CalorieActivity"
+            android:name="MainActivity"
             android:label="@string/app_name">
 
       <!--

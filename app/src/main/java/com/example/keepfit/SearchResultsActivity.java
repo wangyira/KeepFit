@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.keepfit.authapp.PublicProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -505,6 +506,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
     public void openNewActivityUser(int i){
         //OPEN USER PROFILE
+        String username = profileUsernames.get(i);
+        Intent intent = new Intent(this, PublicProfile.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 
     private Bitmap imgToBitmap(File file){
