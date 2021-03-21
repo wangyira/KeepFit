@@ -14,4 +14,5 @@
     <string name="login_failed">"Login failed"</string>
     <string name="enter_your_email">Enter Your Email</string>
     <string name="profileGreeting">Welcome,</string>
+    <string name="uploadedVideos">Uploaded Videos</string>
 </resources>

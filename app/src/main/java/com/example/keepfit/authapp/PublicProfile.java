@@ -30,7 +30,7 @@ public class PublicProfile extends AppCompatActivity {
     private ImageView pfp;
     private TextView username, name;
 
-    private String userProfileToDisplay = getIntent().getStringExtra("username");
+    private String userProfileToDisplay;
     private String nameToDisplay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,8 @@ public class PublicProfile extends AppCompatActivity {
         pfp = findViewById(R.id.profilePic);
         name = findViewById(R.id.publicProfileName);
         username = findViewById(R.id.publicProfileUsername);
+
+        userProfileToDisplay = getIntent().getStringExtra("username");
 
         //username of the person whose profile we are displaying -- send a string called "username" when creating intent
 
