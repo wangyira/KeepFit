@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,9 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
+
     ArrayList<String> referenceTitleList = new ArrayList<String>();
     ArrayList<String> displayTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamReferenceTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamDisplayTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamZoomLinks = new ArrayList<String>();
+
     int numVideos = 0;
+    int numLivestreams = 0;
+
+    ReentrantLock lock = new ReentrantLock();
 
 
     @Override
@@ -123,7 +132,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void populate(){
         addItemstoArrayandMakeInvisible();
+        //get livestreams
+        FirebaseDatabase databasel = FirebaseDatabase.getInstance();
+        DatabaseReference myRefl = databasel.getReference("Livestream Details");
+        myRefl.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotl) {
+                //map to hold all livestream references from database
+                HashMap<String, HashMap> lsmAL = new HashMap<String, HashMap>();
+                lsmAL = (HashMap<String, HashMap>) snapshotl.getValue();
+                for(Map.Entry<String, HashMap> livestream: lsmAL.entrySet()){
+                    if(numLivestreams < 20){
+                        Log.d("myTag", "#####");
+                        livestreamReferenceTitleList.add((String) livestream.getValue().get("reference title"));
+                        livestreamDisplayTitleList.add((String) livestream.getValue().get("title"));
+                        livestreamZoomLinks.add((String) livestream.getValue().get("zoomLink"));
+                        Log.d("myTag", "#####");
+                        numLivestreams++;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
+
+        //get videos
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Video References");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -134,35 +168,89 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Map<String, String>> allVideosMap = snapshot.getValue(genericTypeIndicator);
 
                 //for each video (entry in allVideosMap), get the reference title and add it to titleList (if there is space)
-                Iterator it = allVideosMap.entrySet().iterator();
+                //Iterator it = allVideosMap.entrySet().iterator();
                 for(Map.Entry<String, Map<String, String>> entry : allVideosMap.entrySet()){
                     Map<String, String> videoMap = entry.getValue();
                     for(Map.Entry<String, String> data : videoMap.entrySet()){
                         if(data.getKey().equals("reference title")){
 
-                            if(numVideos < 20) {
+                            if(numVideos < (20-numLivestreams)) {
                                 referenceTitleList.add(data.getValue());
                                 numVideos++;
                             }
                         }
                         else if(data.getKey().equals("title")){
-                            if(numVideos < 20){
-                                displayTitleList.add(data.getValue());
-                            }
+                            displayTitleList.add(data.getValue());
                         }
                     }
-                    if(numVideos >= 20){break;}
+                    if(numVideos >= (20-numLivestreams)){break;}
                 }
                 //titleList now contains titles of videos (and images) to be displayed
+                //livestream titleLists contain titles of livestreams to be displayed
 
                 displayThumbnails();
 
+                //titleList now contains titles of all videos (and images)
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
                 for(int i=0; i < numVideos; i++){
+                    StorageReference imageRef = storageRef.child("/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
+                    try{
+                        final int j=i;
+                        final File localFile = File.createTempFile(referenceTitleList.get(i), "jpg");
+                        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                ImageButton ib = imageButtons.get(j);
+
+                                Bitmap bm = imgToBitmap(localFile);
+                                ib.setImageBitmap(bm);
+                                ib.setVisibility(View.VISIBLE);
+
+                                TextView tv = textViews.get(j);
+                                tv.setText(displayTitleList.get(j));
+                                tv.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } catch(Exception e) { }
+                }
+                Log.d("myTag", numVideos + " " + numLivestreams);
+                for(int i=numVideos; i < numVideos+numLivestreams; i++){
+
+                    StorageReference imageRef = storageRef.child("/livestream_thumbnail_images/" + livestreamReferenceTitleList.get(i-numVideos) + ".jpg");
+                    try{
+                        final int j=i;
+                        final File localFile = File.createTempFile(livestreamReferenceTitleList.get(i-numVideos), "jpg");
+                        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                ImageButton ib = imageButtons.get(j);
+
+                                Bitmap bm = imgToBitmap(localFile);
+                                ib.setImageBitmap(bm);
+                                ib.setVisibility(View.VISIBLE);
+
+                                TextView tv = textViews.get(j);
+                                tv.setText("LIVESTREAM: " + livestreamDisplayTitleList.get(j-numVideos));
+                                tv.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } catch(Exception e){ }
+                }
+
+
+
+                for(int i=0; i < numVideos+numLivestreams; i++){
                     final int j = i;
                     imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            openNewActivityVideo(j);
+                            if(j < numVideos){
+                                openNewActivityVideo(j);
+                            } else{
+                                openNewActivityLivestream(j);
+                            }
+
                         }
                     });
                 }
@@ -177,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
         for(int i=0; i < numVideos; i++){
-            Log.d("myTag", "/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
             try{
                 final int j=i;
@@ -186,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         ImageButton ib = imageButtons.get(j);
-
 
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
@@ -198,6 +284,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             } catch(Exception e) { }
+        }
+        Log.d("myTag", numVideos + " " + numLivestreams);
+        for(int i=numVideos; i < numVideos+numLivestreams; i++){
+
+            StorageReference imageRef = storageRef.child("/livestream_thumbnail_images/" + livestreamReferenceTitleList.get(i-numVideos) + ".jpg");
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(livestreamReferenceTitleList.get(i-numVideos), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j);
+                        tv.setText("LIVESTREAM: " + livestreamDisplayTitleList.get(j-numVideos));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch(Exception e){ }
         }
     }
 
@@ -261,8 +370,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);
     }
-    public void openNewActivityLivestream(){
+    public void openNewActivityLivestream(int i){
+        String zoomLink = livestreamZoomLinks.get(i);
         Intent intent = new Intent(this, LivestreamActivity.class);
+        intent.putExtra("zoomLink", zoomLink);
         startActivity(intent);
     }
 
