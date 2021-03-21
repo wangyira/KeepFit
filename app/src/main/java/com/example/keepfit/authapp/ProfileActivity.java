@@ -52,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     StorageReference storageReference;
     String pickey;
     private String username;
+    private String url;
 
     private static final String EMAIL = "email";
     private static final String PREF_FILENAME = "main";
@@ -138,8 +139,8 @@ public class ProfileActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-
-            StorageReference ref = storageReference.child("profilepictures/"+ UUID.randomUUID().toString());
+            url = UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child("profilepictures/"+ url);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -233,7 +234,7 @@ public class ProfileActivity extends AppCompatActivity {
 //            }
 //        });
 
-        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey, username);
+        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey, username, url);
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
         Intent intent = new Intent(ProfileActivity.this, FirebaseMainActivity.class);
         startActivity(intent);
