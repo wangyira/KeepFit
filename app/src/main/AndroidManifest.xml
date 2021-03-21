@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
+        <activity android:name=".SearchResultsActivity"></activity>
         <activity android:name=".authapp.PublicProfile"></activity>
         <activity android:name=".authapp.ProfileActivity"></activity> <!-- <activity -->
         <activity android:name=".MainActivity" />
@@ -28,6 +29,7 @@
         <!-- </activity> -->
 
         <!--            android:name=".authapp.FirebaseMainActivity"-->
+
         <activity
 
             android:name=".calories.CalorieActivity"
@@ -42,8 +44,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".LivestreamActivity" />
         <activity android:name=".authapp.RegisterUser" />
-
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 

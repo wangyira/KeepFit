@@ -3,6 +3,19 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="tag1">Aerobic</string>
+    <string name="tag2">Anaerobic</string>
+    <string name="tag3">Flexibility</string>
+    <string name="tag4">Stability</string>
+
+    <string-array name="tags">
+        <item>@string/tag1</item>
+        <item>@string/tag2</item>
+        <item>@string/tag3</item>
+        <item>@string/tag4</item>
+    </string-array>
+    <string name="like">Like</string>
     <string name="title_activity_login">Welcome!</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
