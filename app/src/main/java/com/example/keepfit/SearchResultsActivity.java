@@ -499,7 +499,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         }*/
 
 
-        String zoomLink = lsRefTitles.get(i-numVideos);
+        String zoomLink = lsZoomLinks.get(i-numVideos);
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
         startActivity(intent);
