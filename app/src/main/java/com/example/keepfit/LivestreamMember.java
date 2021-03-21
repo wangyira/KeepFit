@@ -7,6 +7,7 @@ public class LivestreamMember {
     private String endTime;
     private String zoomLink;
     private String imageUrl;
+    private String referenceTitle;
 
     public LivestreamMember(){
 
@@ -58,5 +59,13 @@ public class LivestreamMember {
 
     public void setImageUrl(String url){
         this.imageUrl = url;
+    }
+    
+    public String getReferenceTitle(){
+        return referenceTitle;
+    }
+    
+    public void setReferenceTitle(String input){
+        this.referenceTitle = input;
     }
 }
