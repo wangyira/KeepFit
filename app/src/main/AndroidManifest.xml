@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
+        <activity android:name=".SearchResultsActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -18,8 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VideoActivity"/>
-        <activity android:name=".LivestreamActivity"/>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".LivestreamActivity" />
     </application>
 
 </manifest>

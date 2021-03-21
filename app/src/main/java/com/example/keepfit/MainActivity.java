@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     int numVideos = 0;
     int numLivestreams = 0;
 
-    ReentrantLock lock = new ReentrantLock();
+
 
 
     @Override
@@ -122,12 +122,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) { search(getString(R.string.tag4)); }
         });
-
-
     }
 
     private void search(String input){
-
+        Intent intent = new Intent(this, SearchResultsActivity.class);
+        intent.putExtra("input",input);
+        startActivity(intent);
     }
 
     private void populate(){
@@ -254,13 +254,48 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+
+                //REMOVE THIS
+                imageButtons.get(numVideos).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openNewActivityLivestream(numVideos);
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+
     }
 
     private void displayThumbnails(){
+
+        //REMOVE THIS!!!!!!!!!!
+        StorageReference storageRefa = FirebaseStorage.getInstance().getReference();
+        StorageReference livestreamRef = storageRefa.child("/livestream_thumbnail_images/6257ec4b-736d-45dd-af2e-313fa7b30b4a.jpg");
+        try{
+            final File llocalFile = File.createTempFile("6257ec4b-736d-45dd-af2e-313fa7b30b4a", "jpg");
+            livestreamRef.getFile(llocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    ImageButton ib = imageButtons.get(numVideos);
+                    Bitmap bm = imgToBitmap(llocalFile);
+                    ib.setImageBitmap(bm);
+                    ib.setVisibility(View.VISIBLE);
+
+                    TextView tv = textViews.get(numVideos);
+                    tv.setText("LIVESTREAM : test");
+                    tv.setVisibility(View.VISIBLE);
+                }
+            });
+        } catch (Exception e){ }
+
+
+
+
+
+
         //titleList now contains titles of all videos (and images)
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -354,8 +389,6 @@ public class MainActivity extends AppCompatActivity {
         textViews.add(findViewById(R.id.item19text));
         textViews.add(findViewById(R.id.item20text));
 
-
-
         for(ImageButton ib : imageButtons){
             ib.setVisibility(View.GONE);
         }
@@ -371,7 +404,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void openNewActivityLivestream(int i){
-        String zoomLink = livestreamZoomLinks.get(i);
+        //REMOVE THIS!!!
+        /*if(i >= numVideos+numLivestreams){
+            String zoomLink = "https://google.com";
+            Intent intent = new Intent(this, LivestreamActivity.class);
+            intent.putExtra("zoomLink", zoomLink);
+            startActivity(intent);
+            return;
+        }*/
+
+
+        String zoomLink = livestreamZoomLinks.get(i-numVideos);
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
         startActivity(intent);

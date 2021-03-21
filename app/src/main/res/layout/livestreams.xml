@@ -32,6 +32,14 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   Redirecting \n to Livestream.."
+                android:textColor="#FFFFFF"
+                android:layout_gravity="center"
+                android:textSize="30dp" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
