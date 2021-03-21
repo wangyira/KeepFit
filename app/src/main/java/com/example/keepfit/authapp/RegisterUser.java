@@ -137,6 +137,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                                 editor.putString(EMAIL, email);
                                                 editor.commit();
                                                 Intent intent = new Intent(RegisterUser.this, ProfileActivity.class);
+                                                intent.putExtra("username", name);
                                                 startActivity(intent);
                                                 //setContentView(R.layout.activity_profile);
                                                 //redirect user to profile

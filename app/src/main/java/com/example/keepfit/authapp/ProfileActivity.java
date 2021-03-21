@@ -24,7 +24,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -46,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     String pickey;
+    private String username;
 
     private static final String EMAIL = "email";
     private static final String PREF_FILENAME = "main";
@@ -60,6 +66,10 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpload = findViewById(R.id.btnUpload);
         btnSave = findViewById(R.id.btnSave);
         imageView = findViewById(R.id.imgView);
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b!=null) username = (String) b.get("username");
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,34 +191,49 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
         if(birthday.length() < 8) {
-            editTextBirthday.setError("Valid Birthday is required!");
+            editTextBirthday.setError("Valid birthday is required!");
             editTextBirthday.requestFocus();
             return;
         }
-        /*
-        if((gender != "Male") && (gender != "Female") && (gender != "Non binary")){
+        if(gender == null){
             editTextGender.setError("Enter Male, Female or Non binary!");
             editTextGender.requestFocus();
             return;
         }
 
-        if(weight.matches("[0-9]+") && weight.length() > 1){
-            editTextWeight.setError("Valid Weight is required!");
+        if(android.text.TextUtils.isDigitsOnly(weight)){
+            editTextWeight.setError("Valid weight is required!");
             editTextWeight.requestFocus();
             return;
         }
 
-        if(height.matches("[0-9]+") && height.length() > 1 && height.length() < 3){
-            editTextHeight.setError("Valid Height is required!");
+        if(android.text.TextUtils.isDigitsOnly(height)){
+            editTextHeight.setError("Valid height is required!");
             editTextHeight.requestFocus();
             return;
         }
-        */
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         String sharedemail = sharedPreferences.getString(EMAIL, "");
 
-        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey);
+//        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+//
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                //User user = snapshot.getValue(User.class);
+//                //username = user.getUsername();
+//                username = (String) snapshot.child("username").getValue();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey, username);
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
         Intent intent = new Intent(ProfileActivity.this, FirebaseMainActivity.class);
         startActivity(intent);
