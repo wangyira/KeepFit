@@ -2,13 +2,20 @@ package com.example.keepfit;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,25 +24,45 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
+    ArrayList<TextView> textViews = new ArrayList<TextView>();
+    ArrayList<String> referenceTitleList = new ArrayList<String>();
+    ArrayList<String> displayTitleList = new ArrayList<String>();
+    int numVideos = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*BottomNavigationView navView = findViewById(R.id.nav_view);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -43,10 +70,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);*/
+        NavigationUI.setupWithNavController(navView, navController);
 
 
         populate();
+
 
         //set button listeners
         ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
@@ -64,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 search(input);
             }
         });
+
 
         preset1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) { search(getString(R.string.tag4)); }
         });
+
+
     }
 
     private void search(String input){
@@ -91,22 +122,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populate(){
-        ArrayList<TextView> itemTextViews = addItemstoArrayandMakeInvisible();
-
-        /*DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Video References");
-        Query query = database.orderByKey().limitToFirst(20);
-        query.on("child_added", function(data)=>{
-
-        });*/
+        addItemstoArrayandMakeInvisible();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Video References");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //arraylist to hold all titles to be put on screen
-                ArrayList<String> titleList = new ArrayList<String>();
-
                 //map to hold all video references from database
                 GenericTypeIndicator<Map<String, Map<String, String>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Map<String, String> >>() {};
                 Map<String, Map<String, String>> allVideosMap = snapshot.getValue(genericTypeIndicator);
@@ -116,71 +138,188 @@ public class MainActivity extends AppCompatActivity {
                 for(Map.Entry<String, Map<String, String>> entry : allVideosMap.entrySet()){
                     Map<String, String> videoMap = entry.getValue();
                     for(Map.Entry<String, String> data : videoMap.entrySet()){
-                        if(data.getKey().equals("\"reference title\"")){
-                            if(titleList.size() < 20) {
-                                titleList.add(data.getValue());
-                                break;
+                        if(data.getKey().equals("reference title")){
+
+                            if(numVideos < 20) {
+                                referenceTitleList.add(data.getValue());
+                                numVideos++;
+                            }
+                        }
+                        else if(data.getKey().equals("title")){
+                            if(numVideos < 20){
+                                displayTitleList.add(data.getValue());
                             }
                         }
                     }
-                    if(titleList.size() >= 20){break;}
+                    if(numVideos >= 20){break;}
                 }
                 //titleList now contains titles of videos (and images) to be displayed
 
-                //for now, just display the titles
-                /*Iterator<String> itTitle = titleList.iterator();
-                for(TextView tv : itemTextViews){
-                    if(!itTitle.hasNext()){break;}
-                    tv.setText(itTitle.toString());
-                    tv.setVisibility(View.VISIBLE);
-                    itTitle.remove();
-                }*/
-                int i=0;
-                for(String title : titleList){
-                    TextView tv = itemTextViews.get(i);
-                    tv.setText(title);
-                    tv.setVisibility(View.VISIBLE);
-                    i++;
-                    if(i>20){break;}
+                displayThumbnails();
+
+                for(int i=0; i < numVideos; i++){
+                    final int j = i;
+                    imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openNewActivityVideo(j);
+                        }
+                    });
                 }
-
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
-    private ArrayList<TextView> addItemstoArrayandMakeInvisible(){
-        ArrayList<TextView> itemTextViews = new ArrayList<TextView>();
-        itemTextViews.add(findViewById(R.id.item1));
-        itemTextViews.add(findViewById(R.id.item2));
-        itemTextViews.add(findViewById(R.id.item3));
-        itemTextViews.add(findViewById(R.id.item4));
-        itemTextViews.add(findViewById(R.id.item5));
-        itemTextViews.add(findViewById(R.id.item6));
-        itemTextViews.add(findViewById(R.id.item7));
-        itemTextViews.add(findViewById(R.id.item8));
-        itemTextViews.add(findViewById(R.id.item9));
-        itemTextViews.add(findViewById(R.id.item10));
-        itemTextViews.add(findViewById(R.id.item11));
-        itemTextViews.add(findViewById(R.id.item12));
-        itemTextViews.add(findViewById(R.id.item13));
-        itemTextViews.add(findViewById(R.id.item14));
-        itemTextViews.add(findViewById(R.id.item15));
-        itemTextViews.add(findViewById(R.id.item16));
-        itemTextViews.add(findViewById(R.id.item17));
-        itemTextViews.add(findViewById(R.id.item18));
-        itemTextViews.add(findViewById(R.id.item19));
-        itemTextViews.add(findViewById(R.id.item20));
+    private void displayThumbnails(){
+        //titleList now contains titles of all videos (and images)
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-        for(TextView tv : itemTextViews){
-            tv.setVisibility(View.GONE);
+        for(int i=0; i < numVideos; i++){
+            Log.d("myTag", "/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(referenceTitleList.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j);
+
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j);
+                        tv.setText(displayTitleList.get(j));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch(Exception e) { }
         }
-        return itemTextViews;
     }
 
+
+    private void addItemstoArrayandMakeInvisible(){
+        imageButtons.add(findViewById(R.id.item1button));
+        imageButtons.add(findViewById(R.id.item2button));
+        imageButtons.add(findViewById(R.id.item3button));
+        imageButtons.add(findViewById(R.id.item4button));
+        imageButtons.add(findViewById(R.id.item5button));
+        imageButtons.add(findViewById(R.id.item6button));
+        imageButtons.add(findViewById(R.id.item7button));
+        imageButtons.add(findViewById(R.id.item8button));
+        imageButtons.add(findViewById(R.id.item9button));
+        imageButtons.add(findViewById(R.id.item10button));
+        imageButtons.add(findViewById(R.id.item11button));
+        imageButtons.add(findViewById(R.id.item12button));
+        imageButtons.add(findViewById(R.id.item13button));
+        imageButtons.add(findViewById(R.id.item14button));
+        imageButtons.add(findViewById(R.id.item15button));
+        imageButtons.add(findViewById(R.id.item16button));
+        imageButtons.add(findViewById(R.id.item17button));
+        imageButtons.add(findViewById(R.id.item18button));
+        imageButtons.add(findViewById(R.id.item19button));
+        imageButtons.add(findViewById(R.id.item20button));
+
+        textViews.add(findViewById(R.id.item1text));
+        textViews.add(findViewById(R.id.item2text));
+        textViews.add(findViewById(R.id.item3text));
+        textViews.add(findViewById(R.id.item4text));
+        textViews.add(findViewById(R.id.item5text));
+        textViews.add(findViewById(R.id.item6text));
+        textViews.add(findViewById(R.id.item7text));
+        textViews.add(findViewById(R.id.item8text));
+        textViews.add(findViewById(R.id.item9text));
+        textViews.add(findViewById(R.id.item10text));
+        textViews.add(findViewById(R.id.item11text));
+        textViews.add(findViewById(R.id.item12text));
+        textViews.add(findViewById(R.id.item13text));
+        textViews.add(findViewById(R.id.item14text));
+        textViews.add(findViewById(R.id.item15text));
+        textViews.add(findViewById(R.id.item16text));
+        textViews.add(findViewById(R.id.item17text));
+        textViews.add(findViewById(R.id.item18text));
+        textViews.add(findViewById(R.id.item19text));
+        textViews.add(findViewById(R.id.item20text));
+
+
+
+        for(ImageButton ib : imageButtons){
+            ib.setVisibility(View.GONE);
+        }
+        for(TextView tv : textViews){
+            tv.setVisibility(View.GONE);
+        }
+    }
+
+    public void openNewActivityVideo(int i){
+        String referenceTitle = referenceTitleList.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+    public void openNewActivityLivestream(){
+        Intent intent = new Intent(this, LivestreamActivity.class);
+        startActivity(intent);
+    }
+
+    private Bitmap imgToBitmap(File file){
+        byte[] bytes = null;
+        try{
+
+
+            FileInputStream fis = new FileInputStream(file);
+            //create FileInputStream which obtains input bytes from a file in a file system
+            //FileInputStream is meant for reading streams of raw bytes such as image data. For reading streams of characters, consider using FileReader.
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            try {
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    //Writes to this byte array output stream
+                    bos.write(buf, 0, readNum);
+                    System.out.println("read " + readNum + " bytes,");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MainActivity.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            bytes = bos.toByteArray();
+        } catch(FileNotFoundException fnfe){
+            AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
+            videoDialog.setTitle("ERROR: fnfe.");
+
+            String[] pictureDialogItems = {
+                    "OK"};
+            videoDialog.setItems(pictureDialogItems,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+            videoDialog.show();
+        }
+
+        ByteArrayInputStream imageStream = null;
+
+        try {
+            imageStream = new ByteArrayInputStream(bytes);
+            return BitmapFactory.decodeStream(imageStream);
+        }
+        catch (Exception ex) {
+            Log.d("My Activity", "Unable to generate a bitmap: " + ex.getMessage());
+            return null;
+        }
+        finally {
+            if (imageStream != null) {
+                try { imageStream.close(); }
+                catch (Exception ex) {}
+            }
+        }
+    }
 
 }
