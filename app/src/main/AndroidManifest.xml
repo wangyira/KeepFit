@@ -2,16 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.keepfit">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="KeepFit"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".authapp.ProfileActivity"></activity>
+        <activity android:name=".authapp.ProfileActivity">
+
+        </activity>
+
         <!-- <activity -->
+        <activity android:name="MainActivity"></activity>
+        <activity android:name=".authapp.ForgotPassword" />
+        <activity android:name=".authapp.ProfileActivityEdits" />
+       <!-- <activity -->
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->
@@ -21,7 +32,6 @@
         <!-- </activity> -->
 
         <!--            android:name=".authapp.FirebaseMainActivity"-->
-
         <activity
             android:name=".StartLivestreamActivity"
             android:label="KeepFit">
