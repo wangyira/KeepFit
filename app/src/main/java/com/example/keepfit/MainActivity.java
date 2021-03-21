@@ -53,7 +53,10 @@ import java.util.logging.Logger;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
+    ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>(); //for profile pic of user who uploaded vid
     ArrayList<TextView> textViews = new ArrayList<TextView>();
+    ArrayList<TextView> textViewsProfile = new ArrayList<TextView>(); //for username of person who uploaded vid
+    ArrayList<Button> likes = new ArrayList<Button>(); //for clicks
 
     ArrayList<String> referenceTitleList = new ArrayList<String>();
     ArrayList<String> displayTitleList = new ArrayList<String>();
@@ -389,11 +392,83 @@ public class MainActivity extends AppCompatActivity {
         textViews.add(findViewById(R.id.item19text));
         textViews.add(findViewById(R.id.item20text));
 
+        imageButtonsProfile.add(findViewById(R.id.item1user));
+        imageButtonsProfile.add(findViewById(R.id.item2user));
+        imageButtonsProfile.add(findViewById(R.id.item3user));
+        imageButtonsProfile.add(findViewById(R.id.item4user));
+        imageButtonsProfile.add(findViewById(R.id.item5user));
+        imageButtonsProfile.add(findViewById(R.id.item6user));
+        imageButtonsProfile.add(findViewById(R.id.item7user));
+        imageButtonsProfile.add(findViewById(R.id.item8user));
+        imageButtonsProfile.add(findViewById(R.id.item9user));
+        imageButtonsProfile.add(findViewById(R.id.item10user));
+        imageButtonsProfile.add(findViewById(R.id.item11user));
+        imageButtonsProfile.add(findViewById(R.id.item12user));
+        imageButtonsProfile.add(findViewById(R.id.item13user));
+        imageButtonsProfile.add(findViewById(R.id.item14user));
+        imageButtonsProfile.add(findViewById(R.id.item15user));
+        imageButtonsProfile.add(findViewById(R.id.item16user));
+        imageButtonsProfile.add(findViewById(R.id.item17user));
+        imageButtonsProfile.add(findViewById(R.id.item18user));
+        imageButtonsProfile.add(findViewById(R.id.item19user));
+        imageButtonsProfile.add(findViewById(R.id.item20user));
+
+        textViewsProfile.add(findViewById(R.id.item1username));
+        textViewsProfile.add(findViewById(R.id.item2username));
+        textViewsProfile.add(findViewById(R.id.item3username));
+        textViewsProfile.add(findViewById(R.id.item4username));
+        textViewsProfile.add(findViewById(R.id.item5username));
+        textViewsProfile.add(findViewById(R.id.item6username));
+        textViewsProfile.add(findViewById(R.id.item7username));
+        textViewsProfile.add(findViewById(R.id.item8username));
+        textViewsProfile.add(findViewById(R.id.item9username));
+        textViewsProfile.add(findViewById(R.id.item10username));
+        textViewsProfile.add(findViewById(R.id.item11username));
+        textViewsProfile.add(findViewById(R.id.item12username));
+        textViewsProfile.add(findViewById(R.id.item13username));
+        textViewsProfile.add(findViewById(R.id.item14username));
+        textViewsProfile.add(findViewById(R.id.item15username));
+        textViewsProfile.add(findViewById(R.id.item16username));
+        textViewsProfile.add(findViewById(R.id.item17username));
+        textViewsProfile.add(findViewById(R.id.item18username));
+        textViewsProfile.add(findViewById(R.id.item19username));
+        textViewsProfile.add(findViewById(R.id.item20username));
+
+        likes.add(findViewById(R.id.item1like));
+        likes.add(findViewById(R.id.item2like));
+        likes.add(findViewById(R.id.item3like));
+        likes.add(findViewById(R.id.item4like));
+        likes.add(findViewById(R.id.item5like));
+        likes.add(findViewById(R.id.item6like));
+        likes.add(findViewById(R.id.item7like));
+        likes.add(findViewById(R.id.item8like));
+        likes.add(findViewById(R.id.item9like));
+        likes.add(findViewById(R.id.item10like));
+        likes.add(findViewById(R.id.item11like));
+        likes.add(findViewById(R.id.item12like));
+        likes.add(findViewById(R.id.item13like));
+        likes.add(findViewById(R.id.item14like));
+        likes.add(findViewById(R.id.item15like));
+        likes.add(findViewById(R.id.item16like));
+        likes.add(findViewById(R.id.item17like));
+        likes.add(findViewById(R.id.item18like));
+        likes.add(findViewById(R.id.item19like));
+        likes.add(findViewById(R.id.item20like));
+ 
         for(ImageButton ib : imageButtons){
             ib.setVisibility(View.GONE);
         }
         for(TextView tv : textViews){
             tv.setVisibility(View.GONE);
+        }
+        for(ImageButton ib : imageButtonsProfile){
+            ib.setVisibility(View.GONE);
+        }
+        for(TextView tv : textViewsProfile){
+            tv.setVisibility(View.GONE);
+        }
+        for(Button l : likes){
+            l.setVisibility(View.GONE);
         }
     }
 
@@ -419,6 +494,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("zoomLink", zoomLink);
         startActivity(intent);
     }
+    public void openNewActivityProfile(int i){
+        //Todo: start Profile activity for user who uploaded video
+    }
+    private void like(int i){
+        //TODO: set likes in user database
+
+    }
+
 
     private Bitmap imgToBitmap(File file){
         byte[] bytes = null;
