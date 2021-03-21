@@ -41,6 +41,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'com.google.firebase:firebase-database:19.7.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -50,7 +51,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     implementation 'com.google.firebase:firebase-firestore'
     implementation "androidx.multidex:multidex:2.0.1"
-    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.android.volley:volley:1.2.0'
-    implementation 'com.google.firebase:firebase-storage:9.2.1'
 }
