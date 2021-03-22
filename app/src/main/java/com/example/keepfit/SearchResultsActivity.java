@@ -11,14 +11,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -73,6 +77,42 @@ public class SearchResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+
+        //navbar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set search selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_search);
+
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_search:
+                        return true;
+                    case R.id.nav_calorie:
+                        startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_livestream:
+                        startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
 
         String input = new String();
         //get input
@@ -251,7 +291,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numVideos < (20-numProfiles-numLivestreams)) {
                                     Log.d("myTag", "###33333");
-                                    videoRefTitles.add(entry.getKey());
+                                    videoRefTitles.add(entry.getValue().get("reference title"));
                                     videoDispTitles.add(entry.getValue().get("title"));
                                     numVideos++;
                                 }
@@ -350,6 +390,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         for(int i=0; i < numVideos; i++) {
             Log.d("storage", "^^^^^^");
+            Log.d("storage", "/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
                 final int j = i;
@@ -362,6 +403,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
+
+                        Log.d("disDebug", "displaying video");
 
                         TextView tv = textViews.get(j);
                         tv.setText(videoDispTitles.get(j));
@@ -499,7 +542,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         }*/
 
 
-        String zoomLink = lsRefTitles.get(i-numVideos);
+        String zoomLink = lsZoomLinks.get(i-numVideos);
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
         startActivity(intent);

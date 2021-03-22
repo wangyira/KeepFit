@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,10 +29,15 @@ import android.widget.VideoView;
 import com.example.keepfit.MainActivity;
 import com.example.keepfit.R;
 import com.example.keepfit.VideoActivity;
+import com.example.keepfit.StartLivestreamActivity;
+import com.example.keepfit.VideoActivity;
+import com.example.keepfit.VideoUploadActivity;
+import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -104,6 +110,54 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         //mAuth = FirebaseAuth.getInstance();
+
+        //navbar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set account selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_account);
+
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        return true;
+                    case R.id.nav_search:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_calorie:
+                        startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_livestream:
+                        startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+//        btnChoose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
 
         btnEditName.setOnClickListener(new View.OnClickListener() {
             @Override

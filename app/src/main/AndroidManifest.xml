@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.keepfit">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,13 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".SearchResultsActivity" />
-        <activity android:name=".authapp.PublicProfile" />
-        <activity android:name=".authapp.ProfileActivity" /> <!-- <activity -->
-        <!--<activity android:name=".MainActivity" /> -->
+        <activity android:name=".SearchResultsActivity"></activity>
+        <activity android:name=".authapp.PublicProfile"></activity>
+        <activity android:name=".authapp.ProfileActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".authapp.ForgotPassword" />
         <activity android:name=".authapp.ProfileActivityEdits" />
-        <activity android:name=".authapp.ScrollingActivity" /> <!-- <activity -->
+        <activity android:name=".authapp.ScrollingActivity" />
+        <activity android:name=".calories.CalorieActivity" />
+        <activity android:name=".VideoActivity"/>
+        <activity android:name=".VideoUploadActivity"/>
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->
@@ -32,25 +34,28 @@
         <!--            android:name=".authapp.FirebaseMainActivity"-->
 
 
-        <activity
 
-            android:name="MainActivity"
+
+            android:name=".MainActivity"
             android:label="@string/app_name">
 
-      <!--
+<!--            android:name="MainActivity"-->
+<!--            android:label="@string/app_name">-->
+
+        <activity
             android:name=".StartLivestreamActivity"
-            android:label="KeepFit"> -->
+            android:label="KeepFit">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VideoActivity" />
         <activity android:name=".LivestreamActivity" />
         <activity android:name=".authapp.RegisterUser" />
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

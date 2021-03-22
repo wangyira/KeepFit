@@ -3,6 +3,7 @@ package com.example.keepfit;
 import android.graphics.Bitmap;
 import android.icu.text.SymbolTable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -69,15 +72,41 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_livestream);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+
+        //navbar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set startlivestream selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_livestream);
+
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(),ProfileActivityEdits.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_search:
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_calorie:
+                        startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_livestream:
+                        return true;
+                }
+                return false;
+            }
+        });
+
 
 //        above copied from MainActivity.java
         title = findViewById(R.id.livestream_title);

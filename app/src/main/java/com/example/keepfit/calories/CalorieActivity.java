@@ -1,7 +1,13 @@
 package com.example.keepfit.calories;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.keepfit.MainActivity;
+import com.example.keepfit.StartLivestreamActivity;
+import com.example.keepfit.VideoActivity;
+import com.example.keepfit.VideoUploadActivity;
+import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -69,7 +76,7 @@ public class CalorieActivity extends AppCompatActivity {
     DatabaseReference mConditionRef4 = mConditionRef.child("Stability");
     */
 
-    DatabaseReference mConditionRef = mRootRef.child("CaloriesTable").child("User1");
+    DatabaseReference mConditionRef = mRootRef.child("CaloriesTable");
 
 
 
@@ -98,15 +105,20 @@ public class CalorieActivity extends AppCompatActivity {
     public class METValue {
 
         public String username;
-        public double myValue;
+        public double myCaloriesBurned;
+        public double myTime;
+        public String exerciseTitle;
 
         public METValue() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public METValue(String username, double myValue) {
+        public METValue(String username, double myCaloriesBurned, double myTime, String exerciseTitle) {
             this.username = username;
-            this.myValue = myValue;
+            this.myCaloriesBurned = myCaloriesBurned;
+            this.myTime = myTime;
+            this.exerciseTitle = exerciseTitle;
+
         }
 
     }
@@ -116,17 +128,39 @@ public class CalorieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calorie);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        //navbar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        //Set calorie selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_calorie);
 
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_search:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_calorie:
+                        return true;
+                    case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_livestream:
+                        startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
 
 
 
@@ -219,9 +253,9 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
 
-                        mConditionRef.setValue(myMETValue);
+                        mConditionRef.push().setValue(myMETValue);
                     }
 
                     @Override
@@ -275,9 +309,9 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
 
-                        mConditionRef.setValue(myMETValue);
+                        mConditionRef.push().setValue(myMETValue);
 
                     }
 
