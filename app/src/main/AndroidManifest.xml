@@ -52,6 +52,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".LivestreamActivity" />
+        <activity android:name=".StartLivestreamActivity" />
+
         <activity android:name=".authapp.RegisterUser" />
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
