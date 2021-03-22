@@ -4,6 +4,11 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <!--<string name="preference_file_username">username</string>-->
+    <!--<string name="preference_file_email">email</string>-->
+    <!--<string name="preference_file_weight">weight</string>-->
+    <!--<string name="preference_file_referenceTitle">reference title</string>-->
+
     <string-array name="tagEntries">
         <item>@string/tag1</item>
         <item>@string/tag2</item>

@@ -1,5 +1,6 @@
 package com.example.keepfit.authapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -135,10 +136,11 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                                 SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putString(EMAIL, email);
-                                                editor.commit();
+                                                //editor.putString("username", name);
+                                                editor.apply();
                                                 Intent intent = new Intent(RegisterUser.this, ProfileActivity.class);
                                                 intent.putExtra("username", name);
-                                                startActivity(intent);
+
                                                 //setContentView(R.layout.activity_profile);
                                                 //redirect user to profile
                                             }
