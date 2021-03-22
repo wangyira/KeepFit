@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -234,6 +235,16 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     String imgLink = info.pickey;
                     String username = info.username;
                     String email = info.email;
+                    String referenceTitle = info.referenceTitle;
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("main", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("referenceTitle", referenceTitle);
+                    editor.putString("weight", weight);
+                    editor.putString("username", username);
+                    editor.putString("email", email);
+                    editor.apply();
+                    //editor.commit();
 
                     Picasso.get().load(imgLink).into(profilePicture);
 

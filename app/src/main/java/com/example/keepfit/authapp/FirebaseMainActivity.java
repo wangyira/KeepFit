@@ -1,6 +1,7 @@
 package com.example.keepfit.authapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,11 +20,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 public class FirebaseMainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView register, forgotPass;
     private Button login;
     private EditText editTextEmail, editTextPassword;
+    String username = new String();
 
     //private ProgressBar progressBar;
     private FirebaseAuth mAuth;
@@ -96,12 +105,19 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
 
         //progressBar.setVisibility(View.VISIBLE);
 
+
+
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     //redirect to user profile
                     //startActivity(new Intent(FirebaseMainActivity.this, PublicProfile.class));
+                    //getUsername(email);
+                    //SharedPreferences sharedPreferences = getSharedPreferences("main", MODE_PRIVATE);
+                    //SharedPreferences.Editor editor = sharedPreferences.edit();
+                    //editor.putString("username", username);
+                    //editor.apply();
                     startActivity(new Intent(FirebaseMainActivity.this, ProfileActivityEdits.class));
                 }
                 else{
@@ -110,5 +126,21 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
+    }
+
+    private void getUsername(String email){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("UserInformation");
+        myRef.orderByChild("email").equalTo(email)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, String> data = (Map<String, String>) snapshot.getValue();
+                        username = data.get("username");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
     }
 }

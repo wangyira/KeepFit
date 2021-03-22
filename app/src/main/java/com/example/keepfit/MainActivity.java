@@ -1,8 +1,10 @@
 package com.example.keepfit;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -234,6 +236,15 @@ public class MainActivity extends AppCompatActivity {
                                 Bitmap bm = imgToBitmap(localFile);
                                 ib.setImageBitmap(bm);
                                 ib.setVisibility(View.VISIBLE);
+
+                                //TextView tv1 = textViewsProfile.get(j);
+
+                                //SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                                //String username = sharedPref.getString("username", null);
+
+
+                                //tv1.setText(username);
+                                //tv1.setVisibility(View.VISIBLE);
 
                                 TextView tv = textViews.get(j);
                                 tv.setText(displayTitleList.get(j));
