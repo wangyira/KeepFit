@@ -70,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
     int numVideos = 0;
     int numLivestreams = 0;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         populate();
 
