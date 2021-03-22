@@ -8,22 +8,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="0dp"
-    android:padding="16dp"
     android:orientation="vertical"
     android:layout_gravity="center"
+
     tools:context=".authapp.ProfileActivityEdits">
 
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/nav_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="0dp"-->
+<!--        android:layout_marginEnd="0dp"-->
+<!--        android:background="?android:attr/windowBackground"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:menu="@menu/new_bottom_navigation" />-->
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        android:id="@+id/bottom_navigation"
+        android:layout_width="402dp"
+        android:layout_height="54dp"
+        android:padding="0dp"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/new_bottom_navigation" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -105,6 +116,7 @@
                         android:layout_height="wrap_content"
                         android:text="Username:"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                 </LinearLayout>
@@ -125,6 +137,7 @@
                         android:layout_height="wrap_content"
                         android:text="Email:"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                 </LinearLayout>
@@ -145,6 +158,7 @@
                         android:layout_height="wrap_content"
                         android:text="Name:"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -172,6 +186,7 @@
                         android:layout_height="wrap_content"
                         android:text="Phone Number: "
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -198,6 +213,7 @@
                         android:layout_height="wrap_content"
                         android:text="Birthday"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -224,6 +240,7 @@
                         android:layout_height="wrap_content"
                         android:text="Gender"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -250,6 +267,7 @@
                         android:layout_height="wrap_content"
                         android:text="Weight"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -276,6 +294,7 @@
                         android:layout_height="wrap_content"
                         android:text="Height"
                         android:textSize="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="@color/colorPrimaryDark"/>
 
                     <Button
@@ -346,7 +365,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"

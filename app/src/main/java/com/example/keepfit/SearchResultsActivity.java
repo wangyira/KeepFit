@@ -11,14 +11,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,6 +77,41 @@ public class SearchResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set search selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_search);
+
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_search:
+                        return true;
+                    case R.id.nav_calorie:
+                        startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_livestream:
+                        startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
 
         String input = new String();
         //get input
