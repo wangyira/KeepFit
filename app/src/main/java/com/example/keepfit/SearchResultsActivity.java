@@ -78,6 +78,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
+        //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //Set search selected

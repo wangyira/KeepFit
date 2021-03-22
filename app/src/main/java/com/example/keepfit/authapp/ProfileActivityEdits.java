@@ -93,9 +93,10 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         storageReference = storage.getReference();
         //mAuth = FirebaseAuth.getInstance();
 
+        //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //Set search selected
+        //Set account selected
         bottomNavigationView.setSelectedItemId(R.id.nav_account);
 
         //perform itemselectedlistener
