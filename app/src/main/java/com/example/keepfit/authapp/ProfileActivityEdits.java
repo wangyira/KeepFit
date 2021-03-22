@@ -69,7 +69,7 @@ import java.util.logging.Logger;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout;
+    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded;
     private ImageView imageView;
 
     private Uri filePath;
@@ -81,9 +81,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     ArrayList<String> videoRefTitles = new ArrayList<String>();
     ArrayList<String> videoDispTitles = new ArrayList<String>();
+    ArrayList<String> videoRefTitles1 = new ArrayList<String>();
+    ArrayList<String> videoDispTitles1 = new ArrayList<String>();
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
-    int numVideos;
+    //int numVideos;
+    int numUploadedVideos;
+    int numLikedVideos;
 
     String which = "";
 
@@ -108,8 +112,15 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnChangePass = findViewById(R.id.btnchangepass);
         btnLogout = findViewById(R.id.btnlogout);
 
+        btnviewLiked = findViewById(R.id.viewLikedVideos);
+        //btnviewDisliked = findViewById(R.id.viewDisliked);
+        btnviewUploaded = findViewById(R.id.viewUploaded);
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+        numUploadedVideos = 0;
+        numLikedVideos = 0;
         //mAuth = FirebaseAuth.getInstance();
 
         //navbar
@@ -224,6 +235,32 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
+        addItemstoArray();
+        makeInvisible();
+
+
+        btnviewLiked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search(1);
+            }
+        });
+
+//        btnviewDisliked.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                search(2);
+//            }
+//        });
+
+        btnviewUploaded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search(2);
+            }
+        });
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         dbreference = FirebaseDatabase.getInstance().getReference("UserInformation");
         userId = user.getUid();
@@ -331,35 +368,35 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        addItemstoArray();
-        makeInvisible();
+
+
 
         //video1 = (ImageButton) findViewById(R.id.imageButton1);
-        video2 = (ImageButton) findViewById(R.id.imageButton2);
-        video3 = (ImageButton) findViewById(R.id.imageButton3);
-        video1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(video)
-                search();
-            }
-        });
+        //video2 = (ImageButton) findViewById(R.id.imageButton2);
+        //video3 = (ImageButton) findViewById(R.id.imageButton3);
+//        video1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //if(video)
+//                search();
+//            }
+//        });
 
-        video2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(video)
-                openNewActivity();
-            }
-        });
-
-        video3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(video)
-                openNewActivity();
-            }
-        });
+//        video2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //if(video)
+//                openNewActivity();
+//            }
+//        });
+//
+//        video3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //if(video)
+//                openNewActivity();
+//            }
+//        });
     }
 
     public void openNewActivity(){
@@ -379,27 +416,39 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(which).setValue(edits);
     }
 
-    private void search(){
-        getVideoResultsbyTitle();
-    }
+    private void search(int i){
+        //liked videos
+        if(i == 1){
+            getLikedVideos();
+        }
+        //uploaded videos
+        else if(i == 2){
+            getVideoResultsbyTitle();
+        }
 
+        //getVideoResultsbyTitle();
+    }
+    //uploaded videos
     private void getVideoResultsbyTitle(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Video References");
-        String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
-        ref.orderByChild("username").equalTo(uidusername).limitToFirst(20)
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        //String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
+        ref.orderByChild("uploadingUser").equalTo(username).limitToFirst(10)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                videoRefTitles.add(entry.getKey());
+                                videoRefTitles.add(entry.getValue().get("reference title"));
                                 videoDispTitles.add(entry.getValue().get("title"));
+                                numUploadedVideos++;
                             }
                         }
-                        displayResults();
-                        numVideos = results.entrySet().size();
+                        displayResultsUploaded();
+                        //numVideos = results.entrySet().size();
                     }
 
                     @Override
@@ -407,10 +456,39 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 });
     }
 
-    private void displayResults(){
-        for(int i=0; i < 20; i++){
+    //liked videos
+    private void getLikedVideos(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Likes");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        //String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
+        ref.orderByChild("uploadingUser").equalTo(username).limitToFirst(10)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                videoRefTitles1.add(entry.getValue().get("reference title"));
+                                videoDispTitles1.add(entry.getValue().get("title"));
+                                numLikedVideos++;
+                            }
+                        }
+                        displayResultsUploaded();
+                        //numVideos = results.entrySet().size();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
+//display uploaded
+    private void displayResultsUploaded(){
+        for(int i=0; i < numUploadedVideos; i++){
             final int j = i;
-            imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+            imageButtons.get(i+10).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("myTag", "@@@@@@@");
@@ -420,11 +498,50 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         }
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        for(int i=0; i < numVideos; i++) {
+        for(int i=0; i < numUploadedVideos; i++) {
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
                 final int j = i;
                 final File localFile = File.createTempFile(videoRefTitles.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j+10);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j+10);
+                        tv.setText(videoDispTitles.get(j));
+                        tv.setVisibility(View.VISIBLE);
+
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    //get liked videos
+    private void displayLikedVideos(){
+        for(int i=0; i < numLikedVideos; i++){
+            final int j = i;
+            imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("myTag", "@@@@@@@");
+                    openNewActivityVideoLiked(j);
+                }
+            });
+        }
+        //display video results
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        for(int i=0; i < numLikedVideos; i++) {
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles1.get(i) + ".jpg");
+            try {
+                final int j = i;
+                final File localFile = File.createTempFile(videoRefTitles1.get(i), "jpg");
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -435,8 +552,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         ib.setVisibility(View.VISIBLE);
 
                         TextView tv = textViews.get(j);
-                        tv.setText(videoDispTitles.get(j));
+                        tv.setText(videoDispTitles1.get(j));
                         tv.setVisibility(View.VISIBLE);
+
                     }
                 });
             } catch (Exception e) {
@@ -509,16 +627,29 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         imageButtons.add(findViewById(R.id.item8btn));
         imageButtons.add(findViewById(R.id.item9btn));
         imageButtons.add(findViewById(R.id.item10btn));
-//        imageButtons.add(findViewById(R.id.item11btn));
-//        imageButtons.add(findViewById(R.id.item12btn));
-//        imageButtons.add(findViewById(R.id.item13button));
-//        imageButtons.add(findViewById(R.id.item14button));
-//        imageButtons.add(findViewById(R.id.item15button));
-//        imageButtons.add(findViewById(R.id.item16button));
-//        imageButtons.add(findViewById(R.id.item17button));
-//        imageButtons.add(findViewById(R.id.item18button));
-//        imageButtons.add(findViewById(R.id.item19button));
-//        imageButtons.add(findViewById(R.id.item20button));
+
+//        imageButtons.add(findViewById(R.id.ditem1btn));
+//        imageButtons.add(findViewById(R.id.ditem2btn));
+//        imageButtons.add(findViewById(R.id.ditem3btn));
+//        imageButtons.add(findViewById(R.id.ditem4btn));
+//        imageButtons.add(findViewById(R.id.ditem5btn));
+//        imageButtons.add(findViewById(R.id.ditem6btn));
+//        imageButtons.add(findViewById(R.id.ditem7btn));
+//        imageButtons.add(findViewById(R.id.ditem8btn));
+//        imageButtons.add(findViewById(R.id.ditem9btn));
+//        imageButtons.add(findViewById(R.id.ditem10btn));
+
+        imageButtons.add(findViewById(R.id.uitem1btn));
+        imageButtons.add(findViewById(R.id.uitem2btn));
+        imageButtons.add(findViewById(R.id.uitem3btn));
+        imageButtons.add(findViewById(R.id.uitem4btn));
+        imageButtons.add(findViewById(R.id.uitem5btn));
+        imageButtons.add(findViewById(R.id.uitem6btn));
+        imageButtons.add(findViewById(R.id.uitem7btn));
+        imageButtons.add(findViewById(R.id.uitem8btn));
+        imageButtons.add(findViewById(R.id.uitem9btn));
+        imageButtons.add(findViewById(R.id.uitem10btn));
+
 
         textViews.add(findViewById(R.id.item1txt));
         textViews.add(findViewById(R.id.item2txt));
@@ -530,16 +661,29 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         textViews.add(findViewById(R.id.item8txt));
         textViews.add(findViewById(R.id.item9txt));
         textViews.add(findViewById(R.id.item10txt));
-//        textViews.add(findViewById(R.id.item11text));
-//        textViews.add(findViewById(R.id.item12text));
-//        textViews.add(findViewById(R.id.item13text));
-//        textViews.add(findViewById(R.id.item14text));
-//        textViews.add(findViewById(R.id.item15text));
-//        textViews.add(findViewById(R.id.item16text));
-//        textViews.add(findViewById(R.id.item17text));
-//        textViews.add(findViewById(R.id.item18text));
-//        textViews.add(findViewById(R.id.item19text));
-//        textViews.add(findViewById(R.id.item20text));
+
+//        textViews.add(findViewById(R.id.ditem1txt));
+//        textViews.add(findViewById(R.id.ditem2txt));
+//        textViews.add(findViewById(R.id.ditem3txt));
+//        textViews.add(findViewById(R.id.ditem4txt));
+//        textViews.add(findViewById(R.id.ditem5txt));
+//        textViews.add(findViewById(R.id.ditem6txt));
+//        textViews.add(findViewById(R.id.ditem7txt));
+//        textViews.add(findViewById(R.id.ditem8txt));
+//        textViews.add(findViewById(R.id.ditem9txt));
+//        textViews.add(findViewById(R.id.ditem10txt));
+
+        textViews.add(findViewById(R.id.uitem1txt));
+        textViews.add(findViewById(R.id.uitem2txt));
+        textViews.add(findViewById(R.id.uitem3txt));
+        textViews.add(findViewById(R.id.uitem4txt));
+        textViews.add(findViewById(R.id.uitem5txt));
+        textViews.add(findViewById(R.id.uitem6txt));
+        textViews.add(findViewById(R.id.uitem7txt));
+        textViews.add(findViewById(R.id.uitem8txt));
+        textViews.add(findViewById(R.id.uitem9txt));
+        textViews.add(findViewById(R.id.uitem10txt));
+
 
     }
 
@@ -554,6 +698,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     public void openNewActivityVideo(int i){
         String referenceTitle = videoRefTitles.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+
+    public void openNewActivityVideoLiked(int i){
+        String referenceTitle = videoRefTitles1.get(i);
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);

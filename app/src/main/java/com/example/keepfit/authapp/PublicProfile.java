@@ -81,7 +81,7 @@ public class PublicProfile extends AppCompatActivity {
         username = findViewById(R.id.publicProfileUsername);
 
         userProfileToDisplay = getIntent().getStringExtra("username");
-
+        numVideos = 0;
         addItemstoArray();
         makeInvisible();
         search();
@@ -128,16 +128,19 @@ public class PublicProfile extends AppCompatActivity {
     private void getVideoResultsbyTitle(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Video References");
-        ref.orderByChild("username").equalTo(userProfileToDisplay).limitToFirst(10)
+        ref.orderByChild("uploadingUser").equalTo(userProfileToDisplay).limitToFirst(10)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                videoRefTitles.add(entry.getKey());
-                                videoDispTitles.add(entry.getValue().get("title"));
-                                numVideos++;
+                                if(numVideos < 10){
+                                    videoRefTitles.add(entry.getValue().get("reference title"));
+                                    videoDispTitles.add(entry.getValue().get("title"));
+                                    numVideos++;
+                                }
+                                else break;
                             }
                         }
                         displayResults();
@@ -150,7 +153,7 @@ public class PublicProfile extends AppCompatActivity {
     }
 
     private void displayResults(){
-        for(int i=0; i < 10; i++){
+        for(int i=0; i < numVideos; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
