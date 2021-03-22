@@ -1,6 +1,8 @@
 package com.example.keepfit.calories;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.keepfit.MainActivity;
@@ -234,7 +236,13 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double MET_Exercise = Double.parseDouble(myCurrentValue);
 
-                        double weight = 100.0; //lb
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+
+                        String myTempWeight = sharedPref.getString("weight", null);
+
+                        double weight = Double.parseDouble(myTempWeight); //lb
+
 
 
                         long millis = timeInPause;
@@ -253,7 +261,7 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
+                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
 
                         mConditionRef.push().setValue(myMETValue);
                     }
@@ -291,7 +299,12 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double MET_Exercise = Double.parseDouble(myCurrentValue);
 
-                        double weight = 100.0; //kg
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+
+                        String myTempWeight = sharedPref.getString("weight", null);
+
+                        double weight = Double.parseDouble(myTempWeight); //lb
 
                         String myString = editTextTime.getText().toString();
 
@@ -309,7 +322,7 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
+                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
 
                         mConditionRef.push().setValue(myMETValue);
 
