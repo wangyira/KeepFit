@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.keepfit.MainActivity;
 import com.example.keepfit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -170,6 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
+
         }
     }
 
@@ -196,19 +198,19 @@ public class ProfileActivity extends AppCompatActivity {
             editTextBirthday.requestFocus();
             return;
         }
-        if(gender == null){
+        if(gender == ""){
             editTextGender.setError("Enter Male, Female or Non binary!");
             editTextGender.requestFocus();
             return;
         }
 
-        if(android.text.TextUtils.isDigitsOnly(weight)){
+        if(weight == ""){
             editTextWeight.setError("Valid weight is required!");
             editTextWeight.requestFocus();
             return;
         }
 
-        if(android.text.TextUtils.isDigitsOnly(height)){
+        if(height ==  ""){
             editTextHeight.setError("Valid height is required!");
             editTextHeight.requestFocus();
             return;
@@ -236,7 +238,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey, username, url);
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
-        Intent intent = new Intent(ProfileActivity.this, FirebaseMainActivity.class);
+        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
         startActivity(intent);
 
     }

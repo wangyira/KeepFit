@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.keepfit.MainActivity;
 import com.example.keepfit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -102,7 +103,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
                 if(task.isSuccessful()){
                     //redirect to user profile
                     //startActivity(new Intent(FirebaseMainActivity.this, PublicProfile.class));
-                    startActivity(new Intent(FirebaseMainActivity.this, ProfileActivityEdits.class));
+                    startActivity(new Intent(FirebaseMainActivity.this, MainActivity.class));
                 }
                 else{
                     Toast.makeText(FirebaseMainActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();

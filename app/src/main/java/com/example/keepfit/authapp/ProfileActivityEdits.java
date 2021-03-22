@@ -3,10 +3,13 @@ package com.example.keepfit.authapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.keepfit.MainActivity;
 import com.example.keepfit.R;
+import com.example.keepfit.VideoActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -42,13 +48,21 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnChoose, btnUpload, btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout;
+    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout;
     private ImageView imageView;
 
     private Uri filePath;
@@ -57,11 +71,18 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     FirebaseStorage storage;
     StorageReference storageReference;
-    String pickey;
+
+    ArrayList<String> videoRefTitles = new ArrayList<String>();
+    ArrayList<String> videoDispTitles = new ArrayList<String>();
+    ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
+    ArrayList<TextView> textViews = new ArrayList<TextView>();
+    int numVideos;
 
     String which = "";
 
-    ImageButton video;
+    ImageButton video1;
+    ImageButton video2;
+    ImageButton video3;
 
     private FirebaseUser user;
     private DatabaseReference dbreference;
@@ -71,8 +92,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        btnChoose = findViewById(R.id.btnChoose);
-        btnUpload = findViewById(R.id.btnUpload);
         btnEditName = findViewById(R.id.btnEditName);
         btnEditPhoneNumber = findViewById(R.id.btnEditPhoneNumber);
         btnEditBirthday = findViewById(R.id.btnEditBirthday);
@@ -85,21 +104,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         //mAuth = FirebaseAuth.getInstance();
-
-
-        btnChoose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
 
         btnEditName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,8 +266,26 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        video = (ImageButton) findViewById(R.id.imageButton);
-        video.setOnClickListener(new View.OnClickListener() {
+        video1 = (ImageButton) findViewById(R.id.imageButton1);
+        video2 = (ImageButton) findViewById(R.id.imageButton2);
+        video3 = (ImageButton) findViewById(R.id.imageButton3);
+        video1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if(video)
+                search();
+            }
+        });
+
+        video2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if(video)
+                openNewActivity();
+            }
+        });
+
+        video3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if(video)
@@ -289,6 +311,187 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(which).setValue(edits);
     }
 
+    private void search(){
+        getVideoResultsbyTitle();
+    }
+
+    private void getVideoResultsbyTitle(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Video References");
+        String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
+        ref.orderByChild("username").equalTo(uidusername).limitToFirst(20)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                videoRefTitles.add(entry.getKey());
+                                videoDispTitles.add(entry.getValue().get("title"));
+                            }
+                        }
+                        displayResults();
+                        numVideos = results.entrySet().size();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
+    private void displayResults(){
+        for(int i=0; i < 20; i++){
+            final int j = i;
+            imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("myTag", "@@@@@@@");
+                        openNewActivityVideo(j);
+                }
+            });
+        }
+        //display video results
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        for(int i=0; i < numVideos; i++) {
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
+            try {
+                final int j = i;
+                final File localFile = File.createTempFile(videoRefTitles.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j);
+                        tv.setText(videoDispTitles.get(j));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private Bitmap imgToBitmap(File file){
+        byte[] bytes = null;
+        try{
+            FileInputStream fis = new FileInputStream(file);
+            //create FileInputStream which obtains input bytes from a file in a file system
+            //FileInputStream is meant for reading streams of raw bytes such as image data. For reading streams of characters, consider using FileReader.
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            try {
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    //Writes to this byte array output stream
+                    bos.write(buf, 0, readNum);
+                    System.out.println("read " + readNum + " bytes,");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MainActivity.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            bytes = bos.toByteArray();
+        } catch(FileNotFoundException fnfe){
+            AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
+            videoDialog.setTitle("ERROR: fnfe.");
+
+            String[] pictureDialogItems = {
+                    "OK"};
+            videoDialog.setItems(pictureDialogItems,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+            videoDialog.show();
+        }
+
+        ByteArrayInputStream imageStream = null;
+
+        try {
+            imageStream = new ByteArrayInputStream(bytes);
+            return BitmapFactory.decodeStream(imageStream);
+        }
+        catch (Exception ex) {
+            Log.d("My Activity", "Unable to generate a bitmap: " + ex.getMessage());
+            return null;
+        }
+        finally {
+            if (imageStream != null) {
+                try { imageStream.close(); }
+                catch (Exception ex) {}
+            }
+        }
+    }
+
+    private void addItemstoArray(){
+        imageButtons.add(findViewById(R.id.item1button));
+        imageButtons.add(findViewById(R.id.item2button));
+        imageButtons.add(findViewById(R.id.item3button));
+        imageButtons.add(findViewById(R.id.item4button));
+        imageButtons.add(findViewById(R.id.item5button));
+        imageButtons.add(findViewById(R.id.item6button));
+        imageButtons.add(findViewById(R.id.item7button));
+        imageButtons.add(findViewById(R.id.item8button));
+        imageButtons.add(findViewById(R.id.item9button));
+        imageButtons.add(findViewById(R.id.item10button));
+        imageButtons.add(findViewById(R.id.item11button));
+        imageButtons.add(findViewById(R.id.item12button));
+        imageButtons.add(findViewById(R.id.item13button));
+        imageButtons.add(findViewById(R.id.item14button));
+        imageButtons.add(findViewById(R.id.item15button));
+        imageButtons.add(findViewById(R.id.item16button));
+        imageButtons.add(findViewById(R.id.item17button));
+        imageButtons.add(findViewById(R.id.item18button));
+        imageButtons.add(findViewById(R.id.item19button));
+        imageButtons.add(findViewById(R.id.item20button));
+
+        textViews.add(findViewById(R.id.item1text));
+        textViews.add(findViewById(R.id.item2text));
+        textViews.add(findViewById(R.id.item3text));
+        textViews.add(findViewById(R.id.item4text));
+        textViews.add(findViewById(R.id.item5text));
+        textViews.add(findViewById(R.id.item6text));
+        textViews.add(findViewById(R.id.item7text));
+        textViews.add(findViewById(R.id.item8text));
+        textViews.add(findViewById(R.id.item9text));
+        textViews.add(findViewById(R.id.item10text));
+        textViews.add(findViewById(R.id.item11text));
+        textViews.add(findViewById(R.id.item12text));
+        textViews.add(findViewById(R.id.item13text));
+        textViews.add(findViewById(R.id.item14text));
+        textViews.add(findViewById(R.id.item15text));
+        textViews.add(findViewById(R.id.item16text));
+        textViews.add(findViewById(R.id.item17text));
+        textViews.add(findViewById(R.id.item18text));
+        textViews.add(findViewById(R.id.item19text));
+        textViews.add(findViewById(R.id.item20text));
+
+    }
+
+    private void makeInvisible(){
+        for(ImageButton ib : imageButtons){
+            ib.setVisibility(View.GONE);
+        }
+        for(TextView tv : textViews){
+            tv.setVisibility(View.GONE);
+        }
+    }
+
+    public void openNewActivityVideo(int i){
+        String referenceTitle = videoRefTitles.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+
+    /*
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -352,6 +555,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
+            FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("pickey").setValue(pickey);
         }
     }
+     */
 }
