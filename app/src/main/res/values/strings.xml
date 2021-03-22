@@ -41,13 +41,6 @@
 
     <string name="myTitle">Calorie Tracker</string>
 
-    <string-array name="tagEntries">
-            <item>Aerobic</item>
-            <item>Anaerobic</item>
-            <item>Flexibility</item>
-            <item>Stability</item>
-    </string-array>
-
     <string-array name="tagEntries2">
             <item>Exercise1</item>
             <item>Exercise2</item>

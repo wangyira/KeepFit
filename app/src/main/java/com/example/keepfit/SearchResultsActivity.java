@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -251,7 +251,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numVideos < (20-numProfiles-numLivestreams)) {
                                     Log.d("myTag", "###33333");
-                                    videoRefTitles.add(entry.getKey());
+                                    videoRefTitles.add(entry.getValue().get("reference title"));
                                     videoDispTitles.add(entry.getValue().get("title"));
                                     numVideos++;
                                 }
@@ -350,6 +350,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         for(int i=0; i < numVideos; i++) {
             Log.d("storage", "^^^^^^");
+            Log.d("storage", "/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
                 final int j = i;
@@ -362,6 +363,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
+
+                        Log.d("disDebug", "displaying video");
 
                         TextView tv = textViews.get(j);
                         tv.setText(videoDispTitles.get(j));

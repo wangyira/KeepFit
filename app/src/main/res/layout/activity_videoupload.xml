@@ -196,19 +196,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <Button
-        android:id="@+id/watchVideo"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="150dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="550dp"
-        android:layout_marginLeft="20dp"
-        android:text="Watch Video"
-        android:textSize="14dp"
-        app:backgroundTint="#7A8EFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
 
 

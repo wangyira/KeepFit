@@ -78,19 +78,13 @@ public class VideoUploadActivity extends AppCompatActivity {
         Button getImagebtn = (Button) findViewById(R.id.selectImageButton);
         Spinner tagSpinner = (Spinner) findViewById(R.id.tagDropDown);
         Spinner diffSpinner = (Spinner) findViewById(R.id.difficultyDropDown);
-        Button watchVideobtn = (Button) findViewById(R.id.watchVideo);
 
         //SET VISIBILITY
         findViewById(R.id.progress_bar).setVisibility(View.GONE);
         findViewById(R.id.success_message).setVisibility(View.GONE);
         findViewById(R.id.videoView).setVisibility(View.GONE);
 
-        watchVideobtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                download();
-            }
-        });
+
         getVideobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,8 +246,7 @@ public class VideoUploadActivity extends AppCompatActivity {
                         vidRef.put("difficulty", difficulty);
                         vidRef.put("tag", tag);
                         vidRef.put("title", title);
-                        vidRef.put("video url", url);
-                        vidRef.put("image url", imageUrl);
+                        vidRef.put("reference title", noSpaceTitle + "." + randomUUID.toString());
 
                         mVideosRef.push().setValue(vidRef);
                     }
@@ -262,7 +255,7 @@ public class VideoUploadActivity extends AppCompatActivity {
         });
     }
 
-    private void download(){
+    /*private void download(){
         try{
             findViewById(R.id.videoView).setVisibility(View.VISIBLE);
             final File localFile = File.createTempFile("testing1", "mp4");
@@ -279,7 +272,7 @@ public class VideoUploadActivity extends AppCompatActivity {
         } catch(Exception e){
             System.out.println("could not download");
         }
-    }
+    }*/
 
     public void chooseVideoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
