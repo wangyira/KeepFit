@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_account"
+        android:title="Account"
+        android:icon="@drawable/ic_account"/>
+
+    <item
+        android:id="@+id/nav_search"
+        android:title="Home/Search"
+        android:icon="@drawable/ic_search"/>
+
+    <item
+        android:id="@+id/nav_calorie"
+        android:title="Track Calorie"
+        android:icon="@drawable/ic_calorie"/>
+
+    <item
+        android:id="@+id/nav_upload"
+        android:title="Upload Video"
+        android:icon="@drawable/ic_upload"/>
+
+    <item
+        android:id="@+id/nav_livestream"
+        android:title="Start Livestream"
+        android:icon="@drawable/ic_videocam"/>
+</menu>
