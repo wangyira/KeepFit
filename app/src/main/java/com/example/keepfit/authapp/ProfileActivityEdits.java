@@ -266,7 +266,10 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        video1 = (ImageButton) findViewById(R.id.imageButton1);
+        addItemstoArray();
+        makeInvisible();
+
+        //video1 = (ImageButton) findViewById(R.id.imageButton1);
         video2 = (ImageButton) findViewById(R.id.imageButton2);
         video3 = (ImageButton) findViewById(R.id.imageButton3);
         video1.setOnClickListener(new View.OnClickListener() {
@@ -431,47 +434,47 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     }
 
     private void addItemstoArray(){
-        imageButtons.add(findViewById(R.id.item1button));
-        imageButtons.add(findViewById(R.id.item2button));
-        imageButtons.add(findViewById(R.id.item3button));
-        imageButtons.add(findViewById(R.id.item4button));
-        imageButtons.add(findViewById(R.id.item5button));
-        imageButtons.add(findViewById(R.id.item6button));
-        imageButtons.add(findViewById(R.id.item7button));
-        imageButtons.add(findViewById(R.id.item8button));
-        imageButtons.add(findViewById(R.id.item9button));
-        imageButtons.add(findViewById(R.id.item10button));
-        imageButtons.add(findViewById(R.id.item11button));
-        imageButtons.add(findViewById(R.id.item12button));
-        imageButtons.add(findViewById(R.id.item13button));
-        imageButtons.add(findViewById(R.id.item14button));
-        imageButtons.add(findViewById(R.id.item15button));
-        imageButtons.add(findViewById(R.id.item16button));
-        imageButtons.add(findViewById(R.id.item17button));
-        imageButtons.add(findViewById(R.id.item18button));
-        imageButtons.add(findViewById(R.id.item19button));
-        imageButtons.add(findViewById(R.id.item20button));
+        imageButtons.add(findViewById(R.id.item1btn));
+        imageButtons.add(findViewById(R.id.item2btn));
+        imageButtons.add(findViewById(R.id.item3btn));
+        imageButtons.add(findViewById(R.id.item4btn));
+        imageButtons.add(findViewById(R.id.item5btn));
+        imageButtons.add(findViewById(R.id.item6btn));
+        imageButtons.add(findViewById(R.id.item7btn));
+        imageButtons.add(findViewById(R.id.item8btn));
+        imageButtons.add(findViewById(R.id.item9btn));
+        imageButtons.add(findViewById(R.id.item10btn));
+//        imageButtons.add(findViewById(R.id.item11btn));
+//        imageButtons.add(findViewById(R.id.item12btn));
+//        imageButtons.add(findViewById(R.id.item13button));
+//        imageButtons.add(findViewById(R.id.item14button));
+//        imageButtons.add(findViewById(R.id.item15button));
+//        imageButtons.add(findViewById(R.id.item16button));
+//        imageButtons.add(findViewById(R.id.item17button));
+//        imageButtons.add(findViewById(R.id.item18button));
+//        imageButtons.add(findViewById(R.id.item19button));
+//        imageButtons.add(findViewById(R.id.item20button));
 
-        textViews.add(findViewById(R.id.item1text));
-        textViews.add(findViewById(R.id.item2text));
-        textViews.add(findViewById(R.id.item3text));
-        textViews.add(findViewById(R.id.item4text));
-        textViews.add(findViewById(R.id.item5text));
-        textViews.add(findViewById(R.id.item6text));
-        textViews.add(findViewById(R.id.item7text));
-        textViews.add(findViewById(R.id.item8text));
-        textViews.add(findViewById(R.id.item9text));
-        textViews.add(findViewById(R.id.item10text));
-        textViews.add(findViewById(R.id.item11text));
-        textViews.add(findViewById(R.id.item12text));
-        textViews.add(findViewById(R.id.item13text));
-        textViews.add(findViewById(R.id.item14text));
-        textViews.add(findViewById(R.id.item15text));
-        textViews.add(findViewById(R.id.item16text));
-        textViews.add(findViewById(R.id.item17text));
-        textViews.add(findViewById(R.id.item18text));
-        textViews.add(findViewById(R.id.item19text));
-        textViews.add(findViewById(R.id.item20text));
+        textViews.add(findViewById(R.id.item1txt));
+        textViews.add(findViewById(R.id.item2txt));
+        textViews.add(findViewById(R.id.item3txt));
+        textViews.add(findViewById(R.id.item4txt));
+        textViews.add(findViewById(R.id.item5txt));
+        textViews.add(findViewById(R.id.item6txt));
+        textViews.add(findViewById(R.id.item7txt));
+        textViews.add(findViewById(R.id.item8txt));
+        textViews.add(findViewById(R.id.item9txt));
+        textViews.add(findViewById(R.id.item10txt));
+//        textViews.add(findViewById(R.id.item11text));
+//        textViews.add(findViewById(R.id.item12text));
+//        textViews.add(findViewById(R.id.item13text));
+//        textViews.add(findViewById(R.id.item14text));
+//        textViews.add(findViewById(R.id.item15text));
+//        textViews.add(findViewById(R.id.item16text));
+//        textViews.add(findViewById(R.id.item17text));
+//        textViews.add(findViewById(R.id.item18text));
+//        textViews.add(findViewById(R.id.item19text));
+//        textViews.add(findViewById(R.id.item20text));
 
     }
 
