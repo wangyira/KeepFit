@@ -27,6 +27,7 @@ import com.example.keepfit.MainActivity;
 import com.example.keepfit.R;
 import com.example.keepfit.StartLivestreamActivity;
 import com.example.keepfit.VideoActivity;
+import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -92,9 +93,10 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         storageReference = storage.getReference();
         //mAuth = FirebaseAuth.getInstance();
 
+        //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //Set search selected
+        //Set account selected
         bottomNavigationView.setSelectedItemId(R.id.nav_account);
 
         //perform itemselectedlistener
@@ -113,7 +115,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_upload:
-                        startActivity(new Intent(getApplicationContext(), VideoActivity.class));
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_livestream:

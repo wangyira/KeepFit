@@ -78,6 +78,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
+        //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //Set search selected
@@ -99,7 +100,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_upload:
-                        startActivity(new Intent(getApplicationContext(), VideoActivity.class));
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_livestream:
