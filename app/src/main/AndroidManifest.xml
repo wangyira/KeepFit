@@ -22,6 +22,7 @@
         <activity android:name=".authapp.ScrollingActivity" />
         <activity android:name=".calories.CalorieActivity" />
         <activity android:name=".VideoActivity"/>
+        <activity android:name=".VideoUploadActivity"/>
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->

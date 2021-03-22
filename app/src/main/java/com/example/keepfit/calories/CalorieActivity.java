@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.keepfit.MainActivity;
 import com.example.keepfit.StartLivestreamActivity;
 import com.example.keepfit.VideoActivity;
+import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -153,7 +154,7 @@ public class CalorieActivity extends AppCompatActivity {
                     case R.id.nav_calorie:
                         return true;
                     case R.id.nav_upload:
-                        startActivity(new Intent(getApplicationContext(), VideoActivity.class));
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_livestream:

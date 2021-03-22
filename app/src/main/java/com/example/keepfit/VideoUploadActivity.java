@@ -2,6 +2,8 @@ package com.example.keepfit;
 
 import android.os.Bundle;
 
+import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +31,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.app.AlertDialog;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -62,15 +65,49 @@ public class VideoUploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videoupload);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+
+//        BottomNavigationView navView = findViewById(R.id.nav_view);
+//        // Passing each menu ID as a set of Ids because each
+//        // menu should be considered as top level destinations.
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+//                .build();
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//        NavigationUI.setupWithNavController(navView, navController);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set search selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_upload);
+
+        //perform itemselectedlistener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_search:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_calorie:
+                        startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_upload:
+                        return true;
+                    case R.id.nav_livestream:
+                        startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
 
         //https://demonuts.com/pick-video-gallery-camera-android/
         Button getVideobtn = (Button) findViewById(R.id.selectVideoButton);

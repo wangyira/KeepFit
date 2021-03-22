@@ -99,7 +99,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_upload:
-                        startActivity(new Intent(getApplicationContext(), VideoActivity.class));
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_livestream:
