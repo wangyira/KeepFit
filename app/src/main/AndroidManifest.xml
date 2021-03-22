@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.keepfit">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,9 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".SearchResultsActivity"></activity>
-        <activity android:name=".authapp.PublicProfile"></activity>
-        <activity android:name=".authapp.ProfileActivity"></activity> <!-- <activity -->
+        <activity android:name=".SearchResultsActivity" />
+        <activity android:name=".authapp.PublicProfile" />
+        <activity android:name=".authapp.ProfileActivity" /> <!-- <activity -->
         <!--<activity android:name=".MainActivity" /> -->
         <activity android:name=".authapp.ForgotPassword" />
         <activity android:name=".authapp.ProfileActivityEdits" />
@@ -49,6 +50,7 @@
         <activity android:name=".LivestreamActivity" />
         <activity android:name=".authapp.RegisterUser" />
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:ignore="ManifestOrder" />
 
 </manifest>

@@ -16,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.squareup.picasso.Picasso;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ public class PublicProfile extends AppCompatActivity {
 
     private String userProfileToDisplay;
     private String nameToDisplay;
+    private String uid;
+    private String pfpLink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +52,30 @@ public class PublicProfile extends AppCompatActivity {
 
         //username of the person whose profile we are displaying -- send a string called "username" when creating intent
 
-        DatabaseReference reference = firebaseDatabase.getReference("UserInformation");
-        Query query = reference.orderByChild("username").equalTo(userProfileToDisplay);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("UserInformation");
+        reference.orderByChild("username").equalTo(userProfileToDisplay).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserInformation userInfo = snapshot.getValue(UserInformation.class);
-                nameToDisplay = userInfo.getName();
+                for(DataSnapshot ds : snapshot.getChildren()) {
+                    uid = ds.getKey();
+                    Log.d("TAG", uid);
+                }
+                reference.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        UserInformation userInfo = snapshot.getValue(UserInformation.class);
+                        nameToDisplay = userInfo.name;
+                        pfpLink = userInfo.pickey;
+                        Picasso.get().load(pfpLink).into(pfp);
+                        name.setText(nameToDisplay);
+                        username.setText(userProfileToDisplay);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -63,23 +83,5 @@ public class PublicProfile extends AppCompatActivity {
 
             }
         });
-
-
-        DatabaseReference getImage = databaseReference.child("pickey");
-
-        getImage.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String link = dataSnapshot.getValue(String.class);
-                Picasso.get().load(link).into(pfp);
-            }
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // we are showing that error message in toast
-                //Toast.makeText(PublicProfile.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        name.setText(nameToDisplay);
-        username.setText(userProfileToDisplay);
     }
 }
