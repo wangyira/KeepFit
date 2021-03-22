@@ -76,7 +76,7 @@ public class CalorieActivity extends AppCompatActivity {
     DatabaseReference mConditionRef4 = mConditionRef.child("Stability");
     */
 
-    DatabaseReference mConditionRef = mRootRef.child("CaloriesTable").child("User1");
+    DatabaseReference mConditionRef = mRootRef.child("CaloriesTable");
 
 
 
@@ -105,15 +105,20 @@ public class CalorieActivity extends AppCompatActivity {
     public class METValue {
 
         public String username;
-        public double myValue;
+        public double myCaloriesBurned;
+        public double myTime;
+        public String exerciseTitle;
 
         public METValue() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public METValue(String username, double myValue) {
+        public METValue(String username, double myCaloriesBurned, double myTime, String exerciseTitle) {
             this.username = username;
-            this.myValue = myValue;
+            this.myCaloriesBurned = myCaloriesBurned;
+            this.myTime = myTime;
+            this.exerciseTitle = exerciseTitle;
+
         }
 
     }
@@ -248,9 +253,9 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
 
-                        mConditionRef.setValue(myMETValue);
+                        mConditionRef.push().setValue(myMETValue);
                     }
 
                     @Override
@@ -304,9 +309,9 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue);
+                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
 
-                        mConditionRef.setValue(myMETValue);
+                        mConditionRef.push().setValue(myMETValue);
 
                     }
 
