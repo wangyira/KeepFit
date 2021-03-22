@@ -1,62 +1,71 @@
 package com.example.keepfit;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-//https://demonuts.com/pick-video-gallery-camera-android/
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final FirebaseStorage storage = FirebaseStorage.getInstance();
-    Uri videoURI;
-    Uri imageURI;
+    ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
+    ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>(); //for profile pic of user who uploaded vid
+    ArrayList<TextView> textViews = new ArrayList<TextView>();
+    ArrayList<TextView> textViewsProfile = new ArrayList<TextView>(); //for username of person who uploaded vid
+    ArrayList<Button> likes = new ArrayList<Button>(); //for clicks
 
-    private String title = null;
-    private String tag = null;
-    private String difficulty = null;
-    private String time = null;
-    private String videoPath = null;
-    private String imagePath = null;
+    ArrayList<String> referenceTitleList = new ArrayList<String>();
+    ArrayList<String> displayTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamReferenceTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamDisplayTitleList = new ArrayList<String>();
+    ArrayList<String> livestreamZoomLinks = new ArrayList<String>();
+
+    int numVideos = 0;
+    int numLivestreams = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,267 +81,478 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        //https://demonuts.com/pick-video-gallery-camera-android/
-        Button getVideobtn = (Button) findViewById(R.id.selectVideoButton);
-        Button uploadbtn = (Button) findViewById(R.id.uploadVideoButton);
-        Button getImagebtn = (Button) findViewById(R.id.selectImageButton);
-        Spinner tagSpinner = (Spinner) findViewById(R.id.tagDropDown);
-        Spinner diffSpinner = (Spinner) findViewById(R.id.difficultyDropDown);
-        Button watchVideobtn = (Button) findViewById(R.id.watchVideo);
+        populate();
 
-        //SET VISIBILITY
-        findViewById(R.id.progress_bar).setVisibility(View.GONE);
-        findViewById(R.id.success_message).setVisibility(View.GONE);
-        findViewById(R.id.videoView).setVisibility(View.GONE);
 
-        watchVideobtn.setOnClickListener(new View.OnClickListener() {
+        //set button listeners
+        ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
+        Button preset1 = (Button) findViewById(R.id.preset1);
+        Button preset2 = (Button) findViewById(R.id.preset2);
+        Button preset3 = (Button) findViewById(R.id.preset3);
+        Button preset4 = (Button) findViewById(R.id.preset4);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                download();
+                //get input from bar
+                EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
+                String input = searchInputBar.getText().toString();
+                search(input);
             }
         });
-        getVideobtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseVideoFromGallery();
-            }
-        });
-        getImagebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImageFromGallery();
-            }
-        });
-        uploadbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upload();
-            }
-        });
-        tagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                tag = (String) parent.getItemAtPosition(pos);
-            }
 
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        diffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                difficulty = (String) parent.getItemAtPosition(pos);
-            }
 
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+        preset1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { search(getString(R.string.tag1)); }
+        });
+
+        preset2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { search(getString(R.string.tag2)); }
+        });
+
+        preset3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { search(getString(R.string.tag3)); }
+        });
+
+        preset4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { search(getString(R.string.tag4)); }
         });
     }
 
-    //checks if the required values have been entered
-    //returns 1 if valid or 0 if something is missing
-    private boolean validValues() {
-        //get values
-        EditText mEdit = (EditText) findViewById(R.id.titleInput);
-        title = mEdit.getText().toString();
-        mEdit = (EditText) findViewById(R.id.editTextTime2);
-        time = mEdit.getText().toString();
-
-        if (title == null || title.length() < 1 || title.length() > 60) {
-            AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
-            titleDialog.setTitle("Please enter a title between 1-60 characters in length.");
-            String[] pictureDialogItems = {"OK"};
-            titleDialog.setItems(pictureDialogItems,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-            titleDialog.show();
-            return false;
-        } else if (videoPath == null) {
-            AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
-            videoDialog.setTitle("Please select a video.");
-
-            String[] pictureDialogItems = {
-                    "OK"};
-            videoDialog.setItems(pictureDialogItems,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-
-            videoDialog.show();
-            return false;
-        } else if (imagePath == null) {
-            AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
-            videoDialog.setTitle("Please select a thumbnail image.");
-
-            String[] pictureDialogItems = {
-                    "OK"};
-            videoDialog.setItems(pictureDialogItems,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-
-            videoDialog.show();
-            return false;
-        } else if (time.length() > 6 || (time.length() > 0 && time.length() < 4)) {
-            AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
-            titleDialog.setTitle("Please enter a time of the form min:sec, i.e. 00:05 ");
-            String[] pictureDialogItems = {"OK"};
-            titleDialog.setItems(pictureDialogItems,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-            titleDialog.show();
-            return false;
-        }
-        return true;
+    private void search(String input){
+        Intent intent = new Intent(this, SearchResultsActivity.class);
+        intent.putExtra("input",input);
+        startActivity(intent);
     }
 
-    private void upload() {
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        Button uploadButton = (Button) findViewById(R.id.uploadVideoButton);
-        TextView successMessage = (TextView) findViewById(R.id.success_message);
-        UUID randomUUID = UUID.randomUUID();
-
-        if (!validValues()) {
-            return;
-        }
-        String noSpaceTitle = title.replaceAll("\\s", "_");
-
-        //upload video to storage
-        File file = new File(videoPath);
-        StorageReference videoRef = storage.getReference("videos/" + noSpaceTitle + "." + randomUUID + ".mp4");
-        /*StorageMetadata metadata = new StorageMetadata.Builder()
-                .setCustomMetadata("title", title)
-                .setCustomMetadata("tag", tag)
-                .setCustomMetadata("difficulty", difficulty)
-                .setCustomMetadata("time", time)
-                .build();*/
-
-
-        progressBar.setVisibility(View.VISIBLE);
-        uploadButton.setEnabled(false);
-
-        //UploadTask uploadTask = videoRef.putFile(videoURI, metadata);
-        UploadTask uploadTask = videoRef.putFile(videoURI);
-        uploadTask.addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+    private void populate(){
+        addItemstoArrayandMakeInvisible();
+        //get livestreams
+        FirebaseDatabase databasel = FirebaseDatabase.getInstance();
+        DatabaseReference myRefl = databasel.getReference("Livestream Details");
+        myRefl.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //String url = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+            public void onDataChange(@NonNull DataSnapshot snapshotl) {
+                //map to hold all livestream references from database
+                HashMap<String, HashMap> lsmAL = new HashMap<String, HashMap>();
+                lsmAL = (HashMap<String, HashMap>) snapshotl.getValue();
+                for(Map.Entry<String, HashMap> livestream: lsmAL.entrySet()){
+                    if(numLivestreams < 20){
+                        Log.d("myTag", "#####");
+                        livestreamReferenceTitleList.add((String) livestream.getValue().get("reference title"));
+                        livestreamDisplayTitleList.add((String) livestream.getValue().get("title"));
+                        livestreamZoomLinks.add((String) livestream.getValue().get("zoomLink"));
+                        Log.d("myTag", "#####");
+                        numLivestreams++;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
-                StorageReference imageRef = storage.getReference("thumbnail_images/" + noSpaceTitle + "." + randomUUID + ".jpg");
-                //StorageMetadata metadataI = new StorageMetadata.Builder()
-                        //.setCustomMetadata("title", title)
-                        //.setCustomMetadata("video reference", url)
-                        //.build();
 
-                //UploadTask imageUploadTask = imageRef.putFile(imageURI, metadataI);
-                UploadTask imageUploadTask = imageRef.putFile(imageURI);
-                imageUploadTask.addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        //get videos
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Video References");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //map to hold all video references from database
+                GenericTypeIndicator<Map<String, Map<String, String>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Map<String, String> >>() {};
+                Map<String, Map<String, String>> allVideosMap = snapshot.getValue(genericTypeIndicator);
+
+                //for each video (entry in allVideosMap), get the reference title and add it to titleList (if there is space)
+                //Iterator it = allVideosMap.entrySet().iterator();
+                for(Map.Entry<String, Map<String, String>> entry : allVideosMap.entrySet()){
+                    Map<String, String> videoMap = entry.getValue();
+                    for(Map.Entry<String, String> data : videoMap.entrySet()){
+                        if(data.getKey().equals("reference title")){
+
+                            if(numVideos < (20-numLivestreams)) {
+                                referenceTitleList.add(data.getValue());
+                                numVideos++;
+                            }
+                        }
+                        else if(data.getKey().equals("title")){
+                            displayTitleList.add(data.getValue());
+                        }
+                    }
+                    if(numVideos >= (20-numLivestreams)){break;}
+                }
+                //titleList now contains titles of videos (and images) to be displayed
+                //livestream titleLists contain titles of livestreams to be displayed
+
+                displayThumbnails();
+
+                //titleList now contains titles of all videos (and images)
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+                for(int i=0; i < numVideos; i++){
+                    StorageReference imageRef = storageRef.child("/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
+                    try{
+                        final int j=i;
+                        final File localFile = File.createTempFile(referenceTitleList.get(i), "jpg");
+                        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                ImageButton ib = imageButtons.get(j);
+
+                                Bitmap bm = imgToBitmap(localFile);
+                                ib.setImageBitmap(bm);
+                                ib.setVisibility(View.VISIBLE);
+
+                                TextView tv = textViews.get(j);
+                                tv.setText(displayTitleList.get(j));
+                                tv.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } catch(Exception e) { }
+                }
+                Log.d("myTag", numVideos + " " + numLivestreams);
+                for(int i=numVideos; i < numVideos+numLivestreams; i++){
+
+                    StorageReference imageRef = storageRef.child("/livestream_thumbnail_images/" + livestreamReferenceTitleList.get(i-numVideos) + ".jpg");
+                    try{
+                        final int j=i;
+                        final File localFile = File.createTempFile(livestreamReferenceTitleList.get(i-numVideos), "jpg");
+                        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                ImageButton ib = imageButtons.get(j);
+
+                                Bitmap bm = imgToBitmap(localFile);
+                                ib.setImageBitmap(bm);
+                                ib.setVisibility(View.VISIBLE);
+
+                                TextView tv = textViews.get(j);
+                                tv.setText("LIVESTREAM: " + livestreamDisplayTitleList.get(j-numVideos));
+                                tv.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } catch(Exception e){ }
+                }
+
+
+
+                for(int i=0; i < numVideos+numLivestreams; i++){
+                    final int j = i;
+                    imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(j < numVideos){
+                                openNewActivityVideo(j);
+                            } else{
+                                openNewActivityLivestream(j);
+                            }
+
+                        }
+                    });
+                }
+
+                //REMOVE THIS
+                imageButtons.get(numVideos).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
-                        progressBar.setVisibility(View.GONE);
-                        uploadButton.setEnabled(true);
-                        successMessage.setVisibility(View.VISIBLE);
-
-                        String imageUrl = imageTaskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-
-                        //add reference to video in realtime database
-                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference mRootRef = database.getReference("");
-                        DatabaseReference mVideosRef = mRootRef.child("Video References");
-
-                        Map<String, String> vidRef = new HashMap<String, String>();
-                        vidRef.put("time", time);
-                        vidRef.put("difficulty", difficulty);
-                        vidRef.put("tag", tag);
-                        vidRef.put("title", title);
-                        //vidRef.put("video url", url);
-                        //vidRef.put("image url", imageUrl);
-                        vidRef.put("reference title", noSpaceTitle + "." + randomUUID);
-
-                        mVideosRef.push().setValue(vidRef);
+                    public void onClick(View v) {
+                        openNewActivityLivestream(numVideos);
                     }
                 });
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
+
     }
 
-    private void download(){
+    private void displayThumbnails(){
+
+        //REMOVE THIS!!!!!!!!!!
+        StorageReference storageRefa = FirebaseStorage.getInstance().getReference();
+        StorageReference livestreamRef = storageRefa.child("/livestream_thumbnail_images/6257ec4b-736d-45dd-af2e-313fa7b30b4a.jpg");
         try{
-            findViewById(R.id.videoView).setVisibility(View.VISIBLE);
-            final File localFile = File.createTempFile("testing1", "mp4");
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference videoRef = storageRef.child("/videos/no_metadata_test_1.4ce2db05-b0b2-4f6c-b5db-00d09356665c.mp4");
-            videoRef.getFile(localFile).addOnSuccessListener(
-                    (OnSuccessListener) (TaskSnapshot) -> {
-                        Toast.makeText(MainActivity.this, "Download complete", Toast.LENGTH_LONG).show();
-                        final VideoView videoView = (VideoView) findViewById(R.id.videoView);
-                        videoView.setVideoURI(Uri.fromFile(localFile));
-                        videoView.start();
+            final File llocalFile = File.createTempFile("6257ec4b-736d-45dd-af2e-313fa7b30b4a", "jpg");
+            livestreamRef.getFile(llocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    ImageButton ib = imageButtons.get(numVideos);
+                    Bitmap bm = imgToBitmap(llocalFile);
+                    ib.setImageBitmap(bm);
+                    ib.setVisibility(View.VISIBLE);
+
+                    TextView tv = textViews.get(numVideos);
+                    tv.setText("LIVESTREAM : workout with me");
+                    tv.setVisibility(View.VISIBLE);
+                }
+            });
+        } catch (Exception e){ }
+
+
+
+
+
+
+        //titleList now contains titles of all videos (and images)
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+        for(int i=0; i < numVideos; i++){
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + referenceTitleList.get(i)+".jpg");
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(referenceTitleList.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j);
+                        tv.setText(displayTitleList.get(j));
+                        tv.setVisibility(View.VISIBLE);
                     }
-            );
-        } catch(Exception e){
-            System.out.println("could not download");
+                });
+            } catch(Exception e) { }
+        }
+        Log.d("myTag", numVideos + " " + numLivestreams);
+        for(int i=numVideos; i < numVideos+numLivestreams; i++){
+
+            StorageReference imageRef = storageRef.child("/livestream_thumbnail_images/" + livestreamReferenceTitleList.get(i-numVideos) + ".jpg");
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(livestreamReferenceTitleList.get(i-numVideos), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j);
+                        tv.setText("LIVESTREAM: " + livestreamDisplayTitleList.get(j-numVideos));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch(Exception e){ }
         }
     }
 
-    public void chooseVideoFromGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
 
-        int VIDEO = 1;
-        startActivityForResult(galleryIntent, VIDEO);
+    private void addItemstoArrayandMakeInvisible(){
+        imageButtons.add(findViewById(R.id.item1button));
+        imageButtons.add(findViewById(R.id.item2button));
+        imageButtons.add(findViewById(R.id.item3button));
+        imageButtons.add(findViewById(R.id.item4button));
+        imageButtons.add(findViewById(R.id.item5button));
+        imageButtons.add(findViewById(R.id.item6button));
+        imageButtons.add(findViewById(R.id.item7button));
+        imageButtons.add(findViewById(R.id.item8button));
+        imageButtons.add(findViewById(R.id.item9button));
+        imageButtons.add(findViewById(R.id.item10button));
+        imageButtons.add(findViewById(R.id.item11button));
+        imageButtons.add(findViewById(R.id.item12button));
+        imageButtons.add(findViewById(R.id.item13button));
+        imageButtons.add(findViewById(R.id.item14button));
+        imageButtons.add(findViewById(R.id.item15button));
+        imageButtons.add(findViewById(R.id.item16button));
+        imageButtons.add(findViewById(R.id.item17button));
+        imageButtons.add(findViewById(R.id.item18button));
+        imageButtons.add(findViewById(R.id.item19button));
+        imageButtons.add(findViewById(R.id.item20button));
+
+        textViews.add(findViewById(R.id.item1text));
+        textViews.add(findViewById(R.id.item2text));
+        textViews.add(findViewById(R.id.item3text));
+        textViews.add(findViewById(R.id.item4text));
+        textViews.add(findViewById(R.id.item5text));
+        textViews.add(findViewById(R.id.item6text));
+        textViews.add(findViewById(R.id.item7text));
+        textViews.add(findViewById(R.id.item8text));
+        textViews.add(findViewById(R.id.item9text));
+        textViews.add(findViewById(R.id.item10text));
+        textViews.add(findViewById(R.id.item11text));
+        textViews.add(findViewById(R.id.item12text));
+        textViews.add(findViewById(R.id.item13text));
+        textViews.add(findViewById(R.id.item14text));
+        textViews.add(findViewById(R.id.item15text));
+        textViews.add(findViewById(R.id.item16text));
+        textViews.add(findViewById(R.id.item17text));
+        textViews.add(findViewById(R.id.item18text));
+        textViews.add(findViewById(R.id.item19text));
+        textViews.add(findViewById(R.id.item20text));
+
+        imageButtonsProfile.add(findViewById(R.id.item1user));
+        imageButtonsProfile.add(findViewById(R.id.item2user));
+        imageButtonsProfile.add(findViewById(R.id.item3user));
+        imageButtonsProfile.add(findViewById(R.id.item4user));
+        imageButtonsProfile.add(findViewById(R.id.item5user));
+        imageButtonsProfile.add(findViewById(R.id.item6user));
+        imageButtonsProfile.add(findViewById(R.id.item7user));
+        imageButtonsProfile.add(findViewById(R.id.item8user));
+        imageButtonsProfile.add(findViewById(R.id.item9user));
+        imageButtonsProfile.add(findViewById(R.id.item10user));
+        imageButtonsProfile.add(findViewById(R.id.item11user));
+        imageButtonsProfile.add(findViewById(R.id.item12user));
+        imageButtonsProfile.add(findViewById(R.id.item13user));
+        imageButtonsProfile.add(findViewById(R.id.item14user));
+        imageButtonsProfile.add(findViewById(R.id.item15user));
+        imageButtonsProfile.add(findViewById(R.id.item16user));
+        imageButtonsProfile.add(findViewById(R.id.item17user));
+        imageButtonsProfile.add(findViewById(R.id.item18user));
+        imageButtonsProfile.add(findViewById(R.id.item19user));
+        imageButtonsProfile.add(findViewById(R.id.item20user));
+
+        textViewsProfile.add(findViewById(R.id.item1username));
+        textViewsProfile.add(findViewById(R.id.item2username));
+        textViewsProfile.add(findViewById(R.id.item3username));
+        textViewsProfile.add(findViewById(R.id.item4username));
+        textViewsProfile.add(findViewById(R.id.item5username));
+        textViewsProfile.add(findViewById(R.id.item6username));
+        textViewsProfile.add(findViewById(R.id.item7username));
+        textViewsProfile.add(findViewById(R.id.item8username));
+        textViewsProfile.add(findViewById(R.id.item9username));
+        textViewsProfile.add(findViewById(R.id.item10username));
+        textViewsProfile.add(findViewById(R.id.item11username));
+        textViewsProfile.add(findViewById(R.id.item12username));
+        textViewsProfile.add(findViewById(R.id.item13username));
+        textViewsProfile.add(findViewById(R.id.item14username));
+        textViewsProfile.add(findViewById(R.id.item15username));
+        textViewsProfile.add(findViewById(R.id.item16username));
+        textViewsProfile.add(findViewById(R.id.item17username));
+        textViewsProfile.add(findViewById(R.id.item18username));
+        textViewsProfile.add(findViewById(R.id.item19username));
+        textViewsProfile.add(findViewById(R.id.item20username));
+
+        likes.add(findViewById(R.id.item1like));
+        likes.add(findViewById(R.id.item2like));
+        likes.add(findViewById(R.id.item3like));
+        likes.add(findViewById(R.id.item4like));
+        likes.add(findViewById(R.id.item5like));
+        likes.add(findViewById(R.id.item6like));
+        likes.add(findViewById(R.id.item7like));
+        likes.add(findViewById(R.id.item8like));
+        likes.add(findViewById(R.id.item9like));
+        likes.add(findViewById(R.id.item10like));
+        likes.add(findViewById(R.id.item11like));
+        likes.add(findViewById(R.id.item12like));
+        likes.add(findViewById(R.id.item13like));
+        likes.add(findViewById(R.id.item14like));
+        likes.add(findViewById(R.id.item15like));
+        likes.add(findViewById(R.id.item16like));
+        likes.add(findViewById(R.id.item17like));
+        likes.add(findViewById(R.id.item18like));
+        likes.add(findViewById(R.id.item19like));
+        likes.add(findViewById(R.id.item20like));
+ 
+        for(ImageButton ib : imageButtons){
+            ib.setVisibility(View.GONE);
+        }
+        for(TextView tv : textViews){
+            tv.setVisibility(View.GONE);
+        }
+        for(ImageButton ib : imageButtonsProfile){
+            ib.setVisibility(View.GONE);
+        }
+        for(TextView tv : textViewsProfile){
+            tv.setVisibility(View.GONE);
+        }
+        for(Button l : likes){
+            l.setVisibility(View.GONE);
+        }
     }
 
-    public void chooseImageFromGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    public void openNewActivityVideo(int i){
+        String referenceTitle = referenceTitleList.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+    public void openNewActivityLivestream(int i){
+        //REMOVE THIS!!!
+        /*if(i >= numVideos+numLivestreams){
+            String zoomLink = "https://google.com";
+            Intent intent = new Intent(this, LivestreamActivity.class);
+            intent.putExtra("zoomLink", zoomLink);
+            startActivity(intent);
+            return;
+        }*/
 
-        int IMAGE = 2;
-        startActivityForResult(galleryIntent, IMAGE);
+
+        String zoomLink = livestreamZoomLinks.get(i-numVideos);
+        Intent intent = new Intent(this, LivestreamActivity.class);
+        intent.putExtra("zoomLink", zoomLink);
+        startActivity(intent);
+    }
+    public void openNewActivityProfile(int i){
+        //Todo: start Profile activity for user who uploaded video
+    }
+    private void like(int i){
+        //TODO: set likes in user database
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d("result", "" + resultCode);
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("what", "gale");
+    private Bitmap imgToBitmap(File file){
+        byte[] bytes = null;
+        try{
 
-        if (requestCode == 1) {
-            if (data != null) {
-                videoURI = data.getData();
 
-                videoPath = getPath(videoURI);
+            FileInputStream fis = new FileInputStream(file);
+            //create FileInputStream which obtains input bytes from a file in a file system
+            //FileInputStream is meant for reading streams of raw bytes such as image data. For reading streams of characters, consider using FileReader.
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            try {
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    //Writes to this byte array output stream
+                    bos.write(buf, 0, readNum);
+                    System.out.println("read " + readNum + " bytes,");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(MainActivity.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (requestCode == 2) {
-            if (data != null) {
-                imageURI = data.getData();
-                imagePath = getPath(imageURI);
-            }
+
+            bytes = bos.toByteArray();
+        } catch(FileNotFoundException fnfe){
+            AlertDialog.Builder videoDialog = new AlertDialog.Builder(this);
+            videoDialog.setTitle("ERROR: fnfe.");
+
+            String[] pictureDialogItems = {
+                    "OK"};
+            videoDialog.setItems(pictureDialogItems,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+            videoDialog.show();
         }
 
-    }
+        ByteArrayInputStream imageStream = null;
 
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Video.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
+        try {
+            imageStream = new ByteArrayInputStream(bytes);
+            return BitmapFactory.decodeStream(imageStream);
+        }
+        catch (Exception ex) {
+            Log.d("My Activity", "Unable to generate a bitmap: " + ex.getMessage());
             return null;
+        }
+        finally {
+            if (imageStream != null) {
+                try { imageStream.close(); }
+                catch (Exception ex) {}
+            }
+        }
     }
 
 }
