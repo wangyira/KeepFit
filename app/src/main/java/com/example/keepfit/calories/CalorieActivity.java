@@ -1,6 +1,8 @@
 package com.example.keepfit.calories;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.keepfit.MainActivity;
@@ -86,8 +88,8 @@ public class CalorieActivity extends AppCompatActivity {
     long timeInPause = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
+    Handler timerMyHandler = new Handler();
+    Runnable timerMyRunnable = new Runnable() {
 
         @Override
         public void run() {
@@ -98,7 +100,7 @@ public class CalorieActivity extends AppCompatActivity {
 
             timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 
-            timerHandler.postDelayed(this, 500);
+            timerMyHandler.postDelayed(this, 500);
         }
     };
 
@@ -177,13 +179,13 @@ public class CalorieActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button b = (Button) v;
                 if (b.getText().equals("stop")) {
-                    timerHandler.removeCallbacks(timerRunnable);
+                    timerMyHandler.removeCallbacks(timerMyRunnable);
                     timeInPause = System.currentTimeMillis() - startTime;
                     b.setText("start");
                     pausestart.setText("unpause");
                 } else {
                     startTime = System.currentTimeMillis();
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    timerMyHandler.postDelayed(timerMyRunnable, 0);
                     pausestart.setText("pause");
                     b.setText("stop");
                 }
@@ -194,13 +196,13 @@ public class CalorieActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button b = (Button) v;
                 if (b.getText().equals("pause")) { //Start again
-                    timerHandler.removeCallbacks(timerRunnable);
+                    timerMyHandler.removeCallbacks(timerMyRunnable);
                     timeInPause = System.currentTimeMillis() - startTime;
                     b.setText("unpause");
                     startstop.setText("start");
                 } else { //Stop the timer
                     startTime = System.currentTimeMillis() - timeInPause;
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    timerMyHandler.postDelayed(timerMyRunnable, 0);
                     b.setText("pause");
                     startstop.setText("stop");
                 }
@@ -234,7 +236,13 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double MET_Exercise = Double.parseDouble(myCurrentValue);
 
-                        double weight = 100.0; //lb
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+
+                        String myTempWeight = sharedPref.getString("weight", null);
+
+                        double weight = Double.parseDouble(myTempWeight); //lb
+
 
 
                         long millis = timeInPause;
@@ -253,7 +261,7 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
+                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
 
                         mConditionRef.push().setValue(myMETValue);
                     }
@@ -291,7 +299,12 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double MET_Exercise = Double.parseDouble(myCurrentValue);
 
-                        double weight = 100.0; //kg
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+
+                        String myTempWeight = sharedPref.getString("weight", null);
+
+                        double weight = Double.parseDouble(myTempWeight); //lb
 
                         String myString = editTextTime.getText().toString();
 
@@ -309,7 +322,7 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue("TestUser", NewMETValue, doubleSeconds, mySecondValue);
+                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
 
                         mConditionRef.push().setValue(myMETValue);
 
@@ -334,7 +347,7 @@ public class CalorieActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        timerHandler.removeCallbacks(timerRunnable);
+        timerMyHandler.removeCallbacks(timerMyRunnable);
         Button b = (Button)findViewById(R.id.startstop);
         b.setText("start");
     }

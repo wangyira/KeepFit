@@ -47,20 +47,20 @@
     <string name="myTitle">Calorie Tracker</string>
 
     <string-array name="tagEntries2">
-            <item>Exercise1</item>
-            <item>Exercise2</item>
+            <item>Jogging</item>
+            <item>Running</item>
     </string-array>
     <string-array name="tagEntries3">
-            <item>Exercise3</item>
-            <item>Exercise4</item>
+            <item>Pushups</item>
+            <item>Weight Lifting</item>
     </string-array>
     <string-array name="tagEntries4">
-            <item>Exercise5</item>
-            <item>Exercise6</item>
+            <item>Up Dog</item>
+            <item>Down Dog</item>
     </string-array>
     <string-array name="tagEntries5">
-            <item>Exercise7</item>
-            <item>Exercise8</item>
+            <item>Crows Pose</item>
+            <item>Leg Extensions</item>
     </string-array>
 
     <string name="editTime">Custom Time</string>

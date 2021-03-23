@@ -1,7 +1,5 @@
 package com.example.keepfit;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
@@ -277,10 +275,6 @@ public class VideoUploadActivity extends AppCompatActivity {
                         vidRef.put("tag", tag);
                         vidRef.put("title", title);
                         vidRef.put("reference title", noSpaceTitle + "." + randomUUID.toString());
-
-                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
-                        String username = sharedPref.getString("username", null);
-                        vidRef.put("uploadingUser", username);
 
                         mVideosRef.push().setValue(vidRef);
                     }
