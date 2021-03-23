@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -13,9 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".SearchResultsActivity"></activity>
-        <activity android:name=".authapp.PublicProfile"></activity>
-        <activity android:name=".authapp.ProfileActivity"></activity>
+        <activity android:name=".SearchResultsActivity" />
+        <activity android:name=".authapp.PublicProfile" />
+        <activity android:name=".authapp.ProfileActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".authapp.ForgotPassword" />
         <activity android:name=".authapp.ProfileActivityEdits" />
