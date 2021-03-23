@@ -238,6 +238,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         UserInformation userinfo = new UserInformation(sharedemail, name, phonenumber, gender, birthday, weight, height, pickey, username, url);
         FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userinfo);
+        FirebaseDatabase.getInstance().getReference("Likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("null");
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
         startActivity(intent);
 

@@ -78,6 +78,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     FirebaseStorage storage;
     StorageReference storageReference;
+    DatabaseReference ref;
 
     ArrayList<String> videoRefTitles = new ArrayList<String>();
     ArrayList<String> videoDispTitles = new ArrayList<String>();
@@ -90,10 +91,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     int numLikedVideos;
 
     String which = "";
-
-    ImageButton video1;
-    ImageButton video2;
-    ImageButton video3;
+    String videoId;
 
     private FirebaseUser user;
     private DatabaseReference dbreference;
@@ -425,13 +423,11 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         else if(i == 2){
             getVideoResultsbyTitle();
         }
-
-        //getVideoResultsbyTitle();
     }
     //uploaded videos
     private void getVideoResultsbyTitle(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Video References");
+        ref = database.getReference("Video References");
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         //String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
@@ -459,23 +455,53 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     //liked videos
     private void getLikedVideos(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Likes");
+        ref = database.getReference("Likes");
+
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
-        //String uidusername = FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").toString();
-        ref.orderByChild("uploadingUser").equalTo(username).limitToFirst(10)
+
+        //String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        ref.child(username).limitToFirst(10)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        Map<String, String> results = (Map<String, String>) snapshot.getValue();
                         if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                videoRefTitles1.add(entry.getValue().get("reference title"));
-                                videoDispTitles1.add(entry.getValue().get("title"));
+                            for(Map.Entry<String, String> entry : results.entrySet()){
+                                videoRefTitles1.add(entry.getValue());
+                                ref = database.getReference("Video References");
+                                ref.orderByChild("reference title").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            videoId = ds.getKey();
+                                            //Log.d("TAG", uid);
+                                        }
+                                        ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                                videoDispTitles1.add(results.get("title"));
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    };
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                //videoDispTitles1.add(entry.getValue());
                                 numLikedVideos++;
                             }
                         }
-                        displayResultsUploaded();
+                        displayLikedVideos();
                         //numVideos = results.entrySet().size();
                     }
 
@@ -483,6 +509,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
     }
+
+
 
 //display uploaded
     private void displayResultsUploaded(){
@@ -709,73 +737,4 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);
     }
-
-    /*
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void uploadImage() {
-
-        if(filePath != null)
-        {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-
-            StorageReference ref = storageReference.child("profilepictures/"+ UUID.randomUUID().toString());
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(ProfileActivityEdits.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri downloadUrl) {
-                                    pickey =String.valueOf(downloadUrl);
-                                }
-                            });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(ProfileActivityEdits.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
-            FirebaseDatabase.getInstance().getReference("UserInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("pickey").setValue(pickey);
-        }
-    }
-     */
 }
