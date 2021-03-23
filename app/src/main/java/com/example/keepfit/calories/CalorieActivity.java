@@ -88,8 +88,8 @@ public class CalorieActivity extends AppCompatActivity {
     long timeInPause = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
+    Handler timerMyHandler = new Handler();
+    Runnable timerMyRunnable = new Runnable() {
 
         @Override
         public void run() {
@@ -100,7 +100,7 @@ public class CalorieActivity extends AppCompatActivity {
 
             timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 
-            timerHandler.postDelayed(this, 500);
+            timerMyHandler.postDelayed(this, 500);
         }
     };
 
@@ -179,13 +179,13 @@ public class CalorieActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button b = (Button) v;
                 if (b.getText().equals("stop")) {
-                    timerHandler.removeCallbacks(timerRunnable);
+                    timerMyHandler.removeCallbacks(timerMyRunnable);
                     timeInPause = System.currentTimeMillis() - startTime;
                     b.setText("start");
                     pausestart.setText("unpause");
                 } else {
                     startTime = System.currentTimeMillis();
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    timerMyHandler.postDelayed(timerMyRunnable, 0);
                     pausestart.setText("pause");
                     b.setText("stop");
                 }
@@ -196,13 +196,13 @@ public class CalorieActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button b = (Button) v;
                 if (b.getText().equals("pause")) { //Start again
-                    timerHandler.removeCallbacks(timerRunnable);
+                    timerMyHandler.removeCallbacks(timerMyRunnable);
                     timeInPause = System.currentTimeMillis() - startTime;
                     b.setText("unpause");
                     startstop.setText("start");
                 } else { //Stop the timer
                     startTime = System.currentTimeMillis() - timeInPause;
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    timerMyHandler.postDelayed(timerMyRunnable, 0);
                     b.setText("pause");
                     startstop.setText("stop");
                 }
@@ -347,7 +347,7 @@ public class CalorieActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        timerHandler.removeCallbacks(timerRunnable);
+        timerMyHandler.removeCallbacks(timerMyRunnable);
         Button b = (Button)findViewById(R.id.startstop);
         b.setText("start");
     }
