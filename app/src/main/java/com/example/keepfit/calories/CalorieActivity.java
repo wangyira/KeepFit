@@ -45,6 +45,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class CalorieActivity extends AppCompatActivity {
 
     TextView myTitle;
@@ -271,8 +274,10 @@ public class CalorieActivity extends AppCompatActivity {
 
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
                         myTotalCalories = myTotalCalories + NewMETValue;
+                        BigDecimal bd = new BigDecimal(Double.toString(myTotalCalories));
+                        myTotalCalories = bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                         String myDisplayValue = Double.toString(myTotalCalories);
-                        TotalCalories.setText(myDisplayValue);
+                        TotalCalories.setText(myDisplayValue + " Total Calories Burned!");
 
                         Context context = getApplicationContext();
                         CharSequence text = "Exercise Recorded!";
@@ -344,8 +349,10 @@ public class CalorieActivity extends AppCompatActivity {
 
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
                         myTotalCalories = myTotalCalories + NewMETValue;
+                        BigDecimal bd = new BigDecimal(Double.toString(myTotalCalories));
+                        myTotalCalories = bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                         String myDisplayValue = Double.toString(myTotalCalories);
-                        TotalCalories.setText(myDisplayValue);
+                        TotalCalories.setText(myDisplayValue + " Total Calories Burned!");
 
                         Context context = getApplicationContext();
                         CharSequence text = "Exercise Recorded!";
