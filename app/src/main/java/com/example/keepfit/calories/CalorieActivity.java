@@ -282,7 +282,8 @@ public class CalorieActivity extends AppCompatActivity {
                         Context context = getApplicationContext();
                         CharSequence text = "Exercise Recorded!";
                         int duration = Toast.LENGTH_SHORT;
-
+                        startTime=0;
+                        timerTextView.setText(String.format("%d:%02d", 0, 0));
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
                     }
@@ -356,8 +357,9 @@ public class CalorieActivity extends AppCompatActivity {
 
                         Context context = getApplicationContext();
                         CharSequence text = "Exercise Recorded!";
+                        startTime=0;
+                        timerTextView.setText(String.format("%d:%02d", 0, 0));
                         int duration = Toast.LENGTH_SHORT;
-
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
 
