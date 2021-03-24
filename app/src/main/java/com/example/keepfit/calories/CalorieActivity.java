@@ -63,6 +63,11 @@ public class CalorieActivity extends AppCompatActivity {
 
     String myCurrentValue;
 
+    TextView TotalCalories;
+    Button ClearCalories;
+
+    double myTotalCalories;
+
 
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -128,6 +133,7 @@ public class CalorieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_calorie);
 
         //navbar
@@ -164,9 +170,7 @@ public class CalorieActivity extends AppCompatActivity {
             }
         });
 
-
-
-
+        myTotalCalories = 0;
 
         timerTextView = (TextView) findViewById(R.id.myTimer);
 
@@ -264,6 +268,18 @@ public class CalorieActivity extends AppCompatActivity {
                         METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
 
                         mConditionRef.push().setValue(myMETValue);
+
+                        TotalCalories = (TextView)findViewById((R.id.TotalCalories));
+                        myTotalCalories = myTotalCalories + NewMETValue;
+                        String myDisplayValue = Double.toString(myTotalCalories);
+                        TotalCalories.setText(myDisplayValue);
+
+                        Context context = getApplicationContext();
+                        CharSequence text = "Exercise Recorded!";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
 
                     @Override
@@ -326,6 +342,18 @@ public class CalorieActivity extends AppCompatActivity {
 
                         mConditionRef.push().setValue(myMETValue);
 
+                        TotalCalories = (TextView)findViewById((R.id.TotalCalories));
+                        myTotalCalories = myTotalCalories + NewMETValue;
+                        String myDisplayValue = Double.toString(myTotalCalories);
+                        TotalCalories.setText(myDisplayValue);
+
+                        Context context = getApplicationContext();
+                        CharSequence text = "Exercise Recorded!";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+
                     }
 
                     @Override
@@ -335,10 +363,23 @@ public class CalorieActivity extends AppCompatActivity {
                 });
 
 
+            }
+        });
 
+        ClearCalories = (Button) findViewById((R.id.ClearCalories));
+        ClearCalories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button b = (Button) v;
+
+                myTotalCalories = 0.0;
+
+                TotalCalories = (TextView)findViewById((R.id.TotalCalories));
+                TotalCalories.setText("0");
 
             }
         });
+
 
 
 

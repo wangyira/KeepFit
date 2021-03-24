@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,14 +14,14 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/new_bottom_navigation"
         app:layout_constraintBottom_toBottomOf="parent" />
-        
+
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="270dp"
         android:layout_height="24dp"
         android:layout_marginStart="68dp"
         android:layout_marginLeft="68dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:entries="@array/tagEntries"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myTitle" />
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginLeft="160dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/app_name"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +55,7 @@
         android:layout_height="28dp"
         android:layout_marginStart="148dp"
         android:layout_marginLeft="148dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="Timer"
         android:textSize="24sp"
@@ -131,6 +132,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:navGraph="@navigation/mobile_navigation" />
+
+    <TextView
+        android:id="@+id/TotalCalories"
+        android:layout_width="94dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center|center_horizontal"
+        android:text="Total Calories Burned"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submit2" />
+
+    <Button
+        android:id="@+id/ClearCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginLeft="68dp"
+        android:layout_marginTop="16dp"
+        android:text="Clear"
+        app:layout_constraintStart_toEndOf="@+id/TotalCalories"
+        app:layout_constraintTop_toBottomOf="@+id/submit2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
