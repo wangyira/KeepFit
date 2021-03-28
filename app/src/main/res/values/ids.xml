@@ -14,4 +14,25 @@
     <item name="item6txt" type="id" />
     <item name="item7btn" type="id" />
     <item name="item7txt" type="id" />
+    <item name="viewDisliked" type="id" />
+    <item name="ditem1btn" type="id" />
+    <item name="ditem1txt" type="id" />
+    <item name="ditem2btn" type="id" />
+    <item name="ditem2txt" type="id"/>
+    <item name="ditem3btn" type="id"/>
+    <item name="ditem3txt" type="id"/>
+    <item name="ditem4btn" type="id"/>
+    <item name="ditem4txt" type="id"/>
+    <item name="ditem5btn" type="id"/>
+    <item name="ditem5txt" type="id"/>
+    <item name="ditem6btn" type="id"/>
+    <item name="ditem6txt" type="id"/>
+    <item name="ditem7btn" type="id"/>
+    <item name="ditem7txt" type="id"/>
+    <item name="ditem8btn" type="id"/>
+    <item name="ditem8txt" type="id"/>
+    <item name="ditem9btn" type="id"/>
+    <item name="ditem9txt" type="id"/>
+    <item name="ditem10btn" type="id"/>
+    <item name="ditem10txt" type="id"/>
 </resources>
