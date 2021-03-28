@@ -549,7 +549,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
 
 
-//display uploaded
+    //display uploaded
     private void displayResultsUploaded(){
         for(int i=0; i < numUploadedVideos; i++){
             final int j = i;
@@ -557,7 +557,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 @Override
                 public void onClick(View v) {
                     Log.d("myTag", "@@@@@@@");
-                        openNewActivityVideo(j);
+                    openNewActivityVideo(j);
                 }
             });
         }

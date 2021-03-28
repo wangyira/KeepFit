@@ -138,15 +138,27 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item1like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item1dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
+
             </LinearLayout>
 
 
@@ -180,15 +192,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item2like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item2dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -221,15 +244,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item3like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item3dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -262,15 +296,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item4like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item4dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -303,15 +348,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item5like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item5dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -344,15 +400,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item6like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item6dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -367,6 +434,7 @@
                 android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginRight="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <LinearLayout
@@ -385,15 +453,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item7like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item7dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -426,15 +505,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item8like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item8dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -467,15 +557,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item9like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item9dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -508,15 +609,26 @@
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item10like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item10dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -553,11 +665,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item11like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item11dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item12button"
@@ -593,11 +715,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item12like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item12dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item13button"
@@ -633,11 +765,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item13like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item13dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item14button"
@@ -673,11 +815,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item14like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item14dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -714,11 +866,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item15like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item15dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item16button"
@@ -754,11 +916,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item16like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item16dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item17button"
@@ -794,11 +966,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item17like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item17dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item18button"
@@ -834,11 +1016,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item18like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item18dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item19button"
@@ -874,11 +1066,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item19like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item19dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/item20button"
@@ -914,11 +1116,21 @@
                     android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item20like"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="115dp"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
                     android:background="@color/purple_200"
-                    android:text="@string/like" />
+                    android:text="@string/like"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                <Button
+                    android:id="@+id/item20dislike"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:background="@color/purple_200"
+                    android:text="@string/dislike"
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
