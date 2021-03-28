@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
     ArrayList<TextView> textViewsProfile = new ArrayList<TextView>();
     ArrayList<Button> likes = new ArrayList<Button>();
+    ArrayList<Button> dislikes = new ArrayList<Button>();
 
 
     ArrayList<String> videoRefTitles = new ArrayList<String>();

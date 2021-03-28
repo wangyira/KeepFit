@@ -33,6 +33,7 @@
         <item>@string/tag4</item>
     </string-array>
     <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
     <string name="title_activity_login">Welcome!</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
