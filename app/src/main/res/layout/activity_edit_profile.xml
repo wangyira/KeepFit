@@ -300,345 +300,6 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/viewLikedVideos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text = "View Liked Videos"
-                    android:textSize="24sp"
-                    android:layout_centerInParent="true" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/item1btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item1txt"
-                    android:text="item 1"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item2btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item2txt"
-                    android:text="item 2"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item3btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item3txt"
-                    android:text="item 3"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item4btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item4txt"
-                    android:text="item 4"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item5btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item5txt"
-                    android:text="item 5"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item6btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item6txt"
-                    android:text="item 6"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item7btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item7txt"
-                    android:text="item 7"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item8btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item8txt"
-                    android:text="item 8"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item9btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item9txt"
-                    android:text="item 9"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <ImageButton
-                    android:id="@+id/item10btn"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/item10txt"
-                    android:text="item 10"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/viewDisliked"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text = "View Disiked Videos"-->
-<!--                    android:textSize="24sp"-->
-<!--                    android:layout_centerInParent="true" />-->
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem1btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem1txt"-->
-<!--                    android:text="item 1"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem2btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem2txt"-->
-<!--                    android:text="item 2"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem3btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem3txt"-->
-<!--                    android:text="item 3"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem4btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem4txt"-->
-<!--                    android:text="item 4"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem5btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem5txt"-->
-<!--                    android:text="item 5"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem6btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem6txt"-->
-<!--                    android:text="item 6"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem7btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem7txt"-->
-<!--                    android:text="item 7"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem8btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem8txt"-->
-<!--                    android:text="item 8"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem9btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem9txt"-->
-<!--                    android:text="item 9"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/ditem10btn"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="150dp"-->
-<!--                    android:layout_gravity="center"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/ditem10txt"-->
-<!--                    android:text="item 10"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginBottom="20dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"/>-->
-<!--            </LinearLayout>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
                     android:id="@+id/viewUploaded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -803,6 +464,346 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/viewLikedVideos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text = "View Liked Videos"
+                    android:textSize="24sp"
+                    android:layout_centerInParent="true" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/item1btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item1txt"
+                    android:text="item 1"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item2btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item2txt"
+                    android:text="item 2"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item3btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item3txt"
+                    android:text="item 3"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item4btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item4txt"
+                    android:text="item 4"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item5btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item5txt"
+                    android:text="item 5"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item6btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item6txt"
+                    android:text="item 6"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item7btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item7txt"
+                    android:text="item 7"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item8btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item8txt"
+                    android:text="item 8"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item9btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item9txt"
+                    android:text="item 9"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/item10btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/item10txt"
+                    android:text="item 10"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/viewDisliked"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text = "View Disliked Videos"
+                    android:textSize="24sp"
+                    android:layout_centerInParent="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/ditem1btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem1txt"
+                    android:text="item 1"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem2btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem2txt"
+                    android:text="item 2"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem3btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem3txt"
+                    android:text="item 3"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem4btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem4txt"
+                    android:text="item 4"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem5btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem5txt"
+                    android:text="item 5"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem6btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem6txt"
+                    android:text="item 6"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem7btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem7txt"
+                    android:text="item 7"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem8btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem8txt"
+                    android:text="item 8"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem9btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem9txt"
+                    android:text="item 9"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/ditem10btn"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/ditem10txt"
+                    android:text="item 10"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>

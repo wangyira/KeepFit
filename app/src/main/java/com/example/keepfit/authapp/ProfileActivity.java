@@ -188,33 +188,34 @@ public class ProfileActivity extends AppCompatActivity {
             editTextName.requestFocus();
             return;
         }
-        if(phonenumber.length() < 10){
+        if(phonenumber.length() != 10){
             editTextPhoneNumber.setError("Valid phone number is required!");
             editTextPhoneNumber.requestFocus();
             return;
         }
-        if(birthday.length() < 8) {
-            editTextBirthday.setError("Valid birthday is required!");
-            editTextBirthday.requestFocus();
-            return;
-        }
-        if(gender == ""){
+        if(!(gender.equalsIgnoreCase("Male") || gender.equalsIgnoreCase("Female")|| gender.equalsIgnoreCase("Non binary"))){
             editTextGender.setError("Enter Male, Female or Non binary!");
             editTextGender.requestFocus();
             return;
         }
+        if(birthday.length() != 8) {
+            editTextBirthday.setError("Valid birthday is required!");
+            editTextBirthday.requestFocus();
+            return;
+        }
 
-        if(weight == ""){
+        if(weight.length() < 2){
             editTextWeight.setError("Valid weight is required!");
             editTextWeight.requestFocus();
             return;
         }
 
-        if(height ==  ""){
+        if(height.length() < 2){
             editTextHeight.setError("Valid height is required!");
             editTextHeight.requestFocus();
             return;
         }
+
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         String sharedemail = sharedPreferences.getString(EMAIL, "");
