@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         for(int i=0; i < numVideos; i++) {
-            Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
+            //Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
                 final int j = i;
@@ -314,15 +314,20 @@ public class MainActivity extends AppCompatActivity {
 
                         Button bp = likes.get(j);
                         //change color
-
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-                                Log.d("ONCLICK", "in ON click");
-                                like(videoRefTitles.get(j));
-                            }
+                            public void onClick(View v) { like(videoRefTitles.get(j)); }
                         });
                         bp.setVisibility(View.VISIBLE);
+
+                        Button dl = dislikes.get(j);
+                        //change color
+                        dl.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) { dislike(videoRefTitles.get(j)); }
+                        });
+                        dl.setVisibility(View.VISIBLE);
+
 
                         //String ProfilerefTitle = videoUploadingUserPic.get(j);
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
@@ -518,6 +523,27 @@ public class MainActivity extends AppCompatActivity {
         likes.add(findViewById(R.id.item19like));
         likes.add(findViewById(R.id.item20like));
 
+        dislikes.add(findViewById(R.id.item1dislike));
+        dislikes.add(findViewById(R.id.item2dislike));
+        dislikes.add(findViewById(R.id.item3dislike));
+        dislikes.add(findViewById(R.id.item4dislike));
+        dislikes.add(findViewById(R.id.item5dislike));
+        dislikes.add(findViewById(R.id.item6dislike));
+        dislikes.add(findViewById(R.id.item7dislike));
+        dislikes.add(findViewById(R.id.item8dislike));
+        dislikes.add(findViewById(R.id.item9dislike));
+        dislikes.add(findViewById(R.id.item10dislike));
+        dislikes.add(findViewById(R.id.item11dislike));
+        dislikes.add(findViewById(R.id.item12dislike));
+        dislikes.add(findViewById(R.id.item13dislike));
+        dislikes.add(findViewById(R.id.item14dislike));
+        dislikes.add(findViewById(R.id.item15dislike));
+        dislikes.add(findViewById(R.id.item16dislike));
+        dislikes.add(findViewById(R.id.item17dislike));
+        dislikes.add(findViewById(R.id.item18dislike));
+        dislikes.add(findViewById(R.id.item19dislike));
+        dislikes.add(findViewById(R.id.item20dislike));
+
     }
 
     private void makeInvisible(){
@@ -535,6 +561,9 @@ public class MainActivity extends AppCompatActivity {
         }
         for(Button l : likes){
             l.setVisibility(View.GONE);
+        }
+        for(Button dl : dislikes){
+            dl.setVisibility(View.GONE);
         }
     }
 
@@ -676,6 +705,13 @@ public class MainActivity extends AppCompatActivity {
         });*/
         //Pair<String, String> pair = new Pair<String, String>(videoRefTitles.get(j), null);
         //likeRef.push().setValue(refTitle);
+    }
+
+    private void dislike(String refTitle){
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
+        dislikeRef.push().setValue(refTitle);
     }
 
     private void getUserID(String username){

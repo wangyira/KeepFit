@@ -69,7 +69,7 @@ import java.util.logging.Logger;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded;
+    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewDisliked;
     private ImageView imageView;
 
     private Uri filePath;
@@ -80,15 +80,21 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     StorageReference storageReference;
     DatabaseReference ref;
 
+    //uploaded vidoes
     ArrayList<String> videoRefTitles = new ArrayList<String>();
     ArrayList<String> videoDispTitles = new ArrayList<String>();
+    //liked videos
     ArrayList<String> videoRefTitles1 = new ArrayList<String>();
     ArrayList<String> videoDispTitles1 = new ArrayList<String>();
+    //disliked videos
+    ArrayList<String> videoRefTitles2 = new ArrayList<String>();
+    ArrayList<String> videoDispTitles2 = new ArrayList<String>();
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
-    //int numVideos;
+
     int numUploadedVideos;
     int numLikedVideos;
+    int numDislikedVideos;
 
     String which = "";
     String videoId;
@@ -111,7 +117,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnLogout = findViewById(R.id.btnlogout);
 
         btnviewLiked = findViewById(R.id.viewLikedVideos);
-        //btnviewDisliked = findViewById(R.id.viewDisliked);
+        btnviewDisliked = findViewById(R.id.viewDisliked);
         btnviewUploaded = findViewById(R.id.viewUploaded);
 
         storage = FirebaseStorage.getInstance();
@@ -119,6 +125,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
         numUploadedVideos = 0;
         numLikedVideos = 0;
+        numDislikedVideos = 0;
         //mAuth = FirebaseAuth.getInstance();
 
         //navbar
@@ -244,12 +251,12 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-//        btnviewDisliked.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                search(2);
-//            }
-//        });
+        btnviewDisliked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search(3);
+            }
+        });
 
         btnviewUploaded.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,34 +374,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         });
 
 
-
-
-        //video1 = (ImageButton) findViewById(R.id.imageButton1);
-        //video2 = (ImageButton) findViewById(R.id.imageButton2);
-        //video3 = (ImageButton) findViewById(R.id.imageButton3);
-//        video1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //if(video)
-//                search();
-//            }
-//        });
-
-//        video2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //if(video)
-//                openNewActivity();
-//            }
-//        });
-//
-//        video3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //if(video)
-//                openNewActivity();
-//            }
-//        });
     }
 
     public void openNewActivity(){
@@ -423,7 +402,65 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         else if(i == 2){
             getVideoResultsbyTitle();
         }
+        //disliked videos
+        else if (i == 3){
+            getDislikedVideos();
+        }
     }
+
+    private void getDislikedVideos() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("Dislikes");
+
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+
+        ref.child(username).limitToFirst(10)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, String> results = (Map<String, String>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, String> entry : results.entrySet()){
+                                videoRefTitles2.add(entry.getValue());
+                                ref = database.getReference("Video References");
+                                ref.orderByChild("reference title").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            videoId = ds.getKey();
+                                            //Log.d("TAG", uid);
+                                        }
+                                        ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                                videoDispTitles2.add(results.get("title"));
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    };
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                numDislikedVideos++;
+                            }
+                        }
+                        displayDislikedVideos();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
     //uploaded videos
     private void getVideoResultsbyTitle(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -512,7 +549,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
 
 
-//display uploaded
+    //display uploaded
     private void displayResultsUploaded(){
         for(int i=0; i < numUploadedVideos; i++){
             final int j = i;
@@ -520,7 +557,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 @Override
                 public void onClick(View v) {
                     Log.d("myTag", "@@@@@@@");
-                        openNewActivityVideo(j);
+                    openNewActivityVideo(j);
                 }
             });
         }
@@ -590,6 +627,47 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         }
     }
 
+    //get disliked videos
+    private void displayDislikedVideos(){
+        for(int i=0; i < numDislikedVideos; i++){
+            final int j = i;
+            imageButtons.get(i+20).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("myTag", "@@@@@@@");
+                    openNewActivityVideoDisliked(j);
+                }
+            });
+        }
+        //display video results
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        for(int i=0; i < numDislikedVideos; i++) {
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles2.get(i) + ".jpg");
+            try {
+                final int j = i;
+                final File localFile = File.createTempFile(videoRefTitles2.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j+20);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j+20);
+                        tv.setText(videoDispTitles2.get(j));
+                        tv.setVisibility(View.VISIBLE);
+
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+
     private Bitmap imgToBitmap(File file){
         byte[] bytes = null;
         try{
@@ -656,17 +734,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         imageButtons.add(findViewById(R.id.item9btn));
         imageButtons.add(findViewById(R.id.item10btn));
 
-//        imageButtons.add(findViewById(R.id.ditem1btn));
-//        imageButtons.add(findViewById(R.id.ditem2btn));
-//        imageButtons.add(findViewById(R.id.ditem3btn));
-//        imageButtons.add(findViewById(R.id.ditem4btn));
-//        imageButtons.add(findViewById(R.id.ditem5btn));
-//        imageButtons.add(findViewById(R.id.ditem6btn));
-//        imageButtons.add(findViewById(R.id.ditem7btn));
-//        imageButtons.add(findViewById(R.id.ditem8btn));
-//        imageButtons.add(findViewById(R.id.ditem9btn));
-//        imageButtons.add(findViewById(R.id.ditem10btn));
-
         imageButtons.add(findViewById(R.id.uitem1btn));
         imageButtons.add(findViewById(R.id.uitem2btn));
         imageButtons.add(findViewById(R.id.uitem3btn));
@@ -677,6 +744,17 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         imageButtons.add(findViewById(R.id.uitem8btn));
         imageButtons.add(findViewById(R.id.uitem9btn));
         imageButtons.add(findViewById(R.id.uitem10btn));
+
+        imageButtons.add(findViewById(R.id.ditem1btn));
+        imageButtons.add(findViewById(R.id.ditem2btn));
+        imageButtons.add(findViewById(R.id.ditem3btn));
+        imageButtons.add(findViewById(R.id.ditem4btn));
+        imageButtons.add(findViewById(R.id.ditem5btn));
+        imageButtons.add(findViewById(R.id.ditem6btn));
+        imageButtons.add(findViewById(R.id.ditem7btn));
+        imageButtons.add(findViewById(R.id.ditem8btn));
+        imageButtons.add(findViewById(R.id.ditem9btn));
+        imageButtons.add(findViewById(R.id.ditem10btn));
 
 
         textViews.add(findViewById(R.id.item1txt));
@@ -690,17 +768,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         textViews.add(findViewById(R.id.item9txt));
         textViews.add(findViewById(R.id.item10txt));
 
-//        textViews.add(findViewById(R.id.ditem1txt));
-//        textViews.add(findViewById(R.id.ditem2txt));
-//        textViews.add(findViewById(R.id.ditem3txt));
-//        textViews.add(findViewById(R.id.ditem4txt));
-//        textViews.add(findViewById(R.id.ditem5txt));
-//        textViews.add(findViewById(R.id.ditem6txt));
-//        textViews.add(findViewById(R.id.ditem7txt));
-//        textViews.add(findViewById(R.id.ditem8txt));
-//        textViews.add(findViewById(R.id.ditem9txt));
-//        textViews.add(findViewById(R.id.ditem10txt));
-
         textViews.add(findViewById(R.id.uitem1txt));
         textViews.add(findViewById(R.id.uitem2txt));
         textViews.add(findViewById(R.id.uitem3txt));
@@ -711,6 +778,17 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         textViews.add(findViewById(R.id.uitem8txt));
         textViews.add(findViewById(R.id.uitem9txt));
         textViews.add(findViewById(R.id.uitem10txt));
+
+        textViews.add(findViewById(R.id.ditem1txt));
+        textViews.add(findViewById(R.id.ditem2txt));
+        textViews.add(findViewById(R.id.ditem3txt));
+        textViews.add(findViewById(R.id.ditem4txt));
+        textViews.add(findViewById(R.id.ditem5txt));
+        textViews.add(findViewById(R.id.ditem6txt));
+        textViews.add(findViewById(R.id.ditem7txt));
+        textViews.add(findViewById(R.id.ditem8txt));
+        textViews.add(findViewById(R.id.ditem9txt));
+        textViews.add(findViewById(R.id.ditem10txt));
 
 
     }
@@ -737,4 +815,11 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);
     }
+    public void openNewActivityVideoDisliked(int i){
+        String referenceTitle = videoRefTitles2.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+
 }
