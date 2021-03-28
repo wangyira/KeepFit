@@ -127,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         String input = new String();
-        //get input
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            input = extras.getString("input");
-        }
 
         //set searchbar to have input in it (that user searched)
         ((EditText) findViewById(R.id.searchBar)).setText("");

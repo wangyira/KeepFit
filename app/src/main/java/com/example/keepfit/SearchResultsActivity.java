@@ -159,6 +159,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
                 String inputa = searchInputBar.getText().toString();
                 makeInvisible();
+                Log.d("search ", "search " + inputa);
                 search(inputa);
             }
         });
@@ -225,19 +226,19 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
         getLivestreamResultsbyTitle(input);*/
 
+        //Log.e("searching", "input: " + input);
         if(input.equals(getString(R.string.tag1))
                 || input.equals(getString(R.string.tag2))
                 || input.equals(getString(R.string.tag3))
-                || input.equals(getString(R.string.tag4)) ){
+                || input.equals(getString(R.string.tag4)) ) {
             getLivestreamResultsbyTag(input);
-        }
-        else{
-            getProfileResults(input);
-        }
+        } else{ getProfileResults(input); }
+
     }
 
 
     private void getProfileResults(String input){
+        //Log.e("getProfileResults", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("UserInformation");
         ref.orderByChild("username").equalTo(input).limitToFirst(20)
@@ -249,6 +250,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numProfiles < 3) {
                                     Map<String, String> val = entry.getValue();
+                                    //Log.e("getProfileResults", "referenceTitle: " + val.get("referenceTitle"));
+                                    //Log.e("getProfileResults", "username: " + val.get("username"));
                                     profileRefs.add(val.get("referenceTitle"));
                                     profileUsernames.add(val.get("username"));
                                     numProfiles++;
@@ -276,7 +279,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numVideos < (20-numLivestreams-numProfiles)) {
-                                    Log.d("Found something", "Found: " + entry.getValue().get("title"));
+                                    //Log.d("Found something", "Found: " + entry.getValue().get("title"));
                                     videoRefTitles.add(entry.getValue().get("reference title"));
                                     videoDispTitles.add(entry.getValue().get("title"));
                                     String uploadingUser = entry.getValue().get("uploadingUser");
@@ -309,7 +312,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numVideos < (20-numProfiles-numLivestreams)) {
-                                    videoRefTitles.add(entry.getValue().get("referenceTitle"));
+                                    //Log.e("getVideoResultsbyTitle", "referenceTitle: " + entry.getValue().get("referenceTitle"));
+                                    videoRefTitles.add(entry.getValue().get("reference title"));
                                     videoDispTitles.add(entry.getValue().get("title"));
 
                                     String uploadingUser = entry.getValue().get("uploadingUser");
@@ -380,7 +384,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                     lsZoomLinks.add(entry.getValue().get("zoomLink"));
 
                                     String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                                   Log.d("uploading user", uploadingUser);
+                                   //Log.d("uploading user", uploadingUser);
                                     livestreamUploadingUser.add(uploadingUser);
                                     //getLivestreamUploadingUserPic(uploadingUser);
 
@@ -389,6 +393,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 else{break;}
                             }
                         }
+                        //Log.e("calling dr", "calling");
                         displayResults();
                     }
 
@@ -399,12 +404,13 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void displayResults(){
+        //Log.e("displayResults", "displaying results");
         for(int i=0; i < 20; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("myTag", "@@@@@@@");
+                    //.d("myTag", "@@@@@@@");
                     if(j < numVideos){
                         openNewActivityVideo(j);
                     } else if ( j < numVideos+numLivestreams){
@@ -419,11 +425,13 @@ public class SearchResultsActivity extends AppCompatActivity {
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         for(int i=0; i < numVideos; i++) {
-            Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
+            //Log.e("Printing Video", "Video: " + videoDispTitles.get(i));
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
+            //Log.e("videoRefTitle", "videoRefTitle: "+ videoRefTitles.get(i));
             try {
                 final int j = i;
                 final File localFile = File.createTempFile(videoRefTitles.get(i), "jpg");
+                //Log.e("videoRefTitle 2", "videoRefTitle 2: "+ videoRefTitles.get(i));
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -439,7 +447,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.d("ONCLICK", "in ON click");
+                                //Log.d("ONCLICK", "in ON click");
                                 like(videoRefTitles.get(j));
                             }
                         });
@@ -534,6 +542,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         //display profiles
         for(int i=0; i < numProfiles; i++){
+            Log.e("display profile", "user: " + profileUsernames.get(i));
             StorageReference PimageRef = storageRef.child("/profilepictures/" + profileRefs.get(i) );
 
             try{
