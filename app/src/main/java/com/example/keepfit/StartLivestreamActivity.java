@@ -140,7 +140,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                String zoomLink = SaveDetails(selectedType);
+                String  zoomLink = SaveDetails(selectedType);
                 if(zoomLink != "ERROR") {
                     Intent viewIntent =
                             new Intent("android.intent.action.VIEW",
