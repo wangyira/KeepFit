@@ -39,6 +39,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
     private FirebaseAuth mAuth;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void userLogin() {
+    public void userLogin() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
