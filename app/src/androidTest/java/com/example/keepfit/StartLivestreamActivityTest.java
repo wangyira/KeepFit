@@ -38,7 +38,7 @@ public class StartLivestreamActivityTest {
     private String expectedUser = "ritikadendi1";
     private String expectedExercise = "Anaerobic";
     private String expectedEndtime = "16:30";
-    private int expectedMaxppl = 25;
+    private Long expectedMaxppl = 25L;
     private String expectedRefTitle = "09ffaefd-02e1-4c12-ad88-190adb88a05a.jpg";
     private String expectedTitle = "workout with me";
 
