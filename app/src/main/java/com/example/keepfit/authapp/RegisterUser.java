@@ -38,6 +38,34 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private EditText editTextUsername;
     //private ProgressBar progressBar;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    private String name;
+    private String email;
+    private String password;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -57,6 +85,10 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         register = (Button) findViewById(R.id.registerUser);
         register.setOnClickListener(this);
 
+        name = editTextUsername.getText().toString().trim();
+        email = editTextEmail.getText().toString();
+        password = editTextPassword.getText().toString().trim();
+
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
@@ -69,10 +101,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void registerUsers(){
-        String name = editTextUsername.getText().toString().trim();
-        String email = editTextEmail.getText().toString();
-        String password = editTextPassword.getText().toString().trim();
+    protected void registerUsers(){
 
         if(name.isEmpty()){
             editTextUsername.setError("Username is required!");

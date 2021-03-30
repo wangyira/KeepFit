@@ -68,7 +68,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     String imageUrl = null;
 
     LivestreamMember member;
-    String[] exerciseTypes = {"","Aerobic","Anaerobic","Flexibility","Stability"};
+    String[] exerciseTypes = {"Aerobic","Anaerobic","Flexibility","Stability"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +140,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                String zoomLink = SaveDetails(selectedType);
+                String  zoomLink = SaveDetails(selectedType);
                 if(zoomLink != "ERROR") {
                     Intent viewIntent =
                             new Intent("android.intent.action.VIEW",
@@ -261,26 +261,30 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             FirebaseStorage storage = FirebaseStorage.getInstance();
             UUID randomUUID = UUID.randomUUID();
             StorageReference imageRef = storage.getReference("livestream_thumbnail_images/" + randomUUID + ".jpg");
-            UploadTask imageUploadTask = imageRef.putFile(imageURI);
 
-            imageUploadTask.addOnSuccessListener(StartLivestreamActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
-                    member.setTitle(titleText);
-                    member.setMaxNumberOfPeople(Integer.parseInt(peopleText));
-                    member.setExerciseType(selectedType);
-                    member.setEndTime(timeText);
-                    member.setZoomLink(zoomText);
-                    member.setReferenceTitle(randomUUID + ".jpg");
+            if(imageURI != null) {
+                UploadTask imageUploadTask = imageRef.putFile(imageURI);
+                imageUploadTask.addOnSuccessListener(StartLivestreamActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
+                        member.setTitle(titleText);
+                        member.setMaxNumberOfPeople(Integer.parseInt(peopleText));
+                        member.setExerciseType(selectedType);
+                        member.setEndTime(timeText);
+                        member.setZoomLink(zoomText);
+                        member.setReferenceTitle(randomUUID + ".jpg");
 
-                    SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
-                    String username = sharedPref.getString("username", null);
-                    member.setUploadingUser(username);
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+                        member.setUploadingUser(username);
 
-                    String id = databaseReference.push().getKey();
-                    databaseReference.child(id).setValue(member);
-                }
-            });
+                        String id = databaseReference.push().getKey();
+                        databaseReference.child(id).setValue(member);
+                    }
+                });
+            }
+
+
         }
 
         return zoomText;

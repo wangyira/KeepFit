@@ -353,7 +353,7 @@ public class CalorieActivity extends AppCompatActivity {
                         BigDecimal bd = new BigDecimal(Double.toString(myTotalCalories));
                         myTotalCalories = bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                         String myDisplayValue = Double.toString(myTotalCalories);
-                        TotalCalories.setText(myDisplayValue + " Total Calories Burned!");
+                        TotalCalories.setText(myDisplayValue);
 
                         Context context = getApplicationContext();
                         CharSequence text = "Exercise Recorded!";

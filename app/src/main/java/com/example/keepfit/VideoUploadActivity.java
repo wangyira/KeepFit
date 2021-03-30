@@ -218,7 +218,7 @@ public class VideoUploadActivity extends AppCompatActivity {
         return true;
     }
 
-    private void upload() {
+    public void upload() {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         Button uploadButton = (Button) findViewById(R.id.uploadVideoButton);
         TextView successMessage = (TextView) findViewById(R.id.success_message);
@@ -334,7 +334,8 @@ public class VideoUploadActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (data != null) {
                 videoURI = data.getData();
-
+                Log.e("videoURI",videoURI.toString());
+                Log.e("videodata",data.toString());
                 videoPath = getPath(videoURI);
             }
         } else if (requestCode == 2) {

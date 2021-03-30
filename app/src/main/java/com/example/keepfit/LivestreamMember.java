@@ -6,7 +6,7 @@ public class LivestreamMember {
     private String type;
     private String endTime;
     private String zoomLink;
-    private String referenceTitle;
+    private String referenceTitle = "noThumbnail";
     private String uploadingUser;
 
     public LivestreamMember(){
