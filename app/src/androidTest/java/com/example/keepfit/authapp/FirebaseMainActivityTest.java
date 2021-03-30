@@ -2,41 +2,21 @@ package com.example.keepfit.authapp;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.keepfit.R;
+
+import org.junit.Rule;
+import org.junit.Test;
+
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
-
-import com.example.keepfit.MainActivity;
-import com.example.keepfit.R;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.not;
-
-import static androidx.test.espresso.intent.Intents.intended;
-
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 public class FirebaseMainActivityTest {
 //    @Rule
@@ -69,7 +49,7 @@ public class FirebaseMainActivityTest {
         Espresso.onView(withId(R.id.loginUser)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
