@@ -33,6 +33,12 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
+            <TextView
+                android:id="@+id/textViewVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,5 +48,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
     </VideoView>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
