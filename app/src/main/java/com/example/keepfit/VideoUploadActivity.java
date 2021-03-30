@@ -334,7 +334,8 @@ public class VideoUploadActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (data != null) {
                 videoURI = data.getData();
-
+                Log.e("videoURI",videoURI.toString());
+                Log.e("videodata",data.toString());
                 videoPath = getPath(videoURI);
             }
         } else if (requestCode == 2) {
