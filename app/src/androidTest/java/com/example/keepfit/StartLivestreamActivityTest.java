@@ -26,7 +26,7 @@ public class StartLivestreamActivityTest {
     public ActivityTestRule<StartLivestreamActivity> mainActivityTestRule = new ActivityTestRule<StartLivestreamActivity>(StartLivestreamActivity.class);
 
     @Test
-    public void saveDetails() {
+    public void startLivestreamSession() {
         Espresso.onView(withId(R.id.livestream_title)).perform(typeText(title));
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.livestream_num_people)).perform(typeText(Integer.toString(ppl)));

@@ -37,7 +37,7 @@ public class MainActivityTest {
     private String livestreamTitle = "workout with me";
 
     @Test
-    public void onCreate() {
+    public void displayExerciseVideoOnMainActivity() {
         try {
             Thread.sleep(3000);
         } catch(InterruptedException e){
@@ -52,7 +52,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void openNewActivityVideo() {
+    public void openVideoOnMainActivity() {
         try {
             Thread.sleep(5000);
         } catch(InterruptedException e){
@@ -68,7 +68,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void openNewActivityLivestream() {
+    public void joinLivestreamOnMainActivity() {
         onView(withId(R.id.searchBar)).perform(typeText(livestreamTitle));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.searchButton)).perform(click());

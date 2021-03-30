@@ -32,7 +32,7 @@ public class VideoUploadActivityTest {
     public ActivityTestRule<VideoUploadActivity> mainActivityTestRule = new ActivityTestRule<VideoUploadActivity>(VideoUploadActivity.class);
 
     @Test
-    public void upload() {
+    public void uploadFailWithoutVideo() {
         Espresso.onView(withId(R.id.titleInput)).perform(typeText(title));
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.editTextTime2)).perform(typeText(time)); //optional time

@@ -29,7 +29,7 @@ public class CalorieActivityTest {
     public ActivityTestRule<CalorieActivity> mainActivityTestRule = new ActivityTestRule<CalorieActivity>(CalorieActivity.class);
 
     @Test
-    public void onCreate() {
+    public void uploadExerciseTimeToCalculateCalorie() {
         Espresso.onView(withId(R.id.editTextTime)).perform(typeText(time));
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.submit2)).perform(click());
