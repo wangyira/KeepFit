@@ -218,7 +218,7 @@ public class VideoUploadActivity extends AppCompatActivity {
         return true;
     }
 
-    private void upload() {
+    public void upload() {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         Button uploadButton = (Button) findViewById(R.id.uploadVideoButton);
         TextView successMessage = (TextView) findViewById(R.id.success_message);

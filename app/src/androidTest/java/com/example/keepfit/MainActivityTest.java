@@ -54,13 +54,13 @@ public class MainActivityTest {
     @Test
     public void openNewActivityVideo() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
         onView(withId(R.id.item1button)).perform(click());
         try {
-            Thread.sleep(2000);
+            Thread.sleep(4000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
