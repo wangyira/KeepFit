@@ -14,7 +14,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import org.junit.Rule;
 
-public class StartLivestreamActivityTest {
+public class StartLivestreamActivityEspressoTest {
 
     private String title = "Yoga Stretch Livestream";
     private int ppl = 15;

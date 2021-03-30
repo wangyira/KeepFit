@@ -22,7 +22,7 @@ import org.junit.Rule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VideoUploadActivityTest {
+public class VideoUploadActivityEspressoTest {
     String title = "yoga video";
     String time = "0:30";
     String difficulty = "Beginner";
