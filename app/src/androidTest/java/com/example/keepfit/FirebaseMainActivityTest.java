@@ -7,13 +7,18 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.example.keepfit.authapp.User;
 
@@ -35,7 +40,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class FirebaseMainActivityTest {
 
-    private FirebaseFirestore db;
+    private String id = "4Uy3YUSpFgW78DuTe84CzPxBNpO2";
     private String email = "kaitlyn@usc.edu";
     private String username = "kaitlyn";
     private String birthday = "04072000";
@@ -48,63 +53,60 @@ public class FirebaseMainActivityTest {
 
     @Test
     public void checkRegisterActivity() {
-        db = FirebaseFirestore.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Users").child(id);
         //checks to make sure that when the user registers an account, their email and username are correctly stored
-        DocumentReference docIdRef = db.collection("Users").document(username);
-        docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    assertEquals(username, document.getString("username"));
-                    assertEquals(email, document.getString("email"));
-                } else {
-                    Log.d("document", "Failed with: ", task.getException());
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                assertEquals(username, map.get("username"));
+                assertEquals(email, map.get("email"));
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
     @Test
     public void checkCreateProfileActivity() {
-        db = FirebaseFirestore.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("UserInformation").child(id);
         //checks to make sure that when the user creates their profile (fills in personal info),
         //their information is correctly saved into the UserInformation table
-        DocumentReference docIdRef = db.collection("UserInformation").document(username);
-        docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    assertEquals(birthday, document.getString("birthday"));
-                    assertEquals(gender, document.getString("gender"));
-                    assertEquals(height, document.getString("height"));
-                    assertEquals(phonenumber, document.getString("phonenumber"));
-                    assertEquals(weight, document.getString("weight"));
-                } else {
-                    Log.d("document", "Failed with: ", task.getException());
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                assertEquals(birthday, map.get("birthday"));
+                assertEquals(gender, map.get("gender"));
+                assertEquals(height, map.get("height"));
+                assertEquals(phonenumber, map.get("phonenumber"));
+                assertEquals(weight, map.get("weight"));
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
     @Test
     public void checkProfilePicture() {
-        db = FirebaseFirestore.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("UserInformation").child(id);
         //checks to make sure that when the user adds a profile picture, it is correctly stored in Firebase
         //when an image is uploaded, the pickey and referenceTitle should be populated in the UserInformation table
-        DocumentReference docIdRef = db.collection("UserInformation").document(username);
-        docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    assertEquals(pickey, document.getString("pickey"));
-                    assertEquals(referenceTitle, document.getString("referenceTitle"));
-                } else {
-                    Log.d("document", "Failed with: ", task.getException());
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> map = (Map<String, String>) snapshot.getValue();
+                assertEquals(pickey, map.get("pickey"));
+                assertEquals(referenceTitle, map.get("referenceTitle"));
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 }
