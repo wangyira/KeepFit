@@ -42,31 +42,6 @@ public class ProfileActivityTest {
     private String username = "kaitlyn";
 
     @Test
-    public void getLikedVideosActivity() {
-        String videoReferenceTitle = "no_metadata_test_1.4ce2db05-b0b2-4f6c-b5db-00d09356665c";
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Likes");
-
-        ref.child(username)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, String> results = (Map<String, String>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, String> entry : results.entrySet()){
-                                assertEquals(videoReferenceTitle, entry.getValue());
-                                }
-                            }
-                        }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    @Test
     public void getUploadedVideosActivity(){
         String vidReferenceTitle = "no_metadata_test_1.4ce2db05-b0b2-4f6c-b5db-00d09356665c";
         String vidDisplayTitle = "no metadata test 1";

@@ -36,16 +36,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private static final String EMAIL = "email";
     private static final String PREF_FILENAME = "main";
     private EditText editTextUsername;
-    private DatabaseReference ref;
-
-    public DatabaseReference getRef() {
-        return ref;
-    }
-
-    public void setRef(DatabaseReference ref) {
-        this.ref = ref;
-    }
-
+    //private ProgressBar progressBar;
 
     public String getName() {
         return name;
@@ -98,8 +89,6 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString().trim();
 
-
-
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
@@ -113,12 +102,13 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void registerUsers(){
-        ref = FirebaseDatabase.getInstance().getReference();
+
         if(name.isEmpty()){
             editTextUsername.setError("Username is required!");
             editTextUsername.requestFocus();
             return;
         }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query query = ref.child("Users").orderByChild("username").equalTo(name);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

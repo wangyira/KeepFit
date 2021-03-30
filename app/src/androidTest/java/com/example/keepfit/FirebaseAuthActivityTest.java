@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
-public class FirebaseMainActivityTest {
+public class FirebaseAuthActivityTest {
 
     private String id = "4Uy3YUSpFgW78DuTe84CzPxBNpO2";
     private String email = "kaitlyn@usc.edu";
