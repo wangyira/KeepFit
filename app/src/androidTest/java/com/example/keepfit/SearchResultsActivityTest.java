@@ -41,7 +41,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -75,7 +75,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -88,13 +88,13 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -104,13 +104,13 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -123,7 +123,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -136,7 +136,7 @@ public class SearchResultsActivityTest {
         Espresso.onView(withId(R.id.viewLikedVideos)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -151,7 +151,7 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -164,7 +164,7 @@ public class SearchResultsActivityTest {
         Espresso.onView(withId(R.id.viewDisliked)).perform(click());
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -179,14 +179,14 @@ public class SearchResultsActivityTest {
         Espresso.closeSoftKeyboard();
         Espresso.onView(withId(R.id.searchButton)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Espresso.onView(withId(R.id.searchButton)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -199,20 +199,20 @@ public class SearchResultsActivityTest {
     @Test
     public void ViewExerciseType() {
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         Espresso.onView(withId(R.id.preset1)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Espresso.onView(withId(R.id.preset1)).perform(click());
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -85,9 +85,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         register = (Button) findViewById(R.id.registerUser);
         register.setOnClickListener(this);
 
-        name = editTextUsername.getText().toString().trim();
-        email = editTextEmail.getText().toString();
-        password = editTextPassword.getText().toString().trim();
+//        name = editTextUsername.getText().toString().trim();
+//        email = editTextEmail.getText().toString();
+//        password = editTextPassword.getText().toString().trim();
 
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
@@ -102,7 +102,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void registerUsers(){
-
+        name = editTextUsername.getText().toString().trim();
+        email = editTextEmail.getText().toString();
+        password = editTextPassword.getText().toString().trim();
         if(name.isEmpty()){
             editTextUsername.setError("Username is required!");
             editTextUsername.requestFocus();

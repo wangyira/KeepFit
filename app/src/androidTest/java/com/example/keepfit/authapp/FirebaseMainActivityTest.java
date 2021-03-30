@@ -88,7 +88,7 @@ public class FirebaseMainActivityTest {
         Espresso.onView(withId(R.id.register)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class FirebaseMainActivityTest {
         Espresso.onView(withId(R.id.registerUser)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
@@ -120,7 +120,7 @@ public class FirebaseMainActivityTest {
         Espresso.onView(withId(R.id.register)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
@@ -132,7 +132,7 @@ public class FirebaseMainActivityTest {
         Espresso.onView(withId(R.id.registerUser)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(8000);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
