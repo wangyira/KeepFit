@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class StartLivestreamActivityTest {
-    private String expectedZoomLink = "https://usc.zoom.us/j/719353793";
+    private String expectedZoomLink = "https://usc.zoom.us/j/9184535088";
     private String id = "-MWLAiEuugDAtXWCjBvx";
     private String expectedUser = "ritikadendi1";
     private String expectedExercise = "Anaerobic";

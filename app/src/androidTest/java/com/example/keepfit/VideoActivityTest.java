@@ -106,7 +106,7 @@ public class VideoActivityTest {
                 @Override
                 public void onSuccess(@NonNull FileDownloadTask.TaskSnapshot taskSnapshot) {
                     //video null
-                    v.setVideoURI(null);
+                    //v.setVideoURI(null);
                 }
             });
 
