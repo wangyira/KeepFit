@@ -215,6 +215,31 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void search(String input){
+        //add to search history
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        //find according to username
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        userRef.orderByChild("username").equalTo(username).limitToFirst(1)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, Map<String, Map<String, String>>> map = (Map<String, Map<String, Map<String, String>>>) snapshot.getValue();
+                        for(Map.Entry<String, Map<String, Map<String, String>>> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("UserInformation").child(key).child("searchHistory");
+                            Log.e("key: ", key);
+                            newRef.push().setValue(input);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+                //.child("gxNcguuht0ZlDw5lk4NEqzGYpoF2").child("searchHistory");
+        //historyRef.push().setValue(input);
+
+
         //get all search results
         /*getProfileResults(input);
         getVideoResultsbyTitle(input);
