@@ -52,6 +52,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.Math.min;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
     ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
     ArrayList<String> livestreamUplodingUserPic = new ArrayList<String>();
+
+    Button btnviewSearch;
+    DatabaseReference ref;
+
+    ArrayList<TextView> searchTextViews = new ArrayList<TextView>();
+    ArrayList<Button> searchBtnTextViews = new ArrayList<Button>();
+    Button search1;
+    ArrayList<String> searchKeywords = new ArrayList<String>();
 
     //must all add to <= 20
     int numVideos = 0;
@@ -142,6 +151,37 @@ public class MainActivity extends AppCompatActivity {
         Button preset3 = (Button) findViewById(R.id.preset3);
         Button preset4 = (Button) findViewById(R.id.preset4);
 
+        btnviewSearch = findViewById(R.id.searchHistoryBtn);
+
+        searchTextViews.add(findViewById(R.id.searchText1));
+        searchTextViews.add(findViewById(R.id.searchText2));
+        searchTextViews.add(findViewById(R.id.searchText3));
+        searchTextViews.add(findViewById(R.id.searchText4));
+        searchTextViews.add(findViewById(R.id.searchText5));
+
+        searchBtnTextViews.add(findViewById(R.id.searchBtn1));
+        searchBtnTextViews.add(findViewById(R.id.searchBtn2));
+        searchBtnTextViews.add(findViewById(R.id.searchBtn3));
+        searchBtnTextViews.add(findViewById(R.id.searchBtn4));
+        searchBtnTextViews.add(findViewById(R.id.searchBtn5));
+
+        search1 = findViewById(R.id.searchBtn1);
+
+        //hide the 5 search keyword and button by default
+        for(TextView tv : searchTextViews){
+            tv.setVisibility(View.GONE);
+        }
+        for(Button bt : searchBtnTextViews){
+            bt.setVisibility(View.GONE);
+        }
+
+        btnviewSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSearchHistory();
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +239,73 @@ public class MainActivity extends AppCompatActivity {
         getVideos();
         //getLivestreams();
 
+    }
+
+    //search history
+    private void getSearchHistory(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("UserInformation");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+
+
+        ref.orderByChild("username").equalTo(username).limitToFirst(10)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, Map<String, Map<String,String>>> results = (Map<String, Map<String, Map<String,String>>>) snapshot.getValue();
+
+                        if(results!=null){
+                            for(Map.Entry<String, Map<String, Map<String,String>>> entry : results.entrySet()){
+                                Log.e("entry key",entry.getKey());
+                                Map<String, String> searchMap = entry.getValue().get("searchHistory");
+                                for (Map.Entry<String, String> pair : searchMap.entrySet()) {
+                                    Log.e("searchkey",pair.getKey());
+                                    Log.e("searchval",pair.getValue());
+                                    searchKeywords.add(pair.getValue());
+                                }
+                                Log.e("array size",String.valueOf(searchKeywords.size()));
+                            }
+
+                            populateSearchHistory();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
+    private void populateSearchHistory(){
+        int numOfKeywords = min(5, searchKeywords.size());
+        Log.e("numOfKeywords",String.valueOf(numOfKeywords));
+
+        for(int i=0; i < numOfKeywords; i++){
+            final String word = searchKeywords.get(i);
+            Log.d("word ", String.valueOf(i) + " " + word);
+
+            searchTextViews.get(i).setVisibility(View.VISIBLE);
+            searchTextViews.get(i).setText(searchKeywords.get(i));
+            searchBtnTextViews.get(i).setVisibility(View.VISIBLE);
+            searchBtnTextViews.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    numVideos=0;
+                    numLivestreams=0;
+//                    numProfiles=0;
+                    resetValues();
+
+                    //get input from search history
+                    EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
+                    searchInputBar.setText(word);
+
+                    makeInvisible();
+                    Log.d("searchkeyword1 ", word);
+                    search(word);
+                }
+            });
+        }
+        searchKeywords.clear();
     }
 
     private void search(String input){
@@ -542,6 +649,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeInvisible(){
+        for(TextView tv : searchTextViews){
+            tv.setVisibility(View.GONE);
+        }
+        for(Button bt : searchBtnTextViews){
+            bt.setVisibility(View.GONE);
+        }
         for(ImageButton ib : imageButtons){
             ib.setVisibility(View.GONE);
         }
