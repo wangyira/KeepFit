@@ -2,14 +2,9 @@ package com.example.keepfit.authapp;
 
 
 public class UserInformation {
-
     public String email, name, phonenumber, gender, birthday, weight, height, pickey, username, referenceTitle;
 
     public UserInformation() {}
-
-    public String getName() {
-        return name;
-    }
 
     public UserInformation(String email, String name, String phonenumber, String gender, String birthday, String weight, String height, String pickey, String username, String referenceTitle){
         if (pickey == null) {
@@ -30,5 +25,45 @@ public class UserInformation {
         //this.pickey = pickey;
         this.username = username;
         //this.referenceTitle = referenceTitle;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public String getPickey() {
+        return pickey;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getReferenceTitle() {
+        return referenceTitle;
     }
 }

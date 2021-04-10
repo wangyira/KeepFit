@@ -271,16 +271,18 @@ public class VideoUploadActivity extends AppCompatActivity {
                         DatabaseReference mRootRef = database.getReference("");
                         DatabaseReference mVideosRef = mRootRef.child("Video References");
 
-                        Map<String, String> vidRef = new HashMap<String, String>();
+                        /*Map<String, String> vidRef = new HashMap<String, String>();
                         vidRef.put("time", time);
                         vidRef.put("difficulty", difficulty);
                         vidRef.put("tag", tag);
                         vidRef.put("title", title);
                         vidRef.put("reference title", noSpaceTitle + "." + randomUUID.toString());
+                        vidRef.put("numLikes", "0");*/
 
                         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                         String username = sharedPref.getString("username", null);
-                        vidRef.put("uploadingUser", username);
+
+                        VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username);
 
                         mVideosRef.push().setValue(vidRef);
                     }

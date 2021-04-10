@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.authapp.User;
+import com.example.keepfit.authapp.UserInformation;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -224,8 +226,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, Map<String, String>>> map = (Map<String, Map<String, Map<String, String>>>) snapshot.getValue();
-                        for(Map.Entry<String, Map<String, Map<String, String>>> entry : map.entrySet()) {
+                        Map<String, Map<String, User>> map = (Map<String, Map<String, User>>) snapshot.getValue();
+                        for(Map.Entry<String, Map<String, User>> entry : map.entrySet()) {
                             String key = entry.getKey();
                             DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("UserInformation").child(key).child("searchHistory");
                             Log.e("key: ", key);
@@ -271,15 +273,13 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        Map<String, UserInformation> results = (Map<String, UserInformation>) snapshot.getValue();
                         if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                            for(Map.Entry<String, UserInformation> entry : results.entrySet()){
                                 if(numProfiles < 3) {
-                                    Map<String, String> val = entry.getValue();
-                                    //Log.e("getProfileResults", "referenceTitle: " + val.get("referenceTitle"));
-                                    //Log.e("getProfileResults", "username: " + val.get("username"));
-                                    profileRefs.add(val.get("referenceTitle"));
-                                    profileUsernames.add(val.get("username"));
+                                    UserInformation val = entry.getValue();
+                                    profileRefs.add(val.getReferenceTitle());
+                                    profileUsernames.add(val.getUsername());
                                     numProfiles++;
                                 }
                                 else{break;}
@@ -301,20 +301,15 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numVideos < (20-numLivestreams-numProfiles)) {
-                                    //Log.d("Found something", "Found: " + entry.getValue().get("title"));
-                                    videoRefTitles.add(entry.getValue().get("reference title"));
-                                    videoDispTitles.add(entry.getValue().get("title"));
-                                    String uploadingUser = entry.getValue().get("uploadingUser");
-                                    //getVideoUploadingUserPic(uploadingUser);
-                                    videoUploadingUser.add(uploadingUser);
-                                    numVideos++;
-                                }
-                                else{break;}
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            if(numVideos < (20-numLivestreams-numProfiles)) {
+                                videoRefTitles.add(video.getReferenceTitle());
+                                videoDispTitles.add(video.getTitle());
+                                videoUploadingUser.add(video.getUploadingUser());
+                                numVideos++;
                             }
+                            else{break;}
                         }
                         //displayResults();
                     }
@@ -334,21 +329,15 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numVideos < (20-numProfiles-numLivestreams)) {
-                                    videoRefTitles.add(entry.getValue().get("reference title"));
-                                    videoDispTitles.add(entry.getValue().get("title"));
-
-                                    String uploadingUser = entry.getValue().get("uploadingUser");
-                                    //getVideoUploadingUserPic(uploadingUser);
-                                    videoUploadingUser.add(uploadingUser);
-
-                                    numVideos++;
-                                }
-                                else{break;}
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            if(numVideos < (20-numLivestreams-numProfiles)) {
+                                videoRefTitles.add(video.getReferenceTitle());
+                                videoDispTitles.add(video.getTitle());
+                                videoUploadingUser.add(video.getUploadingUser());
+                                numVideos++;
                             }
+                            else{break;}
                         }
                         //displayResults();
                     }
@@ -366,22 +355,19 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numLivestreams < (20-numProfiles)) {
-                                    lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                                    lsDispTitles.add(entry.getValue().get("title"));
-                                    lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                            if(numLivestreams < 20) {
+                                lsRefTitles.add(livestream.getReferenceTitle());
+                                lsDispTitles.add(livestream.getTitle());
+                                lsZoomLinks.add(livestream.getZoomLink());
 
-                                    String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                                    livestreamUploadingUser.add(uploadingUser);
-                                    //getLivestreamUploadingUserPic(uploadingUser);
+                                String uploadingUser = (String) livestream.getUploadingUser();
+                                livestreamUploadingUser.add(uploadingUser);
 
-                                    numLivestreams++;
-                                }
-                                else{break;}
+                                numLivestreams++;
                             }
+                            else{break;}
                         }
                         //displayResults();
                     }
@@ -400,25 +386,20 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numLivestreams < (20-numProfiles) && numLivestreams < 10) {
-                                    lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                                    lsDispTitles.add(entry.getValue().get("title"));
-                                    lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                            if(numLivestreams < 20) {
+                                lsRefTitles.add(livestream.getReferenceTitle());
+                                lsDispTitles.add(livestream.getTitle());
+                                lsZoomLinks.add(livestream.getZoomLink());
 
-                                    String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                                   //Log.d("uploading user", uploadingUser);
-                                    livestreamUploadingUser.add(uploadingUser);
-                                    //getLivestreamUploadingUserPic(uploadingUser);
+                                String uploadingUser = (String) livestream.getUploadingUser();
+                                livestreamUploadingUser.add(uploadingUser);
 
-                                    numLivestreams++;
-                                }
-                                else{break;}
+                                numLivestreams++;
                             }
+                            else{break;}
                         }
-                        //Log.e("calling dr", "calling");
                         displayResults();
                     }
 

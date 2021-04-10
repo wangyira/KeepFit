@@ -213,25 +213,15 @@ public class MainActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //map to hold all video references from database
-                GenericTypeIndicator<Map<String, Map<String, String>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Map<String, String>>>() {
-                };
-                Map<String, Map<String, String>> allVideosMap = snapshot.getValue(genericTypeIndicator);
-
-                //for each video (entry in allVideosMap), get the reference title and add it to titleList (if there is space)
-                //Iterator it = allVideosMap.entrySet().iterator();
-                for (Map.Entry<String, Map<String, String>> entry : allVideosMap.entrySet()) {
-                    Map<String, String> videoMap = entry.getValue();
-                    if (numVideos < (20 - numLivestreams)) {
-                        videoRefTitles.add(videoMap.get("reference title"));
-                        videoDispTitles.add(videoMap.get("title"));
-                        String uploadingUser = videoMap.get("uploadingUser");
-                        //getVideoUploadingUserPic(uploadingUser);
-                        videoUploadingUser.add(uploadingUser);
+                for(DataSnapshot child : snapshot.getChildren()){
+                    VideoReference video = child.getValue(VideoReference.class);
+                    if(numVideos < (20-numLivestreams)) {
+                        videoRefTitles.add(video.getReferenceTitle());
+                        videoDispTitles.add(video.getTitle());
+                        videoUploadingUser.add(video.getUploadingUser());
                         numVideos++;
-                    } else {
-                        break;
                     }
+                    else{break;}
                 }
                 //displayResults();
             }
@@ -250,22 +240,20 @@ public class MainActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                        if(numLivestreams < 20) {
-                            Log.d("entering Livestream", entry.getValue().get("referenceTitle"));
-                            lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                            lsDispTitles.add(entry.getValue().get("title"));
-                            lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                for(DataSnapshot child : snapshot.getChildren()){
+                    LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                    if(numLivestreams < 20) {
+                        lsRefTitles.add(livestream.getReferenceTitle());
+                        lsDispTitles.add(livestream.getTitle());
+                        lsZoomLinks.add(livestream.getZoomLink());
 
-                            String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                            livestreamUploadingUser.add(uploadingUser);
-                            //getLivestreamUploadingUserPic(uploadingUser);
+                        String uploadingUser = (String) livestream.getUploadingUser();
+                        livestreamUploadingUser.add(uploadingUser);
 
-                            numLivestreams++;
-                        }
-                        else{break;}
+                        numLivestreams++;
                     }
+                    else{break;}
+                }
                 displayResults();
             }
 
@@ -280,13 +268,8 @@ public class MainActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("myTag", "@@@@@@@");
-                    if(j < numVideos){
-                        openNewActivityVideo(j);
-                    } else{
-                        openNewActivityLivestream(j);
-                    }
-
+                    if(j < numVideos){ openNewActivityVideo(j); }
+                    else{ openNewActivityLivestream(j); }
                 }
             });
         }
@@ -358,11 +341,9 @@ public class MainActivity extends AppCompatActivity {
 
         //display livestreams
         for(int i=numVideos; i < numVideos+numLivestreams; i++) {
-            Log.d("storage", "!&&&&&&&&" + lsRefTitles.size() + ", " + numLivestreams);
             StorageReference lsimageRef = storageRef.child("/livestream_thumbnail_images/" + lsRefTitles.get(i - numVideos));
             try {
                 final int j = i;
-                Log.d("storage", "!aaaaaaaa " + (i - numVideos) + ", " + lsRefTitles.get(i-numVideos));
                 if(numLivestreams>0){
                     final File localFile = File.createTempFile(lsRefTitles.get(i - numVideos), "jpg");
 
@@ -644,6 +625,10 @@ public class MainActivity extends AppCompatActivity {
         //getUserID(username);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
         likeRef.push().setValue(refTitle);
+
+        //update NumLikes
+
+
         //userID = new String();
         //check if refTitle already in likeRef
         /*likeRef.orderByValue().equalTo(refTitle)
