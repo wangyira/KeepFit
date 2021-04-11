@@ -281,20 +281,30 @@
 
                 <Button
                     android:id="@+id/btnchangepass"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Change Password"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
 
                 <Button
                     android:id="@+id/btnlogout"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Logout"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btnDeleteAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/delete_account"
+                    android:textSize="11sp" />
+
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -315,166 +325,348 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/hist1btn"
+                    android:id="@+id/uitem1btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
+                    android:layout_gravity="center"/>
 
-                <TextView
-                    android:id="@+id/hist1txt"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 1"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem1txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem1delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
+
 
                 <ImageButton
-                    android:id="@+id/hist2btn"
+                    android:id="@+id/uitem2btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
+                    android:layout_gravity="center"/>
 
-                <TextView
-                    android:id="@+id/hist2txt"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 2"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem2txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem2delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist3btn"
+                    android:id="@+id/uitem3btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist3txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 3"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem3txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem3delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist4btn"
+                    android:id="@+id/uitem4btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist4txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 4"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem4txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem4delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist5btn"
+                    android:id="@+id/uitem5btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist5txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 5"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem5txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem5delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist6btn"
+                    android:id="@+id/uitem6btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist6txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 6"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem6txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem6delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist7btn"
+                    android:id="@+id/uitem7btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist7txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 7"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem7txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem7delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist8btn"
+                    android:id="@+id/uitem8btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist8txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 8"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem8txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem8delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist9btn"
+                    android:id="@+id/uitem9btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist9txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 9"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem9txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem9delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/hist10btn"
+                    android:id="@+id/uitem10btn"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/hist10txt"
-                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="item 10"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/uitem10txt"
+                        android:text="item 1"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/uitem10delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:text="@string/delete_video"
+                        android:textSize="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"/>
+                </RelativeLayout>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -814,9 +1006,8 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
-
-
         </LinearLayout>
+
     </ScrollView>
 
     <fragment

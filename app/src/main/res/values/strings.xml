@@ -69,4 +69,6 @@
 
     <string name="profileGreeting">Welcome,</string>
     <string name="uploadedVideos">Uploaded Videos</string>
+    <string name="delete_video">Delete Video</string>
+    <string name="delete_account">Delete Account</string>
 </resources>
