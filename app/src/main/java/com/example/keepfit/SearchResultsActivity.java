@@ -256,7 +256,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     //search history
     private void getSearchHistory(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference("UserInformation");
+        ref = database.getReference("SearchHistory");
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
 
@@ -337,10 +337,13 @@ public class SearchResultsActivity extends AppCompatActivity {
                         for(Map.Entry<String, Map<String, User>> entry : map.entrySet()) {
                             String key = entry.getKey();
                           
-                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(username).child("searchHistory");
+                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory");
                             //Log.e("key: ", key);
 
                             newRef.push().setValue(input);
+
+                            DatabaseReference newRef2 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("username");
+                            newRef2.setValue(username);
 
                             if(input.equals(getString(R.string.tag1))
                                     || input.equals(getString(R.string.tag2))

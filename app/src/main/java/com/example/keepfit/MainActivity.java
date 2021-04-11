@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
     //search history
     private void getSearchHistory(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference("UserInformation");
+        ref = database.getReference("SearchHistory");
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
 
