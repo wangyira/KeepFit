@@ -64,6 +64,7 @@ import static java.lang.Math.min;
 public class MainActivity extends AppCompatActivity {
 
     boolean liked = false;
+    boolean disliked = false;
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
     ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
@@ -497,10 +498,37 @@ public class MainActivity extends AppCompatActivity {
                         //change color
                         dl.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) { dislike(videoRefTitles.get(j)); }
+                            public void onClick(View v) {
+                                disliked = false;
+                                dislike(videoRefTitles.get(j));
+                                //   bp.setBackgroundColor(getResources().getColor(R.color.black));
+                                dl.setText("Disliked");
+                                dl.setTextSize(9);
+                            }
                         });
                         dl.setVisibility(View.VISIBLE);
+                        //depending on whether the button is disliked or not, change button appearance
+                        DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
+                        dislikeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot child : snapshot.getChildren()) {
+                                            Log.e("key", child.getKey());
+                                            Log.e("val", (String) child.getValue());
+                                            if (child.getKey() != null) {
+                                                dl.setText("Disliked");
+                                                dl.setTextSize(9);
+                                            } else {
+                                                dl.setText("Dislike");
+                                            }
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+                        dl.setVisibility(View.VISIBLE); //show dislike button for all videos available
 
                         //String ProfilerefTitle = videoUploadingUserPic.get(j);
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
@@ -818,7 +846,7 @@ public class MainActivity extends AppCompatActivity {
         String username = sharedPref.getString("username", null);
         Log.e("clicked-video", refTitle);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
-        readData(new MyCallback() {
+        readDataLike(new MyCallback() {
                     @Override
                     public void onCallback(Boolean liked) {
                         if(liked == true) {
@@ -862,7 +890,7 @@ public class MainActivity extends AppCompatActivity {
         void onCallback(Boolean liked);
     }
 
-    public void readData(MyCallback myCallback, String refTitle) {
+    public void readDataLike(MyCallback myCallback, String refTitle) {
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
@@ -896,12 +924,60 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+    public interface MyCallback2 {
+        void onCallback(Boolean disliked);
+    }
 
     private void dislike(String refTitle){
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
+        Log.e("clicked-video", refTitle);
         DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
-        dislikeRef.push().setValue(refTitle);
+        readDataDislike(new MyCallback2() {
+            @Override
+            public void onCallback(Boolean disliked) {
+                if(disliked == true) {
+                    Log.e("alreadydisliked", "already disliked - do nothing");
+                }
+                else if(disliked == false){
+                    Log.e("dislikedyes", "disliked successful");
+                    dislikeRef.push().setValue(refTitle);
+                }
+            }
+        }, refTitle);
+    }
+    public void readDataDislike(MyCallback2 myCallback2, String refTitle) {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
+        dislikeRef.orderByValue().equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                if (child.getKey() != null) {
+                                    //if liked, don't add it
+                                    Log.e("key", child.getKey());
+                                    Log.e("val", (String) child.getValue());
+                                    disliked = true;
+                                    Log.e("liked?", String.valueOf(disliked));
+                                    myCallback2.onCallback(disliked);
+
+                                }
+                            }
+                        }
+                        else {
+                            disliked = false;
+                            myCallback2.onCallback(disliked);
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
     }
 
     private void getUserID(String username){
