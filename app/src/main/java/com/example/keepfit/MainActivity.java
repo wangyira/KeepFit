@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.authapp.User;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.core.OrderBy;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Button> likes = new ArrayList<Button>();
     ArrayList<Button> dislikes = new ArrayList<Button>();
 
+    //ArrayList<VideoReference> allVideos  = new ArrayList<VideoReference>();
 
     ArrayList<String> videoRefTitles = new ArrayList<String>();
     ArrayList<String> videoDispTitles = new ArrayList<String>();
@@ -236,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getVideos();
+        //getVideos();
+        getTopVideos();
         //getLivestreams();
 
     }
@@ -314,31 +319,44 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void getTopVideos(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Video References");
+        myRef.orderByChild("numLikes").limitToLast(20-numLivestreams).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot child : snapshot.getChildren()){
+                    VideoReference video = child.getValue(VideoReference.class);
+                    videoRefTitles.add(video.getReferenceTitle());
+                    Log.e("refTitle", video.getReferenceTitle());
+                    videoDispTitles.add(video.getTitle());
+                    videoUploadingUser.add(video.getUploadingUser());
+                    numVideos++;
+                    Log.e("numVideos", "" + numVideos);
+                }
+                getLivestreams();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
     private void getVideos(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Video References");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //map to hold all video references from database
-                GenericTypeIndicator<Map<String, Map<String, String>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Map<String, String>>>() {
-                };
-                Map<String, Map<String, String>> allVideosMap = snapshot.getValue(genericTypeIndicator);
-
-                //for each video (entry in allVideosMap), get the reference title and add it to titleList (if there is space)
-                //Iterator it = allVideosMap.entrySet().iterator();
-                for (Map.Entry<String, Map<String, String>> entry : allVideosMap.entrySet()) {
-                    Map<String, String> videoMap = entry.getValue();
-                    if (numVideos < (20 - numLivestreams)) {
-                        videoRefTitles.add(videoMap.get("reference title"));
-                        videoDispTitles.add(videoMap.get("title"));
-                        String uploadingUser = videoMap.get("uploadingUser");
-                        //getVideoUploadingUserPic(uploadingUser);
-                        videoUploadingUser.add(uploadingUser);
+                for(DataSnapshot child : snapshot.getChildren()){
+                    VideoReference video = child.getValue(VideoReference.class);
+                    if(numVideos < (20-numLivestreams)) {
+                        videoRefTitles.add(video.getReferenceTitle());
+                        videoDispTitles.add(video.getTitle());
+                        videoUploadingUser.add(video.getUploadingUser());
                         numVideos++;
-                    } else {
-                        break;
                     }
+                    else{break;}
                 }
                 //displayResults();
             }
@@ -348,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        getLivestreams();
+        //getLivestreams();
     }
 
     private void getLivestreams(){
@@ -357,22 +375,20 @@ public class MainActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                        if(numLivestreams < 20) {
-                            Log.d("entering Livestream", entry.getValue().get("referenceTitle"));
-                            lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                            lsDispTitles.add(entry.getValue().get("title"));
-                            lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                for(DataSnapshot child : snapshot.getChildren()){
+                    LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                    if(numLivestreams < 20) {
+                        lsRefTitles.add(livestream.getReferenceTitle());
+                        lsDispTitles.add(livestream.getTitle());
+                        lsZoomLinks.add(livestream.getZoomLink());
 
-                            String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                            livestreamUploadingUser.add(uploadingUser);
-                            //getLivestreamUploadingUserPic(uploadingUser);
+                        String uploadingUser = (String) livestream.getUploadingUser();
+                        livestreamUploadingUser.add(uploadingUser);
 
-                            numLivestreams++;
-                        }
-                        else{break;}
+                        numLivestreams++;
                     }
+                    else{break;}
+                }
                 displayResults();
             }
 
@@ -387,19 +403,16 @@ public class MainActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("myTag", "@@@@@@@");
-                    if(j < numVideos){
-                        openNewActivityVideo(j);
-                    } else{
-                        openNewActivityLivestream(j);
-                    }
-
+                    if(j < numVideos){ openNewActivityVideo(j); }
+                    else{ openNewActivityLivestream(j); }
                 }
             });
         }
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        //Log.e("NUM VIDEOS", ""+numVideos);
         for(int i=0; i < numVideos; i++) {
+            //Log.e("i", ""+i);
             //Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
@@ -408,13 +421,13 @@ public class MainActivity extends AppCompatActivity {
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        ImageButton ib = imageButtons.get(j);
+                        ImageButton ib = imageButtons.get((numVideos-1)-j);
 
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
 
-                        Button bp = likes.get(j);
+                        Button bp = likes.get((numVideos-1)-j);
                         //change color
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -422,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
                         });
                         bp.setVisibility(View.VISIBLE);
 
-                        Button dl = dislikes.get(j);
+                        Button dl = dislikes.get((numVideos-1)-j);
                         //change color
                         dl.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -435,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
                         //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                        ImageButton ibp = imageButtonsProfile.get(j);
+                        ImageButton ibp = imageButtonsProfile.get((numVideos-1)-j);
                         /*try{
                             final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                             imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -449,12 +462,12 @@ public class MainActivity extends AppCompatActivity {
                         }catch (Exception e){ }*/
                         ibp.setVisibility(View.VISIBLE);
 
-                        TextView tvp = textViewsProfile.get(j);
+                        TextView tvp = textViewsProfile.get((numVideos-1)-j);
                         tvp.setText(videoUploadingUser.get(j));
 
                         tvp.setVisibility(View.VISIBLE);
 
-                        TextView tv = textViews.get(j);
+                        TextView tv = textViews.get((numVideos-1)-j);
                         tv.setText(videoDispTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
                     }
@@ -465,11 +478,9 @@ public class MainActivity extends AppCompatActivity {
 
         //display livestreams
         for(int i=numVideos; i < numVideos+numLivestreams; i++) {
-            Log.d("storage", "!&&&&&&&&" + lsRefTitles.size() + ", " + numLivestreams);
             StorageReference lsimageRef = storageRef.child("/livestream_thumbnail_images/" + lsRefTitles.get(i - numVideos));
             try {
                 final int j = i;
-                Log.d("storage", "!aaaaaaaa " + (i - numVideos) + ", " + lsRefTitles.get(i-numVideos));
                 if(numLivestreams>0){
                     final File localFile = File.createTempFile(lsRefTitles.get(i - numVideos), "jpg");
 
@@ -682,16 +693,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void openNewActivityLivestream(int i){
-        //REMOVE THIS!!!
-        /*if(i >= numVideos+numLivestreams){
-            String zoomLink = "https://google.com";
-            Intent intent = new Intent(this, LivestreamActivity.class);
-            intent.putExtra("zoomLink", zoomLink);
-            startActivity(intent);
-            return;
-        }*/
-
-
         String zoomLink = lsZoomLinks.get(i-numVideos);
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
@@ -750,6 +751,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void sortVideosByNumLikes(){
+
+    }
+
     private void like(String refTitle){
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
@@ -757,62 +762,30 @@ public class MainActivity extends AppCompatActivity {
         //getUserID(username);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
         likeRef.push().setValue(refTitle);
-        //userID = new String();
-        //check if refTitle already in likeRef
-        /*likeRef.orderByValue().equalTo(refTitle)
-                .addValueEventListener(new ValueEventListener() {
+
+        //update NumLikes
+        //find video according to refTitle
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d("null", "onDataChange");
-                        Log.d("key", snapshot.getKey());
-                        if(snapshot.getKey()=="likes"){
-                            Log.d("null", "null");
-                            likeRef.push().setValue(refTitle);
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            int numLikesTemp = video.getNumLikes();
+                            numLikesTemp++;
+                            String keyTemp = child.getKey();
+                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                            //ref.setValue(numLikes);
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                            ref.setValue(numLikesTemp);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
-                });*/
-        /*likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("null", "onDataChange");
-                Log.d("key", snapshot.getKey());
-                Map<String, String> map = (Map<String, String>) snapshot.getValue();
-                if(map==null){
-                    Log.d("here", "made it to here a");
-                    likeRef.push().setValue(refTitle);
-                }
-                else if(map.size()==0){
-                    Log.d("here", "made it to here b");
-                    likeRef.push().setValue(refTitle);
-                }
-                else{
-                    boolean found = false;
-                    for(Map.Entry<String, String> entry : map.entrySet()){
-                        Log.d("Key: ", entry.getKey());
-                        //Log.d("Value: ", entry.getValue());
-                        Log.d("refTitle: ", refTitle);
-                        if(entry.getValue().equals(refTitle)){
-                            found = true;
-                            Log.d("here", "made it to here c");
-                            break;
-                        }
-                    }
-                    if(!found){
-                        Log.d("here", "made it to here");
-                        likeRef.push().setValue(refTitle); }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-        //Pair<String, String> pair = new Pair<String, String>(videoRefTitles.get(j), null);
-        //likeRef.push().setValue(refTitle);
+                });
     }
 
     private void dislike(String refTitle){

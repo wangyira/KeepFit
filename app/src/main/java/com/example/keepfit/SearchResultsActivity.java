@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.authapp.User;
+import com.example.keepfit.authapp.UserInformation;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -192,9 +194,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numVideos=0;
-                numLivestreams=0;
-                numProfiles=0;
                 resetValues();
                 //get input from bar
                 EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
@@ -322,22 +321,33 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void search(String input){
+        resetValues();
+        Log.e("searching", "searching...." + input);
         //add to search history
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         //find according to username
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
         userRef.orderByChild("username").equalTo(username).limitToFirst(1)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, Map<String, String>>> map = (Map<String, Map<String, Map<String, String>>>) snapshot.getValue();
-                        for(Map.Entry<String, Map<String, Map<String, String>>> entry : map.entrySet()) {
+                        Log.e("VALUE CHANGED", "VALUE CHANGED");
+                        Map<String, Map<String, User>> map = (Map<String, Map<String, User>>) snapshot.getValue();
+                        for(Map.Entry<String, Map<String, User>> entry : map.entrySet()) {
                             String key = entry.getKey();
-                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("UserInformation").child(key).child("searchHistory");
-                            Log.e("key: ", key);
-                            Log.e("input: ",input);
+                          
+                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(username).child("searchHistory");
+                            //Log.e("key: ", key);
+
                             newRef.push().setValue(input);
+
+                            if(input.equals(getString(R.string.tag1))
+                                    || input.equals(getString(R.string.tag2))
+                                    || input.equals(getString(R.string.tag3))
+                                    || input.equals(getString(R.string.tag4)) ) {
+                                getLivestreamResultsbyTag(input);
+                            } else{ getProfileResults(input); }
                         }
                     }
 
@@ -361,79 +371,68 @@ public class SearchResultsActivity extends AppCompatActivity {
         getLivestreamResultsbyTitle(input);*/
 
         //Log.e("searching", "input: " + input);
-        if(input.equals(getString(R.string.tag1))
-                || input.equals(getString(R.string.tag2))
-                || input.equals(getString(R.string.tag3))
-                || input.equals(getString(R.string.tag4)) ) {
-            getLivestreamResultsbyTag(input);
-        } else{ getProfileResults(input); }
+
 
     }
 
 
     private void getProfileResults(String input){
-        //Log.e("getProfileResults", "input: " + input);
+        Log.e("getProfileResults", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("UserInformation");
         ref.orderByChild("username").equalTo(input).limitToFirst(20)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numProfiles < 3) {
-                                    Map<String, String> val = entry.getValue();
-                                    //Log.e("getProfileResults", "referenceTitle: " + val.get("referenceTitle"));
-                                    //Log.e("getProfileResults", "username: " + val.get("username"));
-                                    profileRefs.add(val.get("referenceTitle"));
-                                    profileUsernames.add(val.get("username"));
-                                    numProfiles++;
-                                }
-                                else{break;}
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            UserInformation user = child.getValue(UserInformation.class);
+                            if(numProfiles < 3) {
+                                profileRefs.add(user.getReferenceTitle());
+                                profileUsernames.add(user.getUsername());
+                                numProfiles++;
                             }
+                            else{break;}
                         }
                         //displayResults();
+                        getVideoResultsbyTitle(input);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
-        getVideoResultsbyTitle(input);
+        //getVideoResultsbyTitle(input);
     }
 
     private void getVideoResultsbyTag(String input){
+        Log.e("getVideoResultsbyTag", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Video References");
         ref.orderByChild("tag").equalTo(input).limitToFirst(20)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numVideos < (20-numLivestreams-numProfiles)) {
-                                    //Log.d("Found something", "Found: " + entry.getValue().get("title"));
-                                    videoRefTitles.add(entry.getValue().get("reference title"));
-                                    videoDispTitles.add(entry.getValue().get("title"));
-                                    String uploadingUser = entry.getValue().get("uploadingUser");
-                                    //getVideoUploadingUserPic(uploadingUser);
-                                    videoUploadingUser.add(uploadingUser);
-                                    numVideos++;
-                                }
-                                else{break;}
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            if(numVideos < (20-numLivestreams-numProfiles)) {
+                                videoRefTitles.add(video.getReferenceTitle());
+                                videoDispTitles.add(video.getTitle());
+                                videoUploadingUser.add(video.getUploadingUser());
+                                numVideos++;
                             }
+                            else{break;}
                         }
                         //displayResults();
+                        getProfileResults(input);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
-        getProfileResults(input);
+        //getProfileResults(input);
     }
 
     private void getVideoResultsbyTitle(String input){
+        Log.e("getVideoResultsbyTitle", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Video References");
         //ref.orderByChild("title").startAt(input).endAt(input+"\uf8ff").limitToFirst(20)
@@ -442,91 +441,81 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numVideos < (20-numProfiles-numLivestreams)) {
-                                    videoRefTitles.add(entry.getValue().get("reference title"));
-                                    videoDispTitles.add(entry.getValue().get("title"));
-
-                                    String uploadingUser = entry.getValue().get("uploadingUser");
-                                    //getVideoUploadingUserPic(uploadingUser);
-                                    videoUploadingUser.add(uploadingUser);
-
-                                    numVideos++;
-                                }
-                                else{break;}
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            if(numVideos < (20-numLivestreams-numProfiles)) {
+                                videoRefTitles.add(video.getReferenceTitle());
+                                videoDispTitles.add(video.getTitle());
+                                videoUploadingUser.add(video.getUploadingUser());
+                                numVideos++;
                             }
+                            else{break;}
                         }
                         //displayResults();
+                        getLivestreamResultsbyTitle(input);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
-        getLivestreamResultsbyTitle(input);
+        //getLivestreamResultsbyTitle(input);
     }
 
     private void getLivestreamResultsbyTag(String input){
+        Log.e("getLsResultsbyTag", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Livestream Details");
         ref.orderByChild("exerciseType").equalTo(input).limitToFirst(7)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numLivestreams < (20-numProfiles)) {
-                                    lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                                    lsDispTitles.add(entry.getValue().get("title"));
-                                    lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                            if(numLivestreams < 20) {
+                                lsRefTitles.add(livestream.getReferenceTitle());
+                                lsDispTitles.add(livestream.getTitle());
+                                lsZoomLinks.add(livestream.getZoomLink());
 
-                                    String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                                    livestreamUploadingUser.add(uploadingUser);
-                                    //getLivestreamUploadingUserPic(uploadingUser);
+                                String uploadingUser = (String) livestream.getUploadingUser();
+                                livestreamUploadingUser.add(uploadingUser);
 
-                                    numLivestreams++;
-                                }
-                                else{break;}
+                                numLivestreams++;
                             }
+                            else{break;}
                         }
                         //displayResults();
+                        getVideoResultsbyTag(input);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
         //displayResults();
-        getVideoResultsbyTag(input);
+        //getVideoResultsbyTag(input);
     }
 
     private void getLivestreamResultsbyTitle(String input){
+        Log.e("getLsResultsbyTitle", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Livestream Details");
         ref.orderByChild("title").equalTo(input).limitToFirst(7)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-                        if(results!=null){
-                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                if(numLivestreams < (20-numProfiles) && numLivestreams < 10) {
-                                    lsRefTitles.add(entry.getValue().get("referenceTitle"));
-                                    lsDispTitles.add(entry.getValue().get("title"));
-                                    lsZoomLinks.add(entry.getValue().get("zoomLink"));
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                            if(numLivestreams < 20) {
+                                lsRefTitles.add(livestream.getReferenceTitle());
+                                lsDispTitles.add(livestream.getTitle());
+                                lsZoomLinks.add(livestream.getZoomLink());
 
-                                    String uploadingUser = (String) entry.getValue().get("uploadingUser");
-                                   //Log.d("uploading user", uploadingUser);
-                                    livestreamUploadingUser.add(uploadingUser);
-                                    //getLivestreamUploadingUserPic(uploadingUser);
+                                String uploadingUser = (String) livestream.getUploadingUser();
+                                livestreamUploadingUser.add(uploadingUser);
 
-                                    numLivestreams++;
-                                }
-                                else{break;}
+                                numLivestreams++;
                             }
+                            else{break;}
                         }
-                        //Log.e("calling dr", "calling");
                         displayResults();
                     }
 
@@ -537,7 +526,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void displayResults(){
-        //Log.e("displayResults", "displaying results");
+        Log.e("displayResults", "displaying results");
         for(int i=0; i < 20; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
@@ -955,62 +944,36 @@ public class SearchResultsActivity extends AppCompatActivity {
         //getUserID(username);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
         likeRef.push().setValue(refTitle);
-        //userID = new String();
-        //check if refTitle already in likeRef
-        /*likeRef.orderByValue().equalTo(refTitle)
-                .addValueEventListener(new ValueEventListener() {
+
+
+
+        //update NumLikes
+        //find video according to refTitle
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d("null", "onDataChange");
-                        Log.d("key", snapshot.getKey());
-                        if(snapshot.getKey()=="likes"){
-                            Log.d("null", "null");
-                            likeRef.push().setValue(refTitle);
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            int numLikesTemp = video.getNumLikes();
+                            Log.e("numLikes!!!!", "" + video.getNumLikes() + ", " + numLikesTemp);
+                            numLikesTemp++;
+                            Log.e("incremented", "" + numLikesTemp);
+                            String keyTemp = child.getKey();
+                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                            //ref.setValue(numLikes);
+
+                            Log.e("keyTemp", keyTemp);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                            Log.e("numLikes", ""+numLikesTemp);
+                            ref.setValue(numLikesTemp);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
-                });*/
-        /*likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("null", "onDataChange");
-                Log.d("key", snapshot.getKey());
-                Map<String, String> map = (Map<String, String>) snapshot.getValue();
-                if(map==null){
-                    Log.d("here", "made it to here a");
-                    likeRef.push().setValue(refTitle);
-                }
-                else if(map.size()==0){
-                    Log.d("here", "made it to here b");
-                    likeRef.push().setValue(refTitle);
-                }
-                else{
-                    boolean found = false;
-                    for(Map.Entry<String, String> entry : map.entrySet()){
-                        Log.d("Key: ", entry.getKey());
-                        //Log.d("Value: ", entry.getValue());
-                        Log.d("refTitle: ", refTitle);
-                        if(entry.getValue().equals(refTitle)){
-                            found = true;
-                            Log.d("here", "made it to here c");
-                            break;
-                        }
-                    }
-                    if(!found){
-                        Log.d("here", "made it to here");
-                        likeRef.push().setValue(refTitle); }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-        //Pair<String, String> pair = new Pair<String, String>(videoRefTitles.get(j), null);
-        //likeRef.push().setValue(refTitle);
+                });
     }
 
     private void dislike(String refTitle){
