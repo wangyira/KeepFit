@@ -283,6 +283,10 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
                     }
                 });
             }
+            else{
+                Toast.makeText(this, "please upload a thumbnail image", Toast.LENGTH_SHORT).show();
+                return "ERROR";
+            }
 
 
         }
