@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,6 +92,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     int numProfiles = 0;
     int numVideos = 0;
     int numLivestreams = 0;
+
+    int lockCounter = 0;
 
     String userID = new String();
 
@@ -271,11 +274,16 @@ public class SearchResultsActivity extends AppCompatActivity {
                             for(Map.Entry<String, Map<String, Map<String,String>>> entry : results.entrySet()){
                                 Log.e("entry key",entry.getKey());
                                 Map<String, String> searchMap = entry.getValue().get("searchHistory");
-                                for (Map.Entry<String, String> pair : searchMap.entrySet()) {
+                                /*for (Map.Entry<String, String> pair : searchMap.entrySet()) {
                                     Log.e("searchkey",pair.getKey());
                                     Log.e("searchval",pair.getValue());
                                     searchKeywords.add(pair.getValue());
-                                }
+                                }*/
+                                searchKeywords.add(searchMap.get("Item 1"));
+                                searchKeywords.add(searchMap.get("Item 2"));
+                                searchKeywords.add(searchMap.get("Item 3"));
+                                searchKeywords.add(searchMap.get("Item 4"));
+                                searchKeywords.add(searchMap.get("Item 5"));
                                 Log.e("array size",String.valueOf(searchKeywords.size()));
                             }
 
@@ -327,6 +335,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         //find according to username
+
+
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
         userRef.orderByChild("username").equalTo(username).limitToFirst(1)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -336,11 +346,114 @@ public class SearchResultsActivity extends AppCompatActivity {
                         Map<String, Map<String, User>> map = (Map<String, Map<String, User>>) snapshot.getValue();
                         for(Map.Entry<String, Map<String, User>> entry : map.entrySet()) {
                             String key = entry.getKey();
-                          
-                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory");
-                            //Log.e("key: ", key);
 
-                            newRef.push().setValue(input);
+                            Log.e("creating latch", "creating latch");
+                            //CountDownLatch done = new CountDownLatch(4);
+                            Log.e("here", "here");
+                            //shift everything down one
+                            //lockCounter = 0;
+                            //for(int i=4; i >=0; i--){
+                                //Log.e("i", "i="+i);
+                                //final int j=i;
+
+                            DatabaseReference creationRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory");
+                                DatabaseReference shiftRef4 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 4");
+                                shiftRef4.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Log.e("onDataChange", "OnDataChange");
+                                        String savedSearch = (String) snapshot.getValue();
+                                        DatabaseReference shiftRef4a = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 5");
+                                        shiftRef4a.setValue(savedSearch);
+                                        //done.countDown();
+                                        //lockCounter++;
+                                        Log.e("countdown", "countdown 4");
+
+                                        DatabaseReference shiftRef3 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 3");
+                                        shiftRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Log.e("onDataChange", "OnDataChange");
+                                                String savedSearch = (String) snapshot.getValue();
+                                                DatabaseReference shiftRef3a = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 4");
+                                                shiftRef3a.setValue(savedSearch);
+                                                //done.countDown();
+                                                //lockCounter++;
+                                                Log.e("countdown", "countdown 3");
+
+
+                                                DatabaseReference shiftRef2 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 2");
+                                                shiftRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        Log.e("onDataChange", "OnDataChange");
+                                                        String savedSearch = (String) snapshot.getValue();
+                                                        DatabaseReference shiftRef2a = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 3");
+                                                        shiftRef2a.setValue(savedSearch);
+                                                        //done.countDown();
+                                                        //lockCounter++;
+                                                        Log.e("countdown", "countdown 2");
+
+
+                                                        DatabaseReference shiftRef1 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 1");
+                                                        shiftRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                Log.e("onDataChange1", "OnDataChange1");
+                                                                String savedSearch = (String) snapshot.getValue();
+                                                                Log.e("savedSearch item 1", savedSearch);
+                                                                Log.e("hello????", "hello");
+                                                                DatabaseReference shiftRef1a = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 2");
+
+                                                                shiftRef1a.setValue(savedSearch);
+                                                                //done.countDown();
+                                                                //lockCounter++;
+                                                                Log.e("countdown", "countdown 1");
+
+                                                                DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 1");
+                                                                newRef.setValue(input);
+
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error4) {
+                                                            }
+
+                                                        });
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error3) { }
+                                                });
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error2) { }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error1) { }
+                                });
+                            //}
+
+                            /*try {
+                                done.await(); //it will wait till the response is received from firebase.
+                            } catch(InterruptedException e) {
+                                e.printStackTrace();
+                            }*/
+
+                            //while(lockCounter < 4){
+
+                            //}
+
+                            Log.e("DONE", "DONE");
+
+
+                            //DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("1");
+                            //newRef.setValue(input);
+
+                            Log.e("!", "!");
+
+
 
                             DatabaseReference newRef2 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("username");
                             newRef2.setValue(username);

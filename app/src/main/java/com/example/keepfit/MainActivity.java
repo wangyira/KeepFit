@@ -258,17 +258,23 @@ public class MainActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Map<String, Map<String, Map<String,String>>> results = (Map<String, Map<String, Map<String,String>>>) snapshot.getValue();
+                        Map<String, Map<String, Map<String, String>>> results = (Map<String, Map<String, Map<String, String>>>) snapshot.getValue();
 
                         if(results!=null){
-                            for(Map.Entry<String, Map<String, Map<String,String>>> entry : results.entrySet()){
+                            for(Map.Entry<String, Map<String, Map<String, String>>> entry : results.entrySet()){
                                 Log.e("entry key",entry.getKey());
                                 Map<String, String> searchMap = entry.getValue().get("searchHistory");
-                                for (Map.Entry<String, String> pair : searchMap.entrySet()) {
+                                /*for (Map.Entry<String, String> pair : searchMap.entrySet()) {
                                     Log.e("searchkey",pair.getKey());
                                     Log.e("searchval",pair.getValue());
+                                    //Log.e("pair", pair);
                                     searchKeywords.add(pair.getValue());
-                                }
+                                }*/
+                                searchKeywords.add(searchMap.get("Item 1"));
+                                searchKeywords.add(searchMap.get("Item 2"));
+                                searchKeywords.add(searchMap.get("Item 3"));
+                                searchKeywords.add(searchMap.get("Item 4"));
+                                searchKeywords.add(searchMap.get("Item 5"));
                                 Log.e("array size",String.valueOf(searchKeywords.size()));
                             }
 
