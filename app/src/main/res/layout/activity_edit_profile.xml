@@ -315,155 +315,166 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/uitem1btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist1btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem1txt"
+                    android:id="@+id/hist1txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 1"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem2btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist2btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem2txt"
+                    android:id="@+id/hist2txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 2"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem3btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist3btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem3txt"
+                    android:id="@+id/hist3txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 3"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem4btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist4btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem4txt"
+                    android:id="@+id/hist4txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 4"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem5btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist5btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem5txt"
+                    android:id="@+id/hist5txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 5"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem6btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist6btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem6txt"
+                    android:id="@+id/hist6txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 6"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem7btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist7btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem7txt"
+                    android:id="@+id/hist7txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 7"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem8btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist8btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem8txt"
+                    android:id="@+id/hist8txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 8"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem9btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist9btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem9txt"
+                    android:id="@+id/hist9txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="item 9"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20dp" />
 
                 <ImageButton
-                    android:id="@+id/uitem10btn"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/hist10btn"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop" />
+
                 <TextView
-                    android:id="@+id/uitem10txt"
-                    android:text="item 10"
-                    android:textSize="20dp"
+                    android:id="@+id/hist10txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="item 10"
+                    android:textSize="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
