@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
+import com.example.keepfit.authapp.User;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
     //must all add to <= 20
     int numVideos = 0;
     int numLivestreams = 0;
+
+    int numLikesTemp = 0;
+    String keyTemp = "";
 
     String userID = new String();
 
@@ -627,6 +631,36 @@ public class MainActivity extends AppCompatActivity {
         likeRef.push().setValue(refTitle);
 
         //update NumLikes
+        //find video according to refTitle
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            numLikesTemp = video.getNumLikes();
+                            Log.e("numLikes!!!!", "" + video.getNumLikes() + ", " + numLikesTemp);
+                            numLikesTemp++;
+                            Log.e("incremented", "" + numLikesTemp);
+                            keyTemp = child.getKey();
+                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                            //ref.setValue(numLikes);
+
+                            Log.e("keyTemp", keyTemp);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                            Log.e("numLikes", ""+numLikesTemp);
+                            ref.setValue(numLikesTemp);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+
+
+
+
 
 
         //userID = new String();
@@ -646,6 +680,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });*/
+
+
+
+
+
+
+
         /*likeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -1,8 +1,11 @@
 package com.example.keepfit.authapp;
 
 
+import java.util.Map;
+
 public class UserInformation {
     public String email, name, phonenumber, gender, birthday, weight, height, pickey, username, referenceTitle;
+    public Map<String, String> searchHistory;
 
     public UserInformation() {}
 
