@@ -424,7 +424,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                             for(Map.Entry<String, String> entry : results.entrySet()){
                                 videoRefTitles2.add(entry.getValue());
                                 ref = database.getReference("Video References");
-                                ref.orderByChild("reference title").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot ds : snapshot.getChildren()) {
@@ -475,7 +475,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-                                videoRefTitles.add(entry.getValue().get("reference title"));
+                                videoRefTitles.add(entry.getValue().get("referenceTitle"));
                                 videoDispTitles.add(entry.getValue().get("title"));
                                 numUploadedVideos++;
                             }
@@ -508,7 +508,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                             for(Map.Entry<String, String> entry : results.entrySet()){
                                 videoRefTitles1.add(entry.getValue());
                                 ref = database.getReference("Video References");
-                                ref.orderByChild("reference title").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot ds : snapshot.getChildren()) {

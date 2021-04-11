@@ -182,7 +182,17 @@ public class MainActivity extends AppCompatActivity {
         btnviewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSearchHistory();
+                if(findViewById(R.id.searchText1).isShown()){
+                    for(TextView tv : searchTextViews){
+                        tv.setVisibility(View.GONE);
+                    }
+                    for(Button bt : searchBtnTextViews){
+                        bt.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    getSearchHistory();
+                }
             }
         });
 
