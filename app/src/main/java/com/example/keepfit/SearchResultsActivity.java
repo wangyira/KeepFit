@@ -411,8 +411,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                 Log.e("onDataChange1", "OnDataChange1");
                                                                 String savedSearch = (String) snapshot.getValue();
-                                                                Log.e("savedSearch item 1", savedSearch);
-                                                                Log.e("hello????", "hello");
+//                                                                Log.e("savedSearch item 1", savedSearch);
+//                                                                Log.e("hello????", "hello");
                                                                 DatabaseReference shiftRef1a = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("Item 2");
 
                                                                 shiftRef1a.setValue(savedSearch);

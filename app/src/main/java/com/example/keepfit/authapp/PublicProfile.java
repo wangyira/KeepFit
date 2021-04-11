@@ -27,10 +27,13 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,6 +42,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,6 +64,7 @@ public class PublicProfile extends AppCompatActivity {
 
     private ImageView pfp;
     private TextView username, name;
+    private ToggleButton followbutton;
 
     private String userProfileToDisplay;
     private String nameToDisplay;
@@ -120,6 +125,7 @@ public class PublicProfile extends AppCompatActivity {
         pfp = findViewById(R.id.profilePic);
         name = findViewById(R.id.publicProfileName);
         username = findViewById(R.id.publicProfileUsername);
+        followbutton = findViewById(R.id.followbutton);
 
         userProfileToDisplay = getIntent().getStringExtra("username");
         numVideos = 0;
@@ -158,6 +164,93 @@ public class PublicProfile extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String currentusername = sharedPref.getString("username", null);
+
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following");
+
+        followingRef.child(currentusername).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
+                if (userfollowing == null) {
+                    followbutton.setChecked(false);
+                    //Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    for (Map.Entry<String, String> entry : userfollowing.entrySet()) {
+                        if (entry.getValue().equals(userProfileToDisplay)) {
+                            followbutton.setChecked(true);
+//                            followbutton.setBackgroundColor(Color.BLACK);
+//                            followbutton.setTextColor(Color.LTGRAY);
+                            //Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            followbutton.setChecked(false);
+//                            followbutton.setBackgroundColor(Color.LTGRAY);
+//                            followbutton.setTextColor(Color.BLACK);
+                            //Toast.makeText(getApplicationContext(), "3", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        followbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("hi", String.valueOf(followbutton.isChecked()));
+                if (followbutton.isChecked()) {
+//                    followbutton.setBackgroundColor(Color.BLACK);
+//                    followbutton.setTextColor(Color.LTGRAY);
+                    Toast.makeText(getApplicationContext(), "User Followed", Toast.LENGTH_SHORT).show();
+                    DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following").child(currentusername);
+                    followingRef.push().setValue(userProfileToDisplay);
+                    DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers").child(userProfileToDisplay);
+                    followersRef.push().setValue(currentusername);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "User Unfollowed", Toast.LENGTH_SHORT).show();
+//                    followbutton.setBackgroundColor(Color.LTGRAY);
+//                    followbutton.setTextColor(Color.BLACK);
+                    DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following").child(currentusername);
+                    DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers").child(userProfileToDisplay);
+                    followingRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot ds: snapshot.getChildren()) {
+                                if (ds.getValue().equals(userProfileToDisplay))
+                                    ds.getRef().removeValue();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    followersRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot ds: snapshot.getChildren()) {
+                                if (ds.getValue().equals(currentusername))
+                                    ds.getRef().removeValue();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             }
         });
     }

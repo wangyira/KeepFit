@@ -3,6 +3,7 @@ package com.example.keepfit.calories;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.example.keepfit.MainActivity;
@@ -11,6 +12,7 @@ import com.example.keepfit.VideoActivity;
 import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,6 +32,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,12 +46,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class CalorieActivity extends AppCompatActivity {
 
@@ -69,9 +78,17 @@ public class CalorieActivity extends AppCompatActivity {
     TextView TotalCalories;
     Button ClearCalories;
 
+    Button ViewHistory;
+    Button DeleteHistory;
+
     double myTotalCalories;
 
+    ArrayList<String> exerciseTitleList = new ArrayList<String>();
+    ArrayList<String> myCaloriesBurnedList = new ArrayList<String>();
+    ArrayList<String> myTimeList = new ArrayList<String>();
+    ArrayList<TextView> textViews = new ArrayList<TextView>();
 
+    int numExerciseEntries;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -87,10 +104,6 @@ public class CalorieActivity extends AppCompatActivity {
     */
 
     DatabaseReference mConditionRef = mRootRef.child("CaloriesTable");
-
-
-
-
 
     long startTime = 0;
     long timeInPause = 0;
@@ -115,19 +128,21 @@ public class CalorieActivity extends AppCompatActivity {
     public class METValue {
 
         public String username;
-        public double myCaloriesBurned;
-        public double myTime;
+        public String myCaloriesBurned;
+        public String myTime;
         public String exerciseTitle;
+        public String shouldView;
 
         public METValue() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public METValue(String username, double myCaloriesBurned, double myTime, String exerciseTitle) {
+        public METValue(String username, String myCaloriesBurned, String myTime, String exerciseTitle, String shouldView) {
             this.username = username;
             this.myCaloriesBurned = myCaloriesBurned;
             this.myTime = myTime;
             this.exerciseTitle = exerciseTitle;
+            this.shouldView = shouldView;
 
         }
 
@@ -136,6 +151,8 @@ public class CalorieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        numExerciseEntries = 0;
 
         setContentView(R.layout.activity_calorie);
 
@@ -268,7 +285,10 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
+                        String myNewMETValue = Double.toString((NewMETValue));
+                        String mydoubleSeconds = Double.toString(doubleSeconds);
+
+                        METValue myMETValue = new METValue(username, myNewMETValue, mydoubleSeconds, mySecondValue, "Y");
 
                         mConditionRef.push().setValue(myMETValue);
 
@@ -344,7 +364,10 @@ public class CalorieActivity extends AppCompatActivity {
 
                         double NewMETValue = MET_Exercise * weight * hours;
 
-                        METValue myMETValue = new METValue(username, NewMETValue, doubleSeconds, mySecondValue);
+                        String myNewMETValue = Double.toString((NewMETValue));
+                        String mydoubleSeconds = Double.toString(doubleSeconds);
+
+                        METValue myMETValue = new METValue(username, myNewMETValue, mydoubleSeconds, mySecondValue, "Y");
 
                         mConditionRef.push().setValue(myMETValue);
 
@@ -390,9 +413,160 @@ public class CalorieActivity extends AppCompatActivity {
         });
 
 
+        ViewHistory = findViewById((R.id.viewhistory));
 
+        ViewHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetViewHistory();
+                getExerciseHistory();
+            }
+        });
+
+        DeleteHistory = findViewById((R.id.deletehistory));
+
+        DeleteHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteHistory();
+            }
+        });
+
+        addItemstoArray();
+        makeInvisible();
+
+    }
+
+    private void resetViewHistory(){
+        numExerciseEntries = 0;
+        textViews.clear();
+        exerciseTitleList.clear();
+        myCaloriesBurnedList.clear();
+        myTimeList.clear();
+        addItemstoArray();
+        makeInvisible();
+    }
+
+    //Get Exercise History
+    private void getExerciseHistory(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("CaloriesTable");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        ref.orderByChild("username").equalTo(username).limitToFirst(10)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //resetViewHistory();
+                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                exerciseTitleList.add(entry.getValue().get("exerciseTitle"));
+                                myCaloriesBurnedList.add(entry.getValue().get("myCaloriesBurned"));
+                                myTimeList.add(entry.getValue().get("myTime"));
+                                numExerciseEntries++;
+                            }
+                        }
+                        if (numExerciseEntries > 10){
+                            numExerciseEntries = 10;
+                        }
+                        displayExerciseHistory();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
+    //Put On Display Exercise History
+    private void displayExerciseHistory(){
+        for(int i=0; i < numExerciseEntries*3; i = i + 3) {
+
+            int j = i / 3;
+
+            TextView tv = textViews.get(i);
+
+            tv.setText(exerciseTitleList.get(j));
+            tv.setVisibility(View.VISIBLE);
+
+            tv = textViews.get(i+1);
+
+            CharSequence cs1 = myCaloriesBurnedList.get(j);
+            tv.setText(cs1);
+            tv.setVisibility(View.VISIBLE);
+
+            tv = textViews.get(i+2);
+
+            CharSequence cs2 = myTimeList.get(j);
+            tv.setText(cs2);
+            tv.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    public void deleteHistory(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("CaloriesTable");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        ref.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1: snapshot.getChildren()){
+                    snapshot1.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
+    private void addItemstoArray(){
+
+        textViews.add(findViewById(R.id.hist1txt));
+        textViews.add(findViewById(R.id.hist2txt));
+        textViews.add(findViewById(R.id.hist3txt));
+        textViews.add(findViewById(R.id.hist4txt));
+        textViews.add(findViewById(R.id.hist5txt));
+        textViews.add(findViewById(R.id.hist6txt));
+        textViews.add(findViewById(R.id.hist7txt));
+        textViews.add(findViewById(R.id.hist8txt));
+        textViews.add(findViewById(R.id.hist9txt));
+        textViews.add(findViewById(R.id.hist10txt));
+        textViews.add(findViewById(R.id.hist11txt));
+        textViews.add(findViewById(R.id.hist12txt));
+        textViews.add(findViewById(R.id.hist13txt));
+        textViews.add(findViewById(R.id.hist14txt));
+        textViews.add(findViewById(R.id.hist15txt));
+        textViews.add(findViewById(R.id.hist16txt));
+        textViews.add(findViewById(R.id.hist17txt));
+        textViews.add(findViewById(R.id.hist18txt));
+        textViews.add(findViewById(R.id.hist19txt));
+        textViews.add(findViewById(R.id.hist20txt));
+        textViews.add(findViewById(R.id.hist21txt));
+        textViews.add(findViewById(R.id.hist22txt));
+        textViews.add(findViewById(R.id.hist23txt));
+        textViews.add(findViewById(R.id.hist24txt));
+        textViews.add(findViewById(R.id.hist25txt));
+        textViews.add(findViewById(R.id.hist26txt));
+        textViews.add(findViewById(R.id.hist27txt));
+        textViews.add(findViewById(R.id.hist28txt));
+        textViews.add(findViewById(R.id.hist29txt));
+        textViews.add(findViewById(R.id.hist30txt));
+
+
+    }
+
+    private void makeInvisible(){
+        for(TextView tv : textViews){
+            tv.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onPause() {
