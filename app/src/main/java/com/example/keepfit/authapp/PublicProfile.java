@@ -178,7 +178,7 @@ public class PublicProfile extends AppCompatActivity {
                 Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
                 if (userfollowing == null) {
                     followbutton.setChecked(false);
-                    Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     for (Map.Entry<String, String> entry : userfollowing.entrySet()) {
@@ -186,13 +186,13 @@ public class PublicProfile extends AppCompatActivity {
                             followbutton.setChecked(true);
 //                            followbutton.setBackgroundColor(Color.BLACK);
 //                            followbutton.setTextColor(Color.LTGRAY);
-                            Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
                             break;
                         } else {
                             followbutton.setChecked(false);
 //                            followbutton.setBackgroundColor(Color.LTGRAY);
 //                            followbutton.setTextColor(Color.BLACK);
-                            Toast.makeText(getApplicationContext(), "3", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "3", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
