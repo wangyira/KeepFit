@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -28,6 +30,7 @@ import com.example.keepfit.authapp.User;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,6 +63,7 @@ import static java.lang.Math.min;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean liked = false;
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
     ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
@@ -442,14 +446,47 @@ public class MainActivity extends AppCompatActivity {
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
-
                         Button bp = likes.get((numVideos-1)-j);
                         //change color
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) { like(videoRefTitles.get(j)); }
+                            public void onClick(View v) {
+                                liked = false;
+                                like(videoRefTitles.get(j));
+                             //   bp.setBackgroundColor(getResources().getColor(R.color.black));
+                                bp.setText("Liked");
+                                bp.setTextSize(9);
+                            }
                         });
+
                         bp.setVisibility(View.VISIBLE);
+                        //depending on whether the button is liked or not, change button appearance
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+                        Log.e("user", username);
+                        Log.e("videoRefTitle", videoRefTitles.get(j));
+                        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
+                        likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Log.e("likedval", String.valueOf(likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)));
+                                        for(DataSnapshot child : snapshot.getChildren()) {
+                                            Log.e("key", child.getKey());
+                                            Log.e("val", (String) child.getValue());
+                                            if (child.getKey() != null) {
+                                                bp.setText("Liked");
+                                                bp.setTextSize(9);
+                                            } else {
+                                                bp.setText("Like");
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+                        bp.setVisibility(View.VISIBLE); //show like button for all videos available
 
                         Button dl = dislikes.get((numVideos-1)-j);
                         //change color
@@ -774,10 +811,22 @@ public class MainActivity extends AppCompatActivity {
     private void like(String refTitle){
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
-        //String userID = getUserID(username);
-        //getUserID(username);
+        Log.e("clicked-video", refTitle);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
-        likeRef.push().setValue(refTitle);
+        readData(new MyCallback() {
+                    @Override
+                    public void onCallback(Boolean liked) {
+                        if(liked == true) {
+                            Log.e("alreadyliked", "already liked - do nothing");
+                        }
+                        else if(liked == false){
+                            Log.e("likedyes", "liked successful");
+                            likeRef.push().setValue(refTitle);
+                        }
+                    }
+                }, refTitle);
+
+
 
         //update NumLikes
         //find video according to refTitle
@@ -802,6 +851,45 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
+    }
+
+    public interface MyCallback {
+        void onCallback(Boolean liked);
+    }
+
+    public void readData(MyCallback myCallback, String refTitle) {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
+        likeRef.orderByValue().equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                if (child.getKey() != null) {
+                                    //if liked, don't add it
+                                    Log.e("key", child.getKey());
+                                    Log.e("val", (String) child.getValue());
+                                    liked = true;
+                                    Log.e("liked?", String.valueOf(liked));
+                                    myCallback.onCallback(liked);
+
+                                }
+                            }
+                        }
+                        else {
+                                liked = false;
+                                myCallback.onCallback(liked);
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
     }
 
     private void dislike(String refTitle){
