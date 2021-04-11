@@ -829,62 +829,36 @@ public class SearchResultsActivity extends AppCompatActivity {
         //getUserID(username);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
         likeRef.push().setValue(refTitle);
-        //userID = new String();
-        //check if refTitle already in likeRef
-        /*likeRef.orderByValue().equalTo(refTitle)
-                .addValueEventListener(new ValueEventListener() {
+
+
+
+        //update NumLikes
+        //find video according to refTitle
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d("null", "onDataChange");
-                        Log.d("key", snapshot.getKey());
-                        if(snapshot.getKey()=="likes"){
-                            Log.d("null", "null");
-                            likeRef.push().setValue(refTitle);
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            int numLikesTemp = video.getNumLikes();
+                            Log.e("numLikes!!!!", "" + video.getNumLikes() + ", " + numLikesTemp);
+                            numLikesTemp++;
+                            Log.e("incremented", "" + numLikesTemp);
+                            String keyTemp = child.getKey();
+                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                            //ref.setValue(numLikes);
+
+                            Log.e("keyTemp", keyTemp);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                            Log.e("numLikes", ""+numLikesTemp);
+                            ref.setValue(numLikesTemp);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
-                });*/
-        /*likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("null", "onDataChange");
-                Log.d("key", snapshot.getKey());
-                Map<String, String> map = (Map<String, String>) snapshot.getValue();
-                if(map==null){
-                    Log.d("here", "made it to here a");
-                    likeRef.push().setValue(refTitle);
-                }
-                else if(map.size()==0){
-                    Log.d("here", "made it to here b");
-                    likeRef.push().setValue(refTitle);
-                }
-                else{
-                    boolean found = false;
-                    for(Map.Entry<String, String> entry : map.entrySet()){
-                        Log.d("Key: ", entry.getKey());
-                        //Log.d("Value: ", entry.getValue());
-                        Log.d("refTitle: ", refTitle);
-                        if(entry.getValue().equals(refTitle)){
-                            found = true;
-                            Log.d("here", "made it to here c");
-                            break;
-                        }
-                    }
-                    if(!found){
-                        Log.d("here", "made it to here");
-                        likeRef.push().setValue(refTitle); }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-        //Pair<String, String> pair = new Pair<String, String>(videoRefTitles.get(j), null);
-        //likeRef.push().setValue(refTitle);
+                });
     }
 
     private void dislike(String refTitle){
