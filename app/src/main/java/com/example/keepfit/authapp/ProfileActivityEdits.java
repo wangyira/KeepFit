@@ -108,6 +108,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
         setContentView(R.layout.activity_edit_profile);
         btnEditName = findViewById(R.id.btnEditName);
         btnEditPhoneNumber = findViewById(R.id.btnEditPhoneNumber);
@@ -130,8 +132,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         numLikedVideos = 0;
         numDislikedVideos = 0;
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
         //mAuth = FirebaseAuth.getInstance();
 
         //navbar
@@ -495,86 +495,103 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 //            }
 //        });
 
+
         // delete the video from video references and all instances in likes/dislikes
-//        ref = FirebaseDatabase.getInstance().getReference("Video References");
-//        ref.orderByChild("uploadingUser").equalTo(username).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for(DataSnapshot ds : snapshot.getChildren()){
-//                    Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) ds.getValue();
-//                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-//                        Map<String,String> temp = entry.getValue();
-//                        refTitle = temp.get("reference title");
-//                        //loop thru likes table to remove likes
-//                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("Likes");
-//                        ref2.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-//                                for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-//                                    String user = entry.getKey();
-//                                    DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("Likes").child(user);
-//                                    newRef.addValueEventListener(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                            for(DataSnapshot ds: snapshot.getChildren()){
-//                                                if(ds.getValue().equals(refTitle)){
-//                                                    ds.getRef().removeValue();
-//                                                }
-//                                            }
-//                                        }
-//                                        @Override
-//                                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                        }
-//                                    });
-//                                }
-//                            }
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
-//                        //loop thru dislikes table to remove dislikes
-//                        ref2 = FirebaseDatabase.getInstance().getReference("Dislikes");
-//                        ref2.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
-//                                for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
-//                                    String user = entry.getKey();
-//                                    DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(user);
-//                                    newRef.addValueEventListener(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                            for(DataSnapshot ds: snapshot.getChildren()){
-//                                                if(ds.getValue().equals(refTitle)){
-//                                                    ds.getRef().removeValue();
-//                                                }
-//                                            }
-//                                        }
-//                                        @Override
-//                                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                        }
-//                                    });
-//                                }
-//                            }
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
-//                    }
-//                    ds.getRef().removeValue();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+        ref = FirebaseDatabase.getInstance().getReference("Video References");
+        ref.orderByChild("uploadingUser").equalTo(username).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot !=null){
+                    Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                    if(results != null){
+                        for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                            Map<String,String> temp = entry.getValue();
+                            refTitle = temp.get("referenceTitle");
+                            //loop thru likes table to remove likes
+                            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("Likes");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                        String user = entry.getKey();
+                                        DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("Likes").child(user);
+                                        newRef.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for(DataSnapshot ds: snapshot.getChildren()){
+                                                    if(ds.getValue().equals(refTitle)){
+                                                        ds.getRef().removeValue();
+                                                    }
+                                                }
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            //loop thru dislikes table to remove dislikes
+                            ref2 = FirebaseDatabase.getInstance().getReference("Dislikes");
+                            ref2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                        String user = entry.getKey();
+                                        DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(user);
+                                        newRef.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for(DataSnapshot ds: snapshot.getChildren()){
+                                                    if(ds.getValue().equals(refTitle)){
+                                                        ds.getRef().removeValue();
+                                                    }
+                                                }
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            ref.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(10)
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot ds: snapshot.getChildren()) {
+                                                ds.getRef().removeValue();
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }
@@ -794,6 +811,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                                 delete.setVisibility(View.GONE);
                                 ib.setVisibility(View.GONE);
                                 tv.setVisibility(View.GONE);
+//                                videoRefTitles.remove(j);
+//                                videoDispTitles.remove(j);
+
                             }
                         });
                         delete.setVisibility(View.VISIBLE);
@@ -811,8 +831,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("Video References");
 
         likeRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, Map<String, String>> map = (Map<String, Map<String, String>>) snapshot.getValue();
                         for(Map.Entry<String, Map<String, String>> entry : map.entrySet()){
                             String key = entry.getKey();
@@ -833,12 +853,12 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                                 }
                             });
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        });
 
         dislikeRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -870,12 +890,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        deleteRef.orderByChild("reference title").equalTo(refTitle).limitToFirst(10)
+        deleteRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(10)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot ds: snapshot.getChildren()) {
                             ds.getRef().removeValue();
+                            numUploadedVideos--;
                         }
                     }
                     @Override
