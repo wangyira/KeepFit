@@ -284,12 +284,17 @@ public class MainActivity extends AppCompatActivity {
                                     //Log.e("pair", pair);
                                     searchKeywords.add(pair.getValue());
                                 }*/
-                                searchKeywords.add(searchMap.get("Item 1"));
-                                searchKeywords.add(searchMap.get("Item 2"));
-                                searchKeywords.add(searchMap.get("Item 3"));
-                                searchKeywords.add(searchMap.get("Item 4"));
-                                searchKeywords.add(searchMap.get("Item 5"));
-                                Log.e("array size",String.valueOf(searchKeywords.size()));
+                                if(searchMap != null) {
+                                    Log.e("searchMap size", String.valueOf(searchMap.size()));
+
+                                    for (int z = 1; z <= searchMap.size(); z++) {
+                                        String s = "Item " + z;
+                                        Log.e("s", s);
+                                        searchKeywords.add(searchMap.get(s));
+
+                                    }
+                                    Log.e("array size", String.valueOf(searchKeywords.size()));
+                                }
                             }
 
                             populateSearchHistory();
