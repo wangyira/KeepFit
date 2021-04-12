@@ -987,7 +987,16 @@ public class SearchResultsActivity extends AppCompatActivity {
         String referenceTitle = videoRefTitles.get(i);
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra("referenceTitle",referenceTitle);
+
+//        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+//        String username = sharedPref.getString("username", null);
+//
+//        DatabaseReference SearchRef = FirebaseDatabase.getInstance().getReference("Search History").child(username);
+//        SearchRef.push().setValue(referenceTitle);
+
         startActivity(intent);
+
+
     }
     public void openNewActivityLivestream(int i){
         //REMOVE THIS!!!

@@ -1,8 +1,12 @@
 package com.example.keepfit;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -49,6 +53,13 @@ public class VideoActivity extends AppCompatActivity {
             final File localFile = File.createTempFile("referenceTitle", "mp4");
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             StorageReference videoRef = storageRef.child("/videos/" + referenceTitle + ".mp4");
+
+            SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+            String username = sharedPref.getString("username", null);
+
+            DatabaseReference SearchRef = FirebaseDatabase.getInstance().getReference("Video History").child(username);
+            SearchRef.push().setValue(referenceTitle);
+
             videoRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
