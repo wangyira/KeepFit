@@ -639,6 +639,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        numDislikedVideos = 0;
+                        videoRefTitles2.clear();
+                        videoDispTitles2.clear();
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, String> entry : results.entrySet()){
@@ -692,6 +695,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        videoRefTitles.clear();
+                        videoDispTitles.clear();
+                        numUploadedVideos = 0;
                         Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
@@ -723,6 +729,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        videoRefTitles1.clear();
+                        videoDispTitles1.clear();
+                        numLikedVideos = 0;
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
                         if(results!=null){
                             for(Map.Entry<String, String> entry : results.entrySet()){
@@ -808,9 +817,22 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                             public void onClick(View v) {
                                 //Log.d("ONCLICK", "Clicked Delete");
                                 deleteVideo(videoRefTitles.get(j));
-                                delete.setVisibility(View.GONE);
-                                ib.setVisibility(View.GONE);
-                                tv.setVisibility(View.GONE);
+                                for(int k =0; k < numUploadedVideos; k++){
+                                    Log.d("removing", String.valueOf(k));
+                                    imageButtons.get(k+10).setVisibility(View.GONE);
+                                    textViews.get(k+10).setVisibility(View.GONE);
+                                    deleteVideo.get(k).setVisibility(View.GONE);
+                                }
+
+                                videoRefTitles.clear();
+                                videoDispTitles.clear();
+                                Log.d("made it here", String.valueOf(videoRefTitles.size()));
+                                //getVideoResultsbyTitle();
+
+                                finish();
+                                getIntent().putExtra("deleting", "true");
+                                startActivity(getIntent());
+
 //                                videoRefTitles.remove(j);
 //                                videoDispTitles.remove(j);
 
