@@ -297,32 +297,51 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnviewLiked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search(1);
+                if(findViewById(R.id.item1txt).isShown()){
+                    for(int i=0; i < 10; i++){
+                        textViews.get(i).setVisibility(View.GONE);
+                        imageButtons.get(i).setVisibility(View.GONE);
+                    }
+
+                }
+                else{
+                    search(1);
+                }
             }
         });
 
         btnviewDisliked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search(3);
+
+                if(findViewById(R.id.ditem1txt).isShown()){
+                    for(int i=20; i < 30; i++){
+                        textViews.get(i).setVisibility(View.GONE);
+                        imageButtons.get(i).setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    search(3);
+                }
             }
         });
 
         btnviewUploaded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(findViewById(R.id.searchText1).isShown()){
-//                    for(TextView tv : searchTextViews){
-//                        tv.setVisibility(View.GONE);
-//                    }
-//                    for(Button bt : searchBtnTextViews){
-//                        bt.setVisibility(View.GONE);
-//                    }
-//                }
-//                else{
-//                    getSearchHistory();
-//                }
-                search(2);
+                if(findViewById(R.id.uitem1txt).isShown()){
+                    for(int i=10; i < 20; i++){
+                        textViews.get(i).setVisibility(View.GONE);
+                        imageButtons.get(i).setVisibility(View.GONE);
+                    }
+                    for(int i=0; i < 10; i++){
+                        deleteVideo.get(i).setVisibility(View.GONE);
+                    }
+
+                }
+                else{
+                    search(2);
+                }
             }
         });
 
