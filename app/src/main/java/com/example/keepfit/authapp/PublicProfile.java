@@ -63,7 +63,7 @@ public class PublicProfile extends AppCompatActivity {
     //private FirebaseUser user;
 
     private ImageView pfp;
-    private TextView username, name;
+    private TextView username, name, followingnumber, followersnumber;
     private ToggleButton followbutton;
 
     private String userProfileToDisplay;
@@ -126,6 +126,9 @@ public class PublicProfile extends AppCompatActivity {
         name = findViewById(R.id.publicProfileName);
         username = findViewById(R.id.publicProfileUsername);
         followbutton = findViewById(R.id.followbutton);
+        followingnumber = findViewById(R.id.followingnumber);
+        followersnumber = findViewById(R.id.followersnumber);
+
 
         userProfileToDisplay = getIntent().getStringExtra("username");
         numVideos = 0;
@@ -178,21 +181,15 @@ public class PublicProfile extends AppCompatActivity {
                 Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
                 if (userfollowing == null) {
                     followbutton.setChecked(false);
-                    //Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     for (Map.Entry<String, String> entry : userfollowing.entrySet()) {
                         if (entry.getValue().equals(userProfileToDisplay)) {
                             followbutton.setChecked(true);
-//                            followbutton.setBackgroundColor(Color.BLACK);
-//                            followbutton.setTextColor(Color.LTGRAY);
-                            //Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
+
                             break;
                         } else {
                             followbutton.setChecked(false);
-//                            followbutton.setBackgroundColor(Color.LTGRAY);
-//                            followbutton.setTextColor(Color.BLACK);
-                            //Toast.makeText(getApplicationContext(), "3", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -205,13 +202,47 @@ public class PublicProfile extends AppCompatActivity {
             }
         });
 
+        followingRef.child(userProfileToDisplay).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
+                if (userfollowing == null) {
+                    followingnumber.setText("0");
+                }
+                else {
+                    followingnumber.setText(String.valueOf(userfollowing.size()));
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers");
+
+        followersRef.child(userProfileToDisplay).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> userfollowers = (Map<String, String>) snapshot.getValue();
+                if (userfollowers == null) {
+                    followersnumber.setText("0");
+                }
+                else {
+                    followersnumber.setText(String.valueOf(userfollowers.size()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         followbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("hi", String.valueOf(followbutton.isChecked()));
                 if (followbutton.isChecked()) {
-//                    followbutton.setBackgroundColor(Color.BLACK);
-//                    followbutton.setTextColor(Color.LTGRAY);
                     Toast.makeText(getApplicationContext(), "User Followed", Toast.LENGTH_SHORT).show();
                     DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following").child(currentusername);
                     followingRef.push().setValue(userProfileToDisplay);
@@ -220,11 +251,9 @@ public class PublicProfile extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "User Unfollowed", Toast.LENGTH_SHORT).show();
-//                    followbutton.setBackgroundColor(Color.LTGRAY);
-//                    followbutton.setTextColor(Color.BLACK);
                     DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following").child(currentusername);
                     DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers").child(userProfileToDisplay);
-                    followingRef.addValueEventListener(new ValueEventListener() {
+                    followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot ds: snapshot.getChildren()) {
@@ -237,7 +266,7 @@ public class PublicProfile extends AppCompatActivity {
 
                         }
                     });
-                    followersRef.addValueEventListener(new ValueEventListener() {
+                    followersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot ds: snapshot.getChildren()) {

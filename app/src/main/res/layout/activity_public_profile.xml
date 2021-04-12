@@ -32,17 +32,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_marginBottom="100dp"
         android:fillViewport="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintStart_toStartOf="parent"
+        card_view:layout_constraintVertical_bias="0.0"
         tools:context=".authapp.PublicProfile">
 
 
@@ -65,48 +62,117 @@
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profilePic"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginStart="5dp"
-                    android:padding="5dp"
+                    android:padding="0dp"
                     android:layout_marginLeft="20dp"
                     android:cropToPadding="true"
                     android:src="@drawable/defavatar" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/publicProfileName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="25dp"
-                        android:text="Name"/>
-                    <TextView
-                        android:id="@+id/publicProfileUsername"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:text="Username"/>
+                        android:orientation="vertical">
 
-                    <ToggleButton
-                        android:id="@+id/followbutton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textOff = "Click to Follow"
-                        android:textOn = "Click to Unfollow"
-                        />
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/publicProfileName"
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginTop="10dp"
+                                android:text="Name"
+                                android:textColor="@color/white"
+                                android:textSize="25dp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/followersnumber"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginTop="10dp"
+                                android:text="0"
+                                android:textColor="@color/white"
+                                android:textSize="20dp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/followingnumber"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginTop="10dp"
+                                android:text="0"
+                                android:textColor="@color/white"
+                                android:textSize="20dp"
+                                android:gravity="center"/>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/publicProfileUsername"
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@color/white"
+                                android:textSize="15dp"
+                                android:text="Username"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/followerstext"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginTop="0dp"
+                                android:text="Followers:"
+                                android:textColor="@color/white"
+                                android:textSize="10dp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/followingtext"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="0dp"
+                                android:textColor="@color/white"
+                                android:textSize="10dp"
+                                android:text="Following:"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+
+                        <ToggleButton
+                            android:id="@+id/followbutton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textOff = "Click to Follow"
+                            android:textOn = "Click to Unfollow"
+                            android:layout_marginTop="10dp"/>
+                    </LinearLayout>
 
             </LinearLayout>
 

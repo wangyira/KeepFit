@@ -72,6 +72,8 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewDisliked;
     private ImageView imageView;
 
+    private TextView followingnumber, followersnumber;
+
     private Uri filePath;
 
     private final int PICK_IMAGE_REQUEST = 71;
@@ -119,6 +121,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnviewLiked = findViewById(R.id.viewLikedVideos);
         btnviewDisliked = findViewById(R.id.viewDisliked);
         btnviewUploaded = findViewById(R.id.viewUploaded);
+
+        followingnumber = findViewById(R.id.followingnumber);
+        followersnumber = findViewById(R.id.followersnumber);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -261,6 +266,17 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnviewUploaded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                if(findViewById(R.id.searchText1).isShown()){
+//                    for(TextView tv : searchTextViews){
+//                        tv.setVisibility(View.GONE);
+//                    }
+//                    for(Button bt : searchBtnTextViews){
+//                        bt.setVisibility(View.GONE);
+//                    }
+//                }
+//                else{
+//                    getSearchHistory();
+//                }
                 search(2);
             }
         });
@@ -364,6 +380,42 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         heightTextView.requestFocus();
                         return;
                     }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String currentusername = sharedPref.getString("username", null);
+
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following");
+
+        followingRef.child(currentusername).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
+                if (userfollowing != null) {
+                    followingnumber.setText(String.valueOf(userfollowing.size()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers");
+
+        followersRef.child(currentusername).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, String> userfollowers = (Map<String, String>) snapshot.getValue();
+                if (userfollowers != null) {
+                    followersnumber.setText(String.valueOf(userfollowers.size()));
                 }
             }
 
