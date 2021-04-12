@@ -469,14 +469,14 @@ public class MainActivity extends AppCompatActivity {
                         //depending on whether the button is liked or not, change button appearance
                         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                         String username = sharedPref.getString("username", null);
-                        Log.e("user", username);
+                        //Log.e("user", username);
                         Log.e("videoRefTitle", videoRefTitles.get(j));
                         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
                         likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        Log.e("likedval", String.valueOf(likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)));
+                                        //Log.e("likedval", String.valueOf(likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)));
                                         for(DataSnapshot child : snapshot.getChildren()) {
                                             Log.e("key", child.getKey());
                                             Log.e("val", (String) child.getValue());
