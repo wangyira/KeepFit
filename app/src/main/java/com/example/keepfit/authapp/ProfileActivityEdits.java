@@ -394,7 +394,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following");
 
-        followingRef.child(currentusername).addValueEventListener(new ValueEventListener() {
+        followingRef.child(currentusername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
@@ -410,7 +410,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         });
         DatabaseReference followersRef = FirebaseDatabase.getInstance().getReference("Followers");
 
-        followersRef.child(currentusername).addValueEventListener(new ValueEventListener() {
+        followersRef.child(currentusername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Map<String, String> userfollowers = (Map<String, String>) snapshot.getValue();
