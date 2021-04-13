@@ -70,7 +70,7 @@ import java.util.logging.Logger;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewDisliked, btnDeleteAccount;
+    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewWatched, btnviewDisliked, btnDeleteAccount;
     private ImageView imageView;
 
     private TextView followingnumber, followersnumber;
@@ -86,6 +86,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     //uploaded vidoes
     ArrayList<String> videoRefTitles = new ArrayList<String>();
     ArrayList<String> videoDispTitles = new ArrayList<String>();
+    //watched videos
+    ArrayList<String> watchedVideoRefTitles = new ArrayList<String>();
+    ArrayList<String> watchedVideoDispTitles = new ArrayList<String>();
     //liked videos
     ArrayList<String> videoRefTitles1 = new ArrayList<String>();
     ArrayList<String> videoDispTitles1 = new ArrayList<String>();
@@ -97,6 +100,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     ArrayList<Button> deleteVideo = new ArrayList<Button>();
 
     int numUploadedVideos;
+    int numWatchedVideos;
     int numLikedVideos;
     int numDislikedVideos;
 
@@ -129,6 +133,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnviewLiked = findViewById(R.id.viewLikedVideos);
         btnviewDisliked = findViewById(R.id.viewDisliked);
         btnviewUploaded = findViewById(R.id.viewUploaded);
+        btnviewWatched = findViewById(R.id.viewWatchHistory);
 
         followingnumber = findViewById(R.id.followingnumber);
         followersnumber = findViewById(R.id.followersnumber);
@@ -137,6 +142,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         storageReference = storage.getReference();
 
         numUploadedVideos = 0;
+        numWatchedVideos = 0;
         numLikedVideos = 0;
         numDislikedVideos = 0;
 
@@ -341,6 +347,21 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 }
                 else{
                     search(2);
+                }
+            }
+        });
+
+        btnviewWatched.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(findViewById(R.id.hitem1txt).isShown()){
+                    for(int i=30; i < 40; i++){
+                        textViews.get(i).setVisibility(View.GONE);
+                        imageButtons.get(i).setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    search(4);
                 }
             }
         });
@@ -719,6 +740,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         else if (i == 3){
             getDislikedVideos();
         }
+        else if (i == 4){
+            getWatchedVideoResultsbyTitle();
+        }
     }
 
     private void getDislikedVideos() {
@@ -811,6 +835,66 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 });
     }
 
+    //uploaded videos
+    private void getWatchedVideoResultsbyTitle(){
+        watchedVideoRefTitles.clear();
+        watchedVideoDispTitles.clear();
+        numWatchedVideos = 0;
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("Video History");
+
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+
+        ref.child(username).limitToFirst(10)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, String> results = (Map<String, String>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, String> entry : results.entrySet()){
+                                Log.e("key",entry.getKey());
+                                Log.e("value",entry.getValue());
+                                watchedVideoRefTitles.add(entry.getValue());
+                                ref = database.getReference("Video References");
+                                ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            videoId = ds.getKey();
+                                        }
+                                        ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                                watchedVideoDispTitles.add(results.get("title"));
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    };
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                numWatchedVideos++;
+                            }
+                        }
+                        Log.e("numwatchedvideo",String.valueOf(numWatchedVideos));
+                        displayWatchedVideos();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
     //liked videos
     private void getLikedVideos(){
         videoRefTitles1.clear();
@@ -872,8 +956,6 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
     }
-
-
 
     //display uploaded
     private void displayResultsUploaded(){
@@ -1024,6 +1106,45 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     }
                 });
 
+    }
+
+    //get watched videos
+    private void displayWatchedVideos(){
+        for(int i=0; i < numWatchedVideos; i++){
+            final int j = i;
+            imageButtons.get(i+30).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("myTag", "@@@@@@@");
+                    openNewActivityVideoWatched(j);
+                }
+            });
+        }
+        //display video results
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        for(int i=0; i < numWatchedVideos; i++) {
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + watchedVideoRefTitles.get(i) + ".jpg");
+            try {
+                final int j = i;
+                final File localFile = File.createTempFile(watchedVideoRefTitles.get(i), "jpg");
+                imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j+30);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j+30);
+                        tv.setText(watchedVideoDispTitles.get(j));
+                        tv.setVisibility(View.VISIBLE);
+
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
     }
 
     //get liked videos
@@ -1194,6 +1315,17 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         imageButtons.add(findViewById(R.id.ditem9btn));
         imageButtons.add(findViewById(R.id.ditem10btn));
 
+        imageButtons.add(findViewById(R.id.hitem1btn));
+        imageButtons.add(findViewById(R.id.hitem2btn));
+        imageButtons.add(findViewById(R.id.hitem3btn));
+        imageButtons.add(findViewById(R.id.hitem4btn));
+        imageButtons.add(findViewById(R.id.hitem5btn));
+        imageButtons.add(findViewById(R.id.hitem6btn));
+        imageButtons.add(findViewById(R.id.hitem7btn));
+        imageButtons.add(findViewById(R.id.hitem8btn));
+        imageButtons.add(findViewById(R.id.hitem9btn));
+        imageButtons.add(findViewById(R.id.hitem10btn));
+
 
         textViews.add(findViewById(R.id.item1txt));
         textViews.add(findViewById(R.id.item2txt));
@@ -1228,6 +1360,17 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         textViews.add(findViewById(R.id.ditem9txt));
         textViews.add(findViewById(R.id.ditem10txt));
 
+        textViews.add(findViewById(R.id.hitem1txt));
+        textViews.add(findViewById(R.id.hitem2txt));
+        textViews.add(findViewById(R.id.hitem3txt));
+        textViews.add(findViewById(R.id.hitem4txt));
+        textViews.add(findViewById(R.id.hitem5txt));
+        textViews.add(findViewById(R.id.hitem6txt));
+        textViews.add(findViewById(R.id.hitem7txt));
+        textViews.add(findViewById(R.id.hitem8txt));
+        textViews.add(findViewById(R.id.hitem9txt));
+        textViews.add(findViewById(R.id.hitem10txt));
+
         deleteVideo.add(findViewById(R.id.uitem1delete));
         deleteVideo.add(findViewById(R.id.uitem2delete));
         deleteVideo.add(findViewById(R.id.uitem3delete));
@@ -1256,6 +1399,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     public void openNewActivityVideo(int i){
         String referenceTitle = videoRefTitles.get(i);
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("referenceTitle",referenceTitle);
+        startActivity(intent);
+    }
+
+    public void openNewActivityVideoWatched(int i){
+        String referenceTitle = watchedVideoRefTitles.get(i);
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);
