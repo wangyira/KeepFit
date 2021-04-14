@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         addItemstoArray();
         makeInvisible();
 
+
         //set button listeners
         ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
         Button preset1 = (Button) findViewById(R.id.preset1);
@@ -361,6 +362,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("numVideos", "" + numVideos);
                 }
                 getLivestreams();
+
+                //flip order
+                flipOrderVideoDispTitles();
+                flipOrderVideoRefTitles();
+                flipOrderVideoUploadingUser();
             }
 
             @Override
@@ -424,11 +430,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayResults(){
+        Log.e("displayResults", "numVideos="+numVideos+", numLivestreams="+numLivestreams);
         for(int i=0; i < 20; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("button clicked", "i="+j + ", name: " + videoDispTitles.get(j));
                     if(j < numVideos){ openNewActivityVideo(j); }
                     else{ openNewActivityLivestream(j); }
                 }
@@ -447,12 +455,12 @@ public class MainActivity extends AppCompatActivity {
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        ImageButton ib = imageButtons.get((numVideos-1)-j);
+                        ImageButton ib = imageButtons.get(j);
 
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
-                        Button bp = likes.get((numVideos-1)-j);
+                        Button bp = likes.get(j);
                         //change color
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -494,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         bp.setVisibility(View.VISIBLE); //show like button for all videos available
 
-                        Button dl = dislikes.get((numVideos-1)-j);
+                        Button dl = dislikes.get(j);
                         //change color
                         dl.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -534,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
                         //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                        ImageButton ibp = imageButtonsProfile.get((numVideos-1)-j);
+                        ImageButton ibp = imageButtonsProfile.get(j);
                         /*try{
                             final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                             imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -548,12 +556,12 @@ public class MainActivity extends AppCompatActivity {
                         }catch (Exception e){ }*/
                         ibp.setVisibility(View.VISIBLE);
 
-                        TextView tvp = textViewsProfile.get((numVideos-1)-j);
+                        TextView tvp = textViewsProfile.get(j);
                         tvp.setText(videoUploadingUser.get(j));
 
                         tvp.setVisibility(View.VISIBLE);
 
-                        TextView tv = textViews.get((numVideos-1)-j);
+                        TextView tv = textViews.get(j);
                         tv.setText(videoDispTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
                     }
@@ -773,6 +781,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openNewActivityVideo(int i){
+        Log.e("passing to VideoAct", "title: " + videoRefTitles.get(i));
         String referenceTitle = videoRefTitles.get(i);
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra("referenceTitle",referenceTitle);
@@ -992,6 +1001,42 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
+    }
+
+    private void flipOrderVideoRefTitles(){
+        ArrayList<String> tempRefTitles = new ArrayList<String>();
+        for(String entry : videoRefTitles){
+            tempRefTitles.add(entry);
+        }
+
+        videoRefTitles.clear();
+        for(int i=tempRefTitles.size()-1; i >=0; i--){
+            videoRefTitles.add(tempRefTitles.get(i));
+        }
+    }
+
+    private void flipOrderVideoDispTitles(){
+        ArrayList<String> tempRefTitles = new ArrayList<String>();
+        for(String entry : videoDispTitles){
+            tempRefTitles.add(entry);
+        }
+
+        videoDispTitles.clear();
+        for(int i=tempRefTitles.size()-1; i >=0; i--){
+            videoDispTitles.add(tempRefTitles.get(i));
+        }
+    }
+
+    private void flipOrderVideoUploadingUser(){
+        ArrayList<String> tempRefTitles = new ArrayList<String>();
+        for(String entry : videoUploadingUser){
+            tempRefTitles.add(entry);
+        }
+
+        videoUploadingUser.clear();
+        for(int i=tempRefTitles.size()-1; i >=0; i--){
+            videoUploadingUser.add(tempRefTitles.get(i));
+        }
     }
 
     private Bitmap imgToBitmap(File file){
