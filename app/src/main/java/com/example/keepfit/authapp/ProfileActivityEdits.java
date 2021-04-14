@@ -402,7 +402,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     editor.putString("username", username);
                     editor.putString("email", email);
                     editor.apply();
-                    //editor.commit();
+                    editor.commit();
 
                     Picasso.get().load(imgLink).into(profilePicture);
 
