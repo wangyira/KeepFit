@@ -73,7 +73,7 @@ import java.util.logging.Logger;
 
 public class ProfileActivityEdits extends AppCompatActivity implements DialogExample.DialogExampleListener {
 
-    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewWatched, btnviewDisliked, btnDeleteAccount;
+    private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewWatched, btnviewDisliked, btnDeleteAccount, btnWipeWatchHistory;
     private ImageView imageView;
 
     private TextView followingnumber, followersnumber;
@@ -357,14 +357,16 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         btnviewWatched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(findViewById(R.id.hitem1txt).isShown()){
+                if (btnWipeWatchHistory.isShown()){
                     for(int i=30; i < 40; i++){
                         textViews.get(i).setVisibility(View.GONE);
                         imageButtons.get(i).setVisibility(View.GONE);
                     }
+                    btnWipeWatchHistory.setVisibility(View.GONE);
                 }
                 else{
-                    search(4);
+                    btnWipeWatchHistory.setVisibility(View.VISIBLE);
+                    viewHistory();
                 }
             }
         });
@@ -510,6 +512,61 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 if (userfollowers != null) {
                     followersnumber.setText(String.valueOf(userfollowers.size()));
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        btnWipeWatchHistory = findViewById(R.id.wipeWatchHistory);
+
+        btnWipeWatchHistory.setVisibility(View.GONE);
+
+        btnWipeWatchHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wipeHistory();
+            }
+        });
+
+
+
+
+    }
+
+    private void viewHistory(){
+
+
+
+        watchedVideoRefTitles.clear();
+        numWatchedVideos = 0;
+
+        if(findViewById(R.id.hitem1txt).isShown()){
+            for(int i=30; i < 40; i++){
+                textViews.get(i).setVisibility(View.GONE);
+                imageButtons.get(i).setVisibility(View.GONE);
+            }
+        }
+        else{
+            search(4);
+        }
+    }
+
+    private void wipeHistory(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference ref = database.getReference("Video History").child(username);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1: snapshot.getChildren()) {
+                    snapshot1.getRef().removeValue();
+                }
+                viewHistory();
             }
 
             @Override
@@ -879,7 +936,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
 
         ref.child(username).limitToFirst(10)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
