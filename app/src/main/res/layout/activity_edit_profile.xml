@@ -742,7 +742,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/viewWatchHistory"
@@ -751,6 +752,13 @@
                     android:text = "View Watched Videos"
                     android:textSize="24sp"
                     android:layout_centerInParent="true" />
+
+                <Button
+                    android:id="@+id/wipeWatchHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Clear History" />
 
             </LinearLayout>
 
