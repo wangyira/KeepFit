@@ -33,6 +33,7 @@ import com.example.keepfit.R;
 import com.example.keepfit.VideoActivity;
 import com.example.keepfit.StartLivestreamActivity;
 import com.example.keepfit.VideoActivity;
+import com.example.keepfit.VideoReference;
 import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,6 +66,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -404,7 +407,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     editor.putString("username", username);
                     editor.putString("email", email);
                     editor.apply();
-                    //editor.commit();
+                    editor.commit();
+
+                    getFollowers();
 
                     Picasso.get().load(imgLink).into(profilePicture);
 
@@ -473,8 +478,13 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
+
+    }
+
+    private void getFollowers(){
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String currentusername = sharedPref.getString("username", null);
+        Log.d("username", currentusername);
 
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference("Following");
 
@@ -484,6 +494,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 Map<String, String> userfollowing = (Map<String, String>) snapshot.getValue();
                 if (userfollowing != null) {
                     followingnumber.setText(String.valueOf(userfollowing.size()));
+                    Log.d("following size", currentusername + String.valueOf(userfollowing.size()));
                 }
             }
 
@@ -508,6 +519,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
             }
         });
+
 
         btnWipeWatchHistory = findViewById(R.id.wipeWatchHistory);
 
@@ -813,24 +825,31 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
+                        //Log.d("getting disliked", String.valueOf(results.size()));
                         if(results!=null){
                             for(Map.Entry<String, String> entry : results.entrySet()){
                                 videoRefTitles2.add(entry.getValue());
                                 ref = database.getReference("Video References");
                                 ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+//                                        VideoReference video = snapshot2.getValue(VideoReference.class);
+//                                        videoDispTitles2.add(video.getTitle());
+                                        //Log.d("display title", video.getTitle());
+
+                                        for(DataSnapshot ds : snapshot2.getChildren()) {
                                             videoId = ds.getKey();
                                             //Log.d("TAG", uid);
                                         }
                                         ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                            public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                                Map <String, String> results = (Map <String, String>) snapshot3.getValue();
                                                 videoDispTitles2.add(results.get("title"));
+                                                Log.d("num disliked videos", String.valueOf(numDislikedVideos) + "  " + String.valueOf(videoRefTitles2.size()) + "  " + String.valueOf(videoDispTitles2.size()));
+                                                if(numDislikedVideos == videoRefTitles2.size() && numDislikedVideos == videoDispTitles2.size())
+                                                    displayDislikedVideos(videoDispTitles2);
                                             }
 
                                             @Override
@@ -838,6 +857,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
                                             }
                                         });
+
                                     };
 
                                     @Override
@@ -848,7 +868,12 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                                 numDislikedVideos++;
                             }
                         }
-                        displayDislikedVideos();
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -873,6 +898,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        //Log.d("getting uploaded", String.valueOf(results.size()));
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 videoRefTitles.add(entry.getValue().get("referenceTitle"));
@@ -880,7 +906,14 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                                 numUploadedVideos++;
                             }
                         }
+//                        try {
+//                            Thread.sleep(5000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                        //Log.d("num uploaded videos", String.valueOf(numUploadedVideos) + "  " + String.valueOf(videoRefTitles.size()) + "  " + String.valueOf(videoDispTitles.size()));
                         displayResultsUploaded();
+
                         //numVideos = results.entrySet().size();
                     }
 
@@ -889,7 +922,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                 });
     }
 
-    //uploaded videos
+    //watched videos
     private void getWatchedVideoResultsbyTitle(){
         watchedVideoRefTitles.clear();
         watchedVideoDispTitles.clear();
@@ -901,47 +934,61 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
 
+
         ref.child(username).limitToFirst(10)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
+                        //Log.d("getting watched", String.valueOf(results.size()));
                         if(results!=null){
+                            //final CountDownLatch latch = new CountDownLatch(results.entrySet().size());
+                            //final CountDownLatch l2 = new CountDownLatch(1);
                             for(Map.Entry<String, String> entry : results.entrySet()){
+                                //final AtomicBoolean done = new AtomicBoolean(false);
+                                numWatchedVideos++;
                                 Log.e("key",entry.getKey());
                                 Log.e("value",entry.getValue());
                                 watchedVideoRefTitles.add(entry.getValue());
                                 ref = database.getReference("Video References");
                                 ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+//                                        VideoReference video = snapshot2.getValue(VideoReference.class);
+//                                        watchedVideoDispTitles.add(video.getTitle());
+                                        for(DataSnapshot ds : snapshot2.getChildren()) {
                                             videoId = ds.getKey();
                                         }
+                                        //Log.d("in datachange", "here");
                                         ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                            public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                                Map <String, String> results = (Map <String, String>) snapshot3.getValue();
                                                 watchedVideoDispTitles.add(results.get("title"));
+                                                //done.set(true);
+                                                //Log.d("here", "here");
+                                                if(numWatchedVideos == watchedVideoRefTitles.size() && numWatchedVideos == watchedVideoDispTitles.size())
+                                                    displayWatchedVideos();
+                                                //Log.d("num watched videos", String.valueOf(numWatchedVideos) + "  " + String.valueOf(watchedVideoRefTitles.size()) + "  " + String.valueOf(watchedVideoDispTitles.size()));
+                                                //Log.d("latch", String.valueOf(latch));
+                                                //latch.countDown();
+                                                //Log.d("latch after", String.valueOf(latch));
                                             }
-
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
 
                                             }
                                         });
                                     };
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
 
                                     }
                                 });
-                                numWatchedVideos++;
                             }
                         }
-                        Log.e("numwatchedvideo",String.valueOf(numWatchedVideos));
-                        displayWatchedVideos();
+
+
                     }
 
                     @Override
@@ -968,22 +1015,27 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, String> results = (Map<String, String>) snapshot.getValue();
+                        //Log.d("getting liked", String.valueOf(results.size()));
                         if(results!=null){
                             for(Map.Entry<String, String> entry : results.entrySet()){
                                 videoRefTitles1.add(entry.getValue());
                                 ref = database.getReference("Video References");
                                 ref.orderByChild("referenceTitle").equalTo(entry.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+
+                                        for(DataSnapshot ds : snapshot2.getChildren()) {
                                             videoId = ds.getKey();
                                             //Log.d("TAG", uid);
                                         }
                                         ref.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                Map <String, String> results = (Map <String, String>) snapshot.getValue();
+                                            public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                                Map <String, String> results = (Map <String, String>) snapshot3.getValue();
                                                 videoDispTitles1.add(results.get("title"));
+                                                //Log.d("num Liked videos", String.valueOf(numLikedVideos) + "  " + String.valueOf(videoRefTitles1.size()) + "  " + String.valueOf(videoDispTitles1.size()));
+                                                if(numLikedVideos == videoRefTitles1.size() && numLikedVideos == videoDispTitles1.size())
+                                                    displayLikedVideos(videoDispTitles1);
                                             }
 
                                             @Override
@@ -1000,9 +1052,16 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                                 });
                                 //videoDispTitles1.add(entry.getValue());
                                 numLikedVideos++;
+
                             }
                         }
-                        displayLikedVideos();
+//                        try {
+//                            Thread.sleep(5000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                        //Log.d("num liked videos", String.valueOf(numLikedVideos) + "  " + String.valueOf(videoRefTitles1.size()) + "  " + String.valueOf(videoDispTitles1.size()));
+                        //displayLikedVideos();
                         //numVideos = results.entrySet().size();
                     }
 
@@ -1013,6 +1072,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
     //display uploaded
     private void displayResultsUploaded(){
+        Log.d("num uploaded", String.valueOf(numUploadedVideos));
         for(int i=0; i < numUploadedVideos; i++){
             final int j = i;
             imageButtons.get(i+10).setOnClickListener(new View.OnClickListener() {
@@ -1202,7 +1262,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     }
 
     //get liked videos
-    private void displayLikedVideos(){
+    private void displayLikedVideos(ArrayList<String> displayTitles){
         for(int i=0; i < numLikedVideos; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
@@ -1230,7 +1290,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         ib.setVisibility(View.VISIBLE);
 
                         TextView tv = textViews.get(j);
-                        tv.setText(videoDispTitles1.get(j));
+                        tv.setText(displayTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
 
                     }
@@ -1241,7 +1301,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     }
 
     //get disliked videos
-    private void displayDislikedVideos(){
+    private void displayDislikedVideos(ArrayList<String> displayTitles){
         for(int i=0; i < numDislikedVideos; i++){
             final int j = i;
             imageButtons.get(i+20).setOnClickListener(new View.OnClickListener() {
@@ -1269,8 +1329,9 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         ib.setVisibility(View.VISIBLE);
 
                         TextView tv = textViews.get(j+20);
-                        tv.setText(videoDispTitles2.get(j));
+                        tv.setText(displayTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
+                        Log.d("end of display", "" + displayTitles.get(j));
 
                     }
                 });
