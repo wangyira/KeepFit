@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.keepfit.MainActivity;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -290,6 +292,8 @@ public class CalorieActivity extends AppCompatActivity {
 
                         METValue myMETValue = new METValue(username, myNewMETValue, mydoubleSeconds, mySecondValue, "Y");
 
+                        modifyMostRecent(mySecondValue);
+
                         mConditionRef.push().setValue(myMETValue);
 
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
@@ -371,6 +375,8 @@ public class CalorieActivity extends AppCompatActivity {
 
                         mConditionRef.push().setValue(myMETValue);
 
+                        modifyMostRecent(mySecondValue);
+
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
                         myTotalCalories = myTotalCalories + NewMETValue;
                         BigDecimal bd = new BigDecimal(Double.toString(myTotalCalories));
@@ -445,6 +451,41 @@ public class CalorieActivity extends AppCompatActivity {
         myTimeList.clear();
         addItemstoArray();
         makeInvisible();
+    }
+
+    private void modifyMostRecent(String myTitle){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("MostRecentTable");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        ref.child(username).setValue(myTitle);
+        /*
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("CaloriesTable");
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        ref.orderByChild("username").equalTo(username)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //resetViewHistory();
+                        Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                        if(results!=null){
+                            for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                                Log.d("result", "Hello!");
+                                entry.getValue().replace("shouldView", "Y", "N");
+
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+
+        */
     }
 
     //Get Exercise History

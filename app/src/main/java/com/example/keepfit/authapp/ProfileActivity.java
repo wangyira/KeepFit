@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -59,6 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String PREF_FILENAME = "main";
 
     private EditText editTextName, editTextPhoneNumber, editTextGender, editTextWeight, editTextHeight, editTextBirthday;
+
+    String myReturnString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
+
+
+
 
 
     private void chooseImage() {
