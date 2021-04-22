@@ -8,8 +8,9 @@ public class VideoReference {
     private String time;
     private String title;
     private String uploadingUser;
+    private Boolean commentsAllowed;
 
-    public VideoReference(String diff, Integer nl, String rt, String ta, String tim, String titl, String uu){
+    public VideoReference(String diff, Integer nl, String rt, String ta, String tim, String titl, String uu, Boolean ac){
         difficulty = diff;
         numLikes = nl;
         referenceTitle = rt;
@@ -17,6 +18,8 @@ public class VideoReference {
         time = tim;
         title = titl;
         uploadingUser = uu;
+        commentsAllowed = ac;
+
     }
 
     public VideoReference(){}
@@ -48,5 +51,7 @@ public class VideoReference {
     public String getUploadingUser() {
         return uploadingUser;
     }
+
+    public Boolean getCommentsAllowed(){ return commentsAllowed; }
 
 }
