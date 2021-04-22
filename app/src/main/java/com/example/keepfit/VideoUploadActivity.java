@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -62,6 +63,7 @@ public class VideoUploadActivity extends AppCompatActivity {
     private String time = null;
     private String videoPath = null;
     private String imagePath = null;
+    private Boolean allowComments = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +161,9 @@ public class VideoUploadActivity extends AppCompatActivity {
         title = mEdit.getText().toString();
         mEdit = (EditText) findViewById(R.id.editTextTime2);
         time = mEdit.getText().toString();
+
+        //CheckBox cb = (CheckBox) findViewById(R.id.allowCommentsCheckBox);
+        //allowComments = cb.isChecked();
 
         if (title == null || title.length() < 1 || title.length() > 60) {
             AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
@@ -307,6 +312,7 @@ public class VideoUploadActivity extends AppCompatActivity {
             });
 
         }
+
 
     }
 
