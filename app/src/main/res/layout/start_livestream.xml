@@ -296,6 +296,40 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <CheckBox
+            android:id="@+id/allowCommentsCheckBox"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginVertical="5dp"
+            android:checked="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/checkBoxText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginVertical="5dp"
+            android:textSize="18dp"
+            android:text="Allow Comments"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+            
+        <LinearLayout
             android:id="@+id/LinearLayoutCenter3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
