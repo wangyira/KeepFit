@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -62,6 +63,7 @@ public class VideoUploadActivity extends AppCompatActivity {
     private String time = null;
     private String videoPath = null;
     private String imagePath = null;
+    private Boolean allowComments = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +114,6 @@ public class VideoUploadActivity extends AppCompatActivity {
         //SET VISIBILITY
         findViewById(R.id.progress_bar).setVisibility(View.GONE);
         findViewById(R.id.success_message).setVisibility(View.GONE);
-        findViewById(R.id.videoView).setVisibility(View.GONE);
 
 
         getVideobtn.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +160,9 @@ public class VideoUploadActivity extends AppCompatActivity {
         title = mEdit.getText().toString();
         mEdit = (EditText) findViewById(R.id.editTextTime2);
         time = mEdit.getText().toString();
+
+        CheckBox cb = (CheckBox) findViewById(R.id.allowCommentsCheckBox);
+        allowComments = cb.isChecked();
 
         if (title == null || title.length() < 1 || title.length() > 60) {
             AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
@@ -282,7 +286,8 @@ public class VideoUploadActivity extends AppCompatActivity {
                         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                         String username = sharedPref.getString("username", null);
 
-                        VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username);
+                        Log.e("uploading", "allowComments="+allowComments);
+                        VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username, allowComments);
 
                         mVideosRef.push().setValue(vidRef);
                     }
