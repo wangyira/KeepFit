@@ -369,6 +369,9 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         title2 = mEdit.getText().toString();
         mEdit = (EditText) findViewById(R.id.editTextTime2);
         time2 = mEdit.getText().toString();
+        
+        CheckBox cb = (CheckBox) findViewById(R.id.allowCommentsCheckBox);
+        allowComments = cb.isChecked();
 
         if (title2 == null || title2.length() < 1 || title2.length() > 60) {
             AlertDialog.Builder titleDialog = new AlertDialog.Builder(this);
@@ -492,7 +495,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
                             SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                             String username = sharedPref.getString("username", null);
 
-                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time2, title2, username);
+                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time2, title2, username, allowCommments);
 
                             mVideosRef.push().setValue(vidRef);
                         }
