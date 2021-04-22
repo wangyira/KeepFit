@@ -198,7 +198,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
         getImagebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImageFromGallery();
+                chooseImageFromGallery2();
             }
         });
         uploadbtn.setOnClickListener(new View.OnClickListener() {
@@ -528,13 +528,13 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             startActivityForResult(galleryIntent, VIDEO);
         }
 
-    //    public void chooseImageFromGallery() {
-    //        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-    //                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    //
-    //        int IMAGE = 2;
-    //        startActivityForResult(galleryIntent, IMAGE);
-    //    }
+        public void chooseImageFromGallery2() {
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+            int IMAGE = 2;
+            startActivityForResult(galleryIntent, IMAGE);
+        }
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -553,6 +553,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             } else if (requestCode == 2) {
                 if (data != null) {
                     imageURI2 = data.getData();
+                    Log.e("imageURI2", ""+imageURI2);
                     imagePath = getPath(imageURI2);
                 }
             }
