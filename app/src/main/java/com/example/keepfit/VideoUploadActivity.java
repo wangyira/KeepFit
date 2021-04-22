@@ -229,10 +229,26 @@ public class VideoUploadActivity extends AppCompatActivity {
         }
         String noSpaceTitle = title.replaceAll("\\s", "_");
 
+        //***************************************************
+
         //upload video to storage
         File file = new File(videoPath);
-        StorageReference videoRef = storage.getReference("videos/" + noSpaceTitle + "." + randomUUID + ".mp4");
-        /*StorageMetadata metadata = new StorageMetadata.Builder()
+
+        //myFileSize --> size of file in KB
+        int myFileSize = Integer.parseInt(String.valueOf(file.length()/1024));
+
+        //10000 KB = 10 MB
+        if (myFileSize >  700){
+            Context context = getApplicationContext();
+            CharSequence text = "Sorry, but your video needs to be under 700 KB.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        else{
+            //******************************************
+            StorageReference videoRef = storage.getReference("videos/" + noSpaceTitle + "." + randomUUID + ".mp4");
+            /*StorageMetadata metadata = new StorageMetadata.Builder()
                 .setCustomMetadata("title", title)
                 .setCustomMetadata("tag", tag)
                 .setCustomMetadata("difficulty", difficulty)
@@ -240,55 +256,58 @@ public class VideoUploadActivity extends AppCompatActivity {
                 .build();*/
 
 
-        progressBar.setVisibility(View.VISIBLE);
-        uploadButton.setEnabled(false);
+            progressBar.setVisibility(View.VISIBLE);
+            uploadButton.setEnabled(false);
 
-        //UploadTask uploadTask = videoRef.putFile(videoURI, metadata);
-        UploadTask uploadTask = videoRef.putFile(videoURI);
-        uploadTask.addOnSuccessListener(VideoUploadActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                String url = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+            //UploadTask uploadTask = videoRef.putFile(videoURI, metadata);
+            UploadTask uploadTask = videoRef.putFile(videoURI);
+            uploadTask.addOnSuccessListener(VideoUploadActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    String url = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
 
-                StorageReference imageRef = storage.getReference("thumbnail_images/" + noSpaceTitle + "." + randomUUID + ".jpg");
-                StorageMetadata metadataI = new StorageMetadata.Builder()
-                        .setCustomMetadata("title", title)
-                        .setCustomMetadata("video reference", url)
-                        .build();
+                    StorageReference imageRef = storage.getReference("thumbnail_images/" + noSpaceTitle + "." + randomUUID + ".jpg");
+                    StorageMetadata metadataI = new StorageMetadata.Builder()
+                            .setCustomMetadata("title", title)
+                            .setCustomMetadata("video reference", url)
+                            .build();
 
-                UploadTask imageUploadTask = imageRef.putFile(imageURI, metadataI);
-                imageUploadTask.addOnSuccessListener(VideoUploadActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
-                        progressBar.setVisibility(View.GONE);
-                        uploadButton.setEnabled(true);
-                        successMessage.setVisibility(View.VISIBLE);
+                    UploadTask imageUploadTask = imageRef.putFile(imageURI, metadataI);
+                    imageUploadTask.addOnSuccessListener(VideoUploadActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
+                            progressBar.setVisibility(View.GONE);
+                            uploadButton.setEnabled(true);
+                            successMessage.setVisibility(View.VISIBLE);
 
-                        String imageUrl = imageTaskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                            String imageUrl = imageTaskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
 
-                        //add reference to video in realtime database
-                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference mRootRef = database.getReference("");
-                        DatabaseReference mVideosRef = mRootRef.child("Video References");
+                            //add reference to video in realtime database
+                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference mRootRef = database.getReference("");
+                            DatabaseReference mVideosRef = mRootRef.child("Video References");
 
-                        /*Map<String, String> vidRef = new HashMap<String, String>();
-                        vidRef.put("time", time);
-                        vidRef.put("difficulty", difficulty);
-                        vidRef.put("tag", tag);
-                        vidRef.put("title", title);
-                        vidRef.put("reference title", noSpaceTitle + "." + randomUUID.toString());
-                        vidRef.put("numLikes", "0");*/
+                            /*Map<String, String> vidRef = new HashMap<String, String>();
+                            vidRef.put("time", time);
+                            vidRef.put("difficulty", difficulty);
+                            vidRef.put("tag", tag);
+                            vidRef.put("title", title);
+                            vidRef.put("reference title", noSpaceTitle + "." + randomUUID.toString());
+                            vidRef.put("numLikes", "0");*/
 
-                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
-                        String username = sharedPref.getString("username", null);
+                            SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                            String username = sharedPref.getString("username", null);
 
-                        VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username);
+                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username);
 
-                        mVideosRef.push().setValue(vidRef);
-                    }
-                });
-            }
-        });
+                            mVideosRef.push().setValue(vidRef);
+                        }
+                    });
+                }
+            });
+
+        }
+
     }
 
     /*private void download(){
