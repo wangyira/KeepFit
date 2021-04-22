@@ -17,11 +17,11 @@
 
     <item
         android:id="@+id/nav_upload"
-        android:title="Upload Video"
-        android:icon="@drawable/ic_upload"/>
+        android:title="Calendar"
+        android:icon="@drawable/ic_calendar"/>
 
     <item
         android:id="@+id/nav_livestream"
-        android:title="Start Livestream"
+        android:title="Livestream/Video"
         android:icon="@drawable/ic_videocam"/>
 </menu>
