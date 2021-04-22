@@ -303,7 +303,7 @@ public class VideoUploadActivity extends AppCompatActivity {
                             SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                             String username = sharedPref.getString("username", null);
 
-                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username);
+                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time, title, username, true);
 
                             mVideosRef.push().setValue(vidRef);
                         }
