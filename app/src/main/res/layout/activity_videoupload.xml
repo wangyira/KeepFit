@@ -48,17 +48,35 @@
             android:layout_height="wrap_content"
             android:id="@+id/main_content">
 
-            <TextView
-                android:id="@+id/date_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="150dp"
-                android:layout_marginTop="20dp"
-                android:text="Schedule Your Workouts!"
-                android:textColor="@android:color/background_dark"
-                android:layout_centerHorizontal="true"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:id="@+id/top_layer"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/date_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Schedule Your Workouts!"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/addEvent"
+                    android:text="+"
+                    android:backgroundTint="@color/teal_700"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </LinearLayout>
 
             <com.github.sundeepk.compactcalendarview.CompactCalendarView
                 xmlns:app="http://schemas.android.com/apk/res-auto"

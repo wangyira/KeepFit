@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.keepfit.authapp.ForgotPassword;
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.calories.CalorieActivity;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,6 +101,7 @@ public class VideoUploadActivity extends AppCompatActivity {
         final ListView eventsListView = findViewById(R.id.eventsList);
         final ToggleButton showCalendarWithAnimationBut = findViewById(R.id.slide_calendar);
         final Button removeAllEventsBut = findViewById(R.id.remove_all_events);
+        final Button addEvent = findViewById(R.id.addEvent);
         final TextView displayDateTv = (TextView) findViewById(R.id.clickedDay);
         final List<String> mutableEvents = new ArrayList<>();
         displayDateTv.setVisibility(View.GONE);
@@ -190,6 +193,13 @@ public class VideoUploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 compactCalendarView.removeAllEvents();
+            }
+        });
+
+        addEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(VideoUploadActivity.this, CreateWorkout.class));
             }
         });
 
