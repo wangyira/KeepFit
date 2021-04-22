@@ -22,11 +22,15 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,8 +96,15 @@ public class VideoUploadActivity extends AppCompatActivity {
 
         compactCalendarView = (CompactCalendarView) findViewById(R.id.calendar);
 
+        final ListView eventsListView = findViewById(R.id.eventsList);
         final ToggleButton showCalendarWithAnimationBut = findViewById(R.id.slide_calendar);
         final Button removeAllEventsBut = findViewById(R.id.remove_all_events);
+        final TextView displayDateTv = (TextView) findViewById(R.id.clickedDay);
+        final List<String> mutableEvents = new ArrayList<>();
+        displayDateTv.setVisibility(View.GONE);
+
+        final ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, mutableEvents);
+        eventsListView.setAdapter(adapter);
 
         compactCalendarView.setUseThreeLetterAbbreviation(false);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
@@ -133,6 +144,21 @@ public class VideoUploadActivity extends AppCompatActivity {
                 toolbar.setTitle(dateFormatForMonth.format(dateClicked));
                 date = dateClicked;
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
+
+                String date = DateFormat.getDateInstance().format(dateClicked);
+
+                displayDateTv.setText("Events on " + date + ":");
+                displayDateTv.setVisibility(View.VISIBLE);
+
+                if(events!=null){
+                    mutableEvents.clear();
+                    for (Event event : events) {
+                        mutableEvents.add((String) event.getData());
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+
+
                 Log.d("hi", "Day was clicked: " + dateClicked + " with events " + events);
             }
 
