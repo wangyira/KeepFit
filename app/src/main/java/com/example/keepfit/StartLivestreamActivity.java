@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -86,6 +87,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     private String time2 = null;
     private String videoPath = null;
     private String imagePath = null;
+    private Boolean allowComments = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -495,7 +497,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
                             SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                             String username = sharedPref.getString("username", null);
 
-                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time2, title2, username, allowCommments);
+                            VideoReference vidRef = new VideoReference(difficulty, 0, noSpaceTitle + "." + randomUUID.toString(), tag, time2, title2, username, allowComments);
 
                             mVideosRef.push().setValue(vidRef);
                         }
