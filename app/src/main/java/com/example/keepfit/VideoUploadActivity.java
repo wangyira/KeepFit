@@ -51,6 +51,7 @@ public class VideoUploadActivity extends AppCompatActivity {
     private boolean shouldShow = false;
     private ActionBar toolbar;
     private Date date;
+    private String dateAsString;
 
 
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
@@ -97,6 +98,8 @@ public class VideoUploadActivity extends AppCompatActivity {
 
 
         compactCalendarView = (CompactCalendarView) findViewById(R.id.calendar);
+
+        compactCalendarView.removeAllEvents();
 
         final ListView eventsListView = findViewById(R.id.eventsList);
         final ToggleButton showCalendarWithAnimationBut = findViewById(R.id.slide_calendar);
@@ -148,9 +151,9 @@ public class VideoUploadActivity extends AppCompatActivity {
                 date = dateClicked;
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
 
-                String date = DateFormat.getDateInstance().format(dateClicked);
+                dateAsString = DateFormat.getDateInstance().format(dateClicked);
 
-                displayDateTv.setText("Events on " + date + ":");
+                displayDateTv.setText("Events on " + dateAsString + ":");
                 displayDateTv.setVisibility(View.VISIBLE);
 
                 if(events!=null){
@@ -199,7 +202,12 @@ public class VideoUploadActivity extends AppCompatActivity {
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(VideoUploadActivity.this, CreateWorkout.class));
+                if(dateAsString ==null || dateAsString.isEmpty()){
+                    dateAsString = DateFormat.getDateInstance().format(new Date());
+                }
+                Intent i = new Intent(VideoUploadActivity.this, CreateWorkout.class);
+                i.putExtra("day", dateAsString);
+                startActivity(i);
             }
         });
 
