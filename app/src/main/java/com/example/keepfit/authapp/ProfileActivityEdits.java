@@ -494,13 +494,15 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         ref.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myReturnString = snapshot.getValue().toString();
-                Context context = getApplicationContext();
-                CharSequence text = "Welcome, based on your exercise history, we suggest you do " + myReturnString;
-                int duration = Toast.LENGTH_LONG;
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-                myReturnString = "0";
+                if(snapshot.getValue()!= null){
+                    myReturnString = snapshot.getValue().toString();
+                    Context context = getApplicationContext();
+                    CharSequence text = "Welcome, based on your exercise history, we suggest you do " + myReturnString;
+                    int duration = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    myReturnString = "0";
+                }
             }
 
             @Override

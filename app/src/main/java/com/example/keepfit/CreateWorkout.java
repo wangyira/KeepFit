@@ -34,6 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class CreateWorkout extends AppCompatActivity {
 
@@ -115,27 +116,30 @@ public class CreateWorkout extends AppCompatActivity {
     private void addExerciseToCalendar() throws ParseException {
         String exerciseInfo = exerciseName.getText().toString().trim();
         String time = exerciseTime.getText().toString().trim();
+        Random rand = new Random();
 
         Bundle b = getIntent().getExtras();
         String day = b.getString("day");
         String dateTime = day + " " + time;
         Log.d("datetime", dateTime);
         //Apr 23, 2021 10:30
-        SimpleDateFormat format = new SimpleDateFormat("MMM DD, yyyy hh:mm", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hh:mm", Locale.getDefault());
         Date date = format.parse(dateTime);
+        Log.d("date", String.valueOf(date));
         long dateInMillis = date.getTime();
         Log.d("dateinmillis", String.valueOf(dateInMillis));
 
-        exerciseInfo += " at " + time;
+        exerciseInfo += " at ";
         String[] hour = time.split(":");
         if(Integer.valueOf(hour[0]) < 12){
-            exerciseInfo += "AM";
+            exerciseInfo += time + "AM";
         }
         else{
-            exerciseInfo += "PM";
+            String newTime = (Integer.valueOf(hour[0]) - 12) + ":" + hour[1];
+            exerciseInfo += newTime + "PM";
         }
 
-        Event e = new Event((int)(Math.random() * 0x1000000), dateInMillis, exerciseInfo);
+        Event e = new Event(Color.argb(rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()), dateInMillis, exerciseInfo);
 
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);

@@ -42,6 +42,7 @@ import android.widget.ToggleButton;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -145,7 +146,6 @@ public class VideoUploadActivity extends AppCompatActivity {
 
 
 
-
         // Query for events on Sun, 07 Jun 2015 GMT.
         // Time is not relevant when querying for events, since events are returned by day.
         // So you can pass in any arbitary DateTime and you will receive all events for that day.
@@ -170,7 +170,7 @@ public class VideoUploadActivity extends AppCompatActivity {
 
                 dateAsString = DateFormat.getDateInstance().format(dateClicked);
 
-                displayDateTv.setText("Workouts Scheduled for " + dateAsString + ":");
+                displayDateTv.setText("Workouts on " + dateAsString + ":");
                 displayDateTv.setVisibility(View.VISIBLE);
 
                 if(events!=null){
