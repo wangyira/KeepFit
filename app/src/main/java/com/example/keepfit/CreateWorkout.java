@@ -126,6 +126,15 @@ public class CreateWorkout extends AppCompatActivity {
         long dateInMillis = date.getTime();
         Log.d("dateinmillis", String.valueOf(dateInMillis));
 
+        exerciseInfo += " at " + time;
+        String[] hour = time.split(":");
+        if(Integer.valueOf(hour[0]) < 12){
+            exerciseInfo += "AM";
+        }
+        else{
+            exerciseInfo += "PM";
+        }
+
         Event e = new Event((int)(Math.random() * 0x1000000), dateInMillis, exerciseInfo);
 
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);

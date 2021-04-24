@@ -170,7 +170,7 @@ public class VideoUploadActivity extends AppCompatActivity {
 
                 dateAsString = DateFormat.getDateInstance().format(dateClicked);
 
-                displayDateTv.setText("Events on " + dateAsString + ":");
+                displayDateTv.setText("Workouts Scheduled for " + dateAsString + ":");
                 displayDateTv.setVisibility(View.VISIBLE);
 
                 if(events!=null){
@@ -376,6 +376,7 @@ public class VideoUploadActivity extends AppCompatActivity {
     }
 
     private void getEvents(long timeInMillis, int day) {
+        compactCalendarView.removeAllEvents();
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         List<Event> addedEvents = new ArrayList<>();

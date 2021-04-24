@@ -133,6 +133,7 @@
                 android:text="Workouts"
                 android:textColor="@android:color/background_dark"
                 android:layout_centerHorizontal="true"
+                android:textAlignment="center"
                 android:textSize="20dp" />
 
 
