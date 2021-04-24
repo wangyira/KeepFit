@@ -1,6 +1,8 @@
 package com.example.keepfit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,11 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -33,6 +40,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +49,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class VideoUploadActivity extends AppCompatActivity {
@@ -52,6 +61,7 @@ public class VideoUploadActivity extends AppCompatActivity {
     private ActionBar toolbar;
     private Date date;
     private String dateAsString;
+    private int completed;
 
 
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
@@ -117,11 +127,11 @@ public class VideoUploadActivity extends AppCompatActivity {
         compactCalendarView.setIsRtl(false);
         compactCalendarView.displayOtherMonthDays(false);
 
-        loadEvents();
+        //loadEvents();
         loadEventsForYear(2021);
         compactCalendarView.invalidate();
 
-        logEventsByMonth(compactCalendarView);
+        //logEventsByMonth(compactCalendarView);
 
         // Add event 1 on Sun, 07 Jun 2015 18:20:51 GMT
 //        Event ev1 = new Event(Color.GREEN, calendar.getTimeInMillis(), "event1");
@@ -130,6 +140,11 @@ public class VideoUploadActivity extends AppCompatActivity {
 //        // Added event 2 GMT: Sun, 07 Jun 2015 19:10:51 GMT
 //        Event ev2 = new Event(Color.GREEN, calendar.getTimeInMillis(), "event2");
 //        compactCalendarView.addEvent(ev2);
+
+
+
+
+
 
         // Query for events on Sun, 07 Jun 2015 GMT.
         // Time is not relevant when querying for events, since events are returned by day.
@@ -149,7 +164,9 @@ public class VideoUploadActivity extends AppCompatActivity {
             public void onDayClick(Date dateClicked) {
                 toolbar.setTitle(dateFormatForMonth.format(dateClicked));
                 date = dateClicked;
+
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
+                //List<Event> events = getEventsForDay(dateClicked);
 
                 dateAsString = DateFormat.getDateInstance().format(dateClicked);
 
@@ -300,8 +317,12 @@ public class VideoUploadActivity extends AppCompatActivity {
     }
 
     private void loadEventsForYear(int year) {
-        addEvents(Calendar.DECEMBER, year);
-        addEvents(Calendar.AUGUST, year);
+//        for(int i = 0; i <12; i++){
+//            addEvents(i, year);
+//        }
+        addEvents(3, 2021);
+//        addEvents(Calendar.DECEMBER, year);
+//        addEvents(Calendar.AUGUST, year);
     }
 
     private void logEventsByMonth(CompactCalendarView compactCalendarView) {
@@ -320,39 +341,97 @@ public class VideoUploadActivity extends AppCompatActivity {
         calendar.setTime(new Date());
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date firstDayOfMonth = calendar.getTime();
-        for (int i = 0; i < 6; i++) {
-            calendar.setTime(firstDayOfMonth);
-            if (month > -1) {
-                calendar.set(Calendar.MONTH, month);
-            }
-            if (year > -1) {
-                calendar.set(Calendar.ERA, GregorianCalendar.AD);
-                calendar.set(Calendar.YEAR, year);
-            }
-            calendar.add(Calendar.DATE, i);
-            setToMidnight(calendar);
-            long timeInMillis = calendar.getTimeInMillis();
-
-            List<Event> events = getEvents(timeInMillis, i);
-
-            compactCalendarView.addEvents(events);
+        calendar.setTime(firstDayOfMonth);
+        if (month > -1) {
+            calendar.set(Calendar.MONTH, month);
         }
+        if (year > -1) {
+            calendar.set(Calendar.ERA, GregorianCalendar.AD);
+            calendar.set(Calendar.YEAR, year);
+        }
+        calendar.add(Calendar.DATE, 0);
+        setToMidnight(calendar);
+        long timeInMillis = calendar.getTimeInMillis();
+        getEvents(timeInMillis, 0);
+        //List<Event> events = getEvents(timeInMillis, 0);
+
+        //compactCalendarView.addEvents(events);
+//        for (int i = 0; i < 6; i++) {
+//            calendar.setTime(firstDayOfMonth);
+//            if (month > -1) {
+//                calendar.set(Calendar.MONTH, month);
+//            }
+//            if (year > -1) {
+//                calendar.set(Calendar.ERA, GregorianCalendar.AD);
+//                calendar.set(Calendar.YEAR, year);
+//            }
+//            calendar.add(Calendar.DATE, i);
+//            setToMidnight(calendar);
+//            long timeInMillis = calendar.getTimeInMillis();
+//
+//            List<Event> events = getEvents(timeInMillis, i);
+//
+//            compactCalendarView.addEvents(events);
+//        }
     }
 
-    private List<Event> getEvents(long timeInMillis, int day) {
-        if (day < 2) {
-            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
-        } else if ( day > 2 && day <= 4) {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
-        } else {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis) ),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
-        }
+    private void getEvents(long timeInMillis, int day) {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        List<Event> addedEvents = new ArrayList<>();
+        DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference("Events");
+        eventsRef.child(username)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot != null) {
+                            Log.d("numberEntries", String.valueOf(snapshot.getChildrenCount()));
+                            for(DataSnapshot child:snapshot.getChildren()){
+                                int color = 0;
+                                long time = 0;
+                                String data = "";
+                                for(DataSnapshot child2 : child.getChildren()){
+                                    //Log.d("child3", child3.toString());
+                                    if(child2.getKey().equals("color")){
+                                        color = Integer.parseInt(child2.getValue().toString());
+                                    }
+                                    else if(child2.getKey().equals("data")){
+                                        data = child2.getValue().toString();
+                                    }
+                                    else if(child2.getKey().equals("timeInMillis")){
+                                        time = Long.parseLong(child2.getValue().toString());
+                                    }
+                                }
+                                Event e = new Event(color, time, data);
+                                addedEvents.add(e);
+                                Log.d("here", "adding an event from firebase " + String.valueOf(e));
+                            }
+                            Log.d("numberEventsInside", String.valueOf(addedEvents.size()));
+                            compactCalendarView.addEvents(addedEvents);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+
+//        List<Event> results = new ArrayList<>();
+//
+//        for(Event e: addedEvents){
+//            if(((int) (e.getTimeInMillis() / (1000*60*60*24))) == (int) (timeInMillis / (1000*60*60*24))){
+//                results.add(e);
+//                Log.d("added event", e.getData().toString());
+//            }
+//        }
+//        Event newEvent = new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis));
+//        addedEvents.add(newEvent);
+//        Log.d("manualAdd", String.valueOf(newEvent));
+        //Log.d("numberEvents", String.valueOf(addedEvents.size()));
+        //compactCalendarView.addEvents(addedEvents);
+        //return addedEvents;
     }
+
 
     private void setToMidnight(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);

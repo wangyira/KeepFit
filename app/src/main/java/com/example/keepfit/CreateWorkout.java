@@ -122,9 +122,9 @@ public class CreateWorkout extends AppCompatActivity {
         Log.d("datetime", dateTime);
         //Apr 23, 2021 10:30
         SimpleDateFormat format = new SimpleDateFormat("MMM DD, yyyy hh:mm", Locale.getDefault());
-
         Date date = format.parse(dateTime);
         long dateInMillis = date.getTime();
+        Log.d("dateinmillis", String.valueOf(dateInMillis));
 
         Event e = new Event((int)(Math.random() * 0x1000000), dateInMillis, exerciseInfo);
 
