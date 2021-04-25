@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
@@ -53,6 +54,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<TextView> textViewsProfile = new ArrayList<TextView>();
     ArrayList<Button> likes = new ArrayList<Button>();
     ArrayList<Button> dislikes = new ArrayList<Button>();
+    ArrayList<Button> viewCommentButtons = new ArrayList<Button>();
 
     //ArrayList<VideoReference> allVideos  = new ArrayList<VideoReference>();
 
@@ -84,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
     ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
     ArrayList<String> livestreamUplodingUserPic = new ArrayList<String>();
+
+    ArrayList<Comment> videoComments = new ArrayList<Comment>();
+    ArrayList<VideoReference> videos = new ArrayList<VideoReference>();
 
     Button btnviewSearch;
     DatabaseReference ref;
@@ -358,6 +364,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("refTitle", video.getReferenceTitle());
                     videoDispTitles.add(video.getTitle());
                     videoUploadingUser.add(video.getUploadingUser());
+                    //videoAllowComments.add(video.getCommentsAllowed());
+                    videos.add(video);
                     numVideos++;
                     Log.e("numVideos", "" + numVideos);
                 }
@@ -367,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
                 flipOrderVideoDispTitles();
                 flipOrderVideoRefTitles();
                 flipOrderVideoUploadingUser();
+                flipOrderVideos();
             }
 
             @Override
@@ -564,6 +573,16 @@ public class MainActivity extends AppCompatActivity {
                         TextView tv = textViews.get(j);
                         tv.setText(videoDispTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
+
+                        //display view comments button
+                        Button vc = viewCommentButtons.get(j);
+                        vc.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                redirectToComments(j);
+                            }
+                        });
+                        vc.setVisibility(View.VISIBLE);
                     }
                 });
             } catch (Exception e) {
@@ -751,6 +770,28 @@ public class MainActivity extends AppCompatActivity {
         dislikes.add(findViewById(R.id.item19dislike));
         dislikes.add(findViewById(R.id.item20dislike));
 
+        viewCommentButtons.add(findViewById(R.id.item1ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item2ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item3ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item4ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item5ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item6ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item7ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item8ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item9ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item10ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item11ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item12ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item13ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item14ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item15ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item16ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item17ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item18ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item19ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item20ViewComments));
+
+
     }
 
     private void makeInvisible(){
@@ -777,6 +818,9 @@ public class MainActivity extends AppCompatActivity {
         }
         for(Button dl : dislikes){
             dl.setVisibility(View.GONE);
+        }
+        for(Button vc : viewCommentButtons){
+            vc.setVisibility(View.GONE);
         }
     }
 
@@ -1036,6 +1080,50 @@ public class MainActivity extends AppCompatActivity {
         videoUploadingUser.clear();
         for(int i=tempRefTitles.size()-1; i >=0; i--){
             videoUploadingUser.add(tempRefTitles.get(i));
+        }
+    }
+
+    private void flipOrderVideos(){
+        ArrayList<VideoReference> tempVideos = new ArrayList<VideoReference>();
+        for(VideoReference entry : videos){
+            tempVideos.add(entry);
+        }
+
+        videos.clear();
+        for(int i=tempVideos.size()-1; i>=0; i--){
+            videos.add(tempVideos.get(i));
+        }
+    }
+
+    private void redirectToComments(int i){
+        String refTitle = videoRefTitles.get(i);
+        //if comments are allowed
+        if(videos.get(i).getCommentsAllowed()){
+            //get video from refTitle
+            DatabaseReference videosRef = FirebaseDatabase.getInstance().getReference("Video References");
+            videosRef.orderByChild("referenceTitle").equalTo(refTitle)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String key = "";
+                            for(DataSnapshot child : snapshot.getChildren()){
+                                VideoReference video = child.getValue(VideoReference.class);
+                                key = child.getKey();
+                            }
+
+                            //send key to activity
+                            Intent intent = new Intent(getApplicationContext(), ViewCommentsActivity.class);
+                            intent.putExtra("key", key);
+                            startActivity(intent);
+                            overridePendingTransition(0,0);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Sorry. Comments are disabled for this video.", Toast.LENGTH_LONG).show();
         }
     }
 

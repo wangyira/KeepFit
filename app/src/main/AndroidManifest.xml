@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -14,6 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
+        <activity
+            android:name=".ViewCommentsActivity"
+            android:label="@string/title_activity_view_comments"
+            android:theme="@style/Theme.KeepFit.NoActionBar"></activity>
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".authapp.PublicProfile" />
         <activity android:name=".authapp.ProfileActivity" />
@@ -22,27 +28,19 @@
         <activity android:name=".authapp.ProfileActivityEdits" />
         <activity android:name=".authapp.ScrollingActivity" />
         <activity android:name=".calories.CalorieActivity" />
-        <activity android:name=".VideoActivity"/>
-        <activity android:name=".VideoUploadActivity"/>
-        <!-- android:name=".ui.login.LoginActivity" -->
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".VideoUploadActivity" /> <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-
-        <!--            android:name=".authapp.FirebaseMainActivity"-->
-
-
-
-
-            <!--android:name=".MainActivity"-->
-            <!--android:label="@string/app_name">-->
-
-<!--            android:name="MainActivity"-->
-<!--            android:label="@string/app_name">-->
-
+        <!-- android:name=".authapp.FirebaseMainActivity" -->
+        <!-- android:name=".MainActivity" -->
+        <!-- android:label="@string/app_name"> -->
+        <!-- android:name="MainActivity" -->
+        <!-- android:label="@string/app_name"> -->
         <activity
             android:name=".authapp.FirebaseMainActivity"
             android:label="KeepFit">
@@ -54,11 +52,7 @@
         </activity>
         <activity android:name=".LivestreamActivity" />
         <activity android:name=".StartLivestreamActivity" />
-
         <activity android:name=".authapp.RegisterUser" />
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
