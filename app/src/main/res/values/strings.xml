@@ -79,9 +79,13 @@
     <string name="uploadedVideos">Uploaded Videos</string>
     <string name="delete_video">Delete Video</string>
     <string name="delete_account">Delete Account</string>
+
+    <string name="title_activity_create_workout">CreateWorkout</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_view_comments">ViewCommentsActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
