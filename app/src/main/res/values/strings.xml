@@ -16,6 +16,14 @@
         <item>@string/tag4</item>
     </string-array>
 
+    <string-array name="searchOptions">
+        <item>All</item>
+        <item>Video</item>
+        <item>Live</item>
+        <item>User</item>
+        <item>Tag</item>
+    </string-array>
+
     <string-array name="difficultyEntries">
         <item>Beginner</item>
         <item>Intermediate</item>

@@ -27,28 +27,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <EditText
-        android:id="@+id/searchBar"
-        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
-        android:layout_width="280dp"
+    <LinearLayout
+        android:id="@+id/searchGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="15dp"
-        android:hint="Search"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@id/searchButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#E9EEFA"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageButton
-        android:id="@+id/searchButton"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
+        <EditText
+            android:id="@+id/searchBar"
+            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:hint="Search"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/searchType"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:entries="@array/searchOptions" />
+
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            app:srcCompat="@android:drawable/ic_menu_search" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/preset1"
@@ -58,7 +72,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/tag1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
+        app:layout_constraintTop_toBottomOf="@+id/searchGroup" />
 
     <Button
         android:id="@+id/preset2"
@@ -68,7 +82,7 @@
         android:layout_marginRight="30dp"
         android:text="@string/tag2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
+        app:layout_constraintTop_toBottomOf="@+id/searchGroup" />
 
     <Button
         android:id="@+id/preset3"
