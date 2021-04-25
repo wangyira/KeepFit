@@ -19,7 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
@@ -48,6 +50,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
@@ -65,6 +68,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     ArrayList<TextView> textViewsProfile = new ArrayList<TextView>();
     ArrayList<Button> likes = new ArrayList<Button>();
     ArrayList<Button> dislikes = new ArrayList<Button>();
+    ArrayList<Button> viewCommentButtons = new ArrayList<Button>();
 
 
     ArrayList<String> videoRefTitles = new ArrayList<String>();
@@ -79,6 +83,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
     ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
     ArrayList<String> livestreamUplodingUserPic = new ArrayList<String>();
+
+    ArrayList<VideoReference> videos = new ArrayList<VideoReference>();
 
     Button btnviewSearch;
     DatabaseReference ref;
@@ -144,14 +150,26 @@ public class SearchResultsActivity extends AppCompatActivity {
 
 
         String input = new String();
+        String searchType = new String();
         //get input
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             input = extras.getString("input");
+            searchType = extras.getString("searchType");
         }
 
         //set searchbar to have input in it (that user searched)
         ((EditText) findViewById(R.id.searchBar)).setText(input);
+
+        //set spinner to have selected in it (from previous page)
+        Map<String, Integer> searchOptionsMap = new HashMap<String, Integer>();
+        searchOptionsMap.put("All", 0);
+        searchOptionsMap.put("Video", 1);
+        searchOptionsMap.put("Live", 2);
+        searchOptionsMap.put("User", 3);
+        searchOptionsMap.put("Tag", 4);
+        int index = searchOptionsMap.get(searchType);
+        ((Spinner) findViewById(R.id.searchType)).setSelection(index);
 
         addItemstoArray();
         makeInvisible();
@@ -211,9 +229,12 @@ public class SearchResultsActivity extends AppCompatActivity {
                 //get input from bar
                 EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
                 String inputa = searchInputBar.getText().toString();
+                //get input from spinner
+                Spinner searchTypeSpinner = (Spinner) findViewById(R.id.searchType);
+                String searchTypea = searchTypeSpinner.getSelectedItem().toString();
                 makeInvisible();
                 Log.d("search ", "search " + inputa);
-                search(inputa);
+                search(inputa, searchTypea);
             }
         });
 
@@ -225,7 +246,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 String inputa = getString(R.string.tag1);
                 makeInvisible();
                 ((EditText) findViewById(R.id.searchBar)).setText(inputa);
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -237,7 +258,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 String inputa = getString(R.string.tag2);
                 makeInvisible();
                 ((EditText) findViewById(R.id.searchBar)).setText(inputa);
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -248,7 +269,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 String inputa = getString(R.string.tag3);
                 makeInvisible();
                 ((EditText) findViewById(R.id.searchBar)).setText(inputa);
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -259,11 +280,11 @@ public class SearchResultsActivity extends AppCompatActivity {
                 String inputa = getString(R.string.tag4);
                 makeInvisible();
                 ((EditText) findViewById(R.id.searchBar)).setText(inputa);
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
-        search(input);
+        search(input, searchType);
     }
 
     //search history
@@ -336,14 +357,14 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                     makeInvisible();
                     Log.d("searchkeyword1 ", word);
-                    search(word);
+                    search(word, "All");
                 }
             });
         }
         searchKeywords.clear();
     }
 
-    private void search(String input){
+    private void search(String input, String searchType){
         resetValues();
         Log.e("searching", "searching...." + input);
         //add to search history
@@ -473,12 +494,24 @@ public class SearchResultsActivity extends AppCompatActivity {
                             DatabaseReference newRef2 = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("username");
                             newRef2.setValue(username);
 
-                            if(input.equals(getString(R.string.tag1))
+                            /*if(input.equals(getString(R.string.tag1))
                                     || input.equals(getString(R.string.tag2))
                                     || input.equals(getString(R.string.tag3))
                                     || input.equals(getString(R.string.tag4)) ) {
                                 getLivestreamResultsbyTag(input);
-                            } else{ getProfileResults(input); }
+                            } else{ getProfileResults(input); }*/
+
+                            if(searchType.equals("All")){
+                                getProfileResults(input);
+                            } else if(searchType.equals("Video")){
+                                getJustVideoResultsbyTitle(input);
+                            } else if(searchType.equals("Live")){
+                                getLivestreamResultsbyTitle(input);
+                            } else if(searchType.equals("User")){
+                                getJustProfileResults(input);
+                            } else if(searchType.equals("Tag")){
+                                getLivestreamResultsbyTag(input);
+                            }
                         }
                     }
 
@@ -534,6 +567,30 @@ public class SearchResultsActivity extends AppCompatActivity {
         //getVideoResultsbyTitle(input);
     }
 
+    private void getJustProfileResults(String input){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("UserInformation");
+        ref.orderByChild("username").equalTo(input).limitToFirst(20)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            UserInformation user = child.getValue(UserInformation.class);
+                            if(numProfiles < 3) {
+                                profileRefs.add(user.getReferenceTitle());
+                                profileUsernames.add(user.getUsername());
+                                numProfiles++;
+                            }
+                            else{break;}
+                        }
+                        displayResults();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
     private void getVideoResultsbyTag(String input){
         Log.e("getVideoResultsbyTag", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -548,12 +605,13 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 videoRefTitles.add(video.getReferenceTitle());
                                 videoDispTitles.add(video.getTitle());
                                 videoUploadingUser.add(video.getUploadingUser());
+                                videos.add(video);
                                 numVideos++;
                             }
                             else{break;}
                         }
-                        //displayResults();
-                        getProfileResults(input);
+                        displayResults();
+                        //getProfileResults(input);
                     }
 
                     @Override
@@ -578,6 +636,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 videoRefTitles.add(video.getReferenceTitle());
                                 videoDispTitles.add(video.getTitle());
                                 videoUploadingUser.add(video.getUploadingUser());
+                                videos.add(video);
                                 numVideos++;
                             }
                             else{break;}
@@ -591,6 +650,35 @@ public class SearchResultsActivity extends AppCompatActivity {
                 });
         //getLivestreamResultsbyTitle(input);
     }
+
+    private void getJustVideoResultsbyTitle(String input){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Video References");
+        //ref.orderByChild("title").startAt(input).endAt(input+"\uf8ff").limitToFirst(20)
+        ref.orderByChild("title").equalTo(input).limitToFirst(20)
+                //ref.orderByChild("username").equalTo(input).limitToFirst(20)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            if(numVideos < (20-numLivestreams-numProfiles)) {
+                                videoRefTitles.add(video.getReferenceTitle());
+                                videoDispTitles.add(video.getTitle());
+                                videoUploadingUser.add(video.getUploadingUser());
+                                videos.add(video);
+                                numVideos++;
+                            }
+                            else{break;}
+                        }
+                        displayResults();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+    }
+
 
     private void getLivestreamResultsbyTag(String input){
         Log.e("getLsResultsbyTag", "input: " + input);
@@ -740,6 +828,15 @@ public class SearchResultsActivity extends AppCompatActivity {
                         TextView tv = textViews.get(j);
                         tv.setText(videoDispTitles.get(j));
                         tv.setVisibility(View.VISIBLE);
+
+                        Button vc = viewCommentButtons.get(j);
+                        vc.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                redirectToComments(j);
+                            }
+                        });
+                        vc.setVisibility(View.VISIBLE);
                     }
                 });
             } catch (Exception e) {
@@ -954,6 +1051,27 @@ public class SearchResultsActivity extends AppCompatActivity {
         dislikes.add(findViewById(R.id.item18dislike));
         dislikes.add(findViewById(R.id.item19dislike));
         dislikes.add(findViewById(R.id.item20dislike));
+
+        viewCommentButtons.add(findViewById(R.id.item1ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item2ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item3ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item4ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item5ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item6ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item7ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item8ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item9ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item10ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item11ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item12ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item13ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item14ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item15ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item16ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item17ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item18ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item19ViewComments));
+        viewCommentButtons.add(findViewById(R.id.item20ViewComments));
     }
 
     private void makeInvisible(){
@@ -980,6 +1098,9 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
         for(Button dl : dislikes){
             dl.setVisibility(View.GONE);
+        }
+        for(Button vc : viewCommentButtons){
+            vc.setVisibility(View.GONE);
         }
     }
 
@@ -1135,6 +1256,38 @@ public class SearchResultsActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
+    }
+
+    private void redirectToComments(int i){
+        String refTitle = videoRefTitles.get(i);
+        //if comments are allowed
+        if(videos.get(i).getCommentsAllowed()){
+            //get video from refTitle
+            DatabaseReference videosRef = FirebaseDatabase.getInstance().getReference("Video References");
+            videosRef.orderByChild("referenceTitle").equalTo(refTitle)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String key = "";
+                            for(DataSnapshot child : snapshot.getChildren()){
+                                VideoReference video = child.getValue(VideoReference.class);
+                                key = child.getKey();
+                            }
+
+                            //send key to activity
+                            Intent intent = new Intent(getApplicationContext(), ViewCommentsActivity.class);
+                            intent.putExtra("key", key);
+                            startActivity(intent);
+                            overridePendingTransition(0,0);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+        }
+        else{
+            Toast.makeText(SearchResultsActivity.this, "Sorry. Comments are disabled for this video.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private Bitmap imgToBitmap(File file){

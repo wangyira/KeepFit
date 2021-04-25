@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -215,8 +216,10 @@ public class MainActivity extends AppCompatActivity {
                 //get input from bar
                 EditText searchInputBar = (EditText) findViewById(R.id.searchBar);
                 String inputa = searchInputBar.getText().toString();
+                Spinner searchTypeSpinner = (Spinner) findViewById(R.id.searchType);
+                String searchType = searchTypeSpinner.getSelectedItem().toString();
                 makeInvisible();
-                search(inputa);
+                search(inputa, searchType);
             }
         });
 
@@ -227,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 resetValues();
                 String inputa = getString(R.string.tag1);
                 makeInvisible();
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -238,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("myTag", "%%%%%%");
                 String inputa = getString(R.string.tag2);
                 makeInvisible();
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -248,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 resetValues();
                 String inputa = getString(R.string.tag3);
                 makeInvisible();
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -258,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 resetValues();
                 String inputa = getString(R.string.tag4);
                 makeInvisible();
-                search(inputa);
+                search(inputa, "Tag");
             }
         });
 
@@ -339,16 +342,17 @@ public class MainActivity extends AppCompatActivity {
 
                     makeInvisible();
                     Log.d("searchkeyword1 ", word);
-                    search(word);
+                    search(word, "All");
                 }
             });
         }
         searchKeywords.clear();
     }
 
-    private void search(String input){
+    private void search(String input, String searchType){
         Intent intent = new Intent(this, SearchResultsActivity.class);
         intent.putExtra("input",input);
+        intent.putExtra("searchType", searchType);
         startActivity(intent);
     }
 
