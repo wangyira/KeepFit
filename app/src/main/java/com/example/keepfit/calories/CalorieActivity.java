@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import com.example.keepfit.StartLivestreamActivity;
 import com.example.keepfit.VideoActivity;
 import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -57,7 +59,12 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
+import java.util.TimeZone;
 
 public class CalorieActivity extends AppCompatActivity {
 
@@ -95,6 +102,9 @@ public class CalorieActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+
+    private Calendar calendar = Calendar.getInstance(Locale.getDefault());
+
 
     /*
     DatabaseReference mConditionRef = mRootRef.child("METValues");
@@ -292,9 +302,34 @@ public class CalorieActivity extends AppCompatActivity {
 
                         METValue myMETValue = new METValue(username, myNewMETValue, mydoubleSeconds, mySecondValue, "Y");
 
+                        mConditionRef.push().setValue(myMETValue);
+
                         modifyMostRecent(mySecondValue);
 
-                        mConditionRef.push().setValue(myMETValue);
+                        Random rand = new Random();
+                        TimeZone tz = TimeZone.getDefault();
+                        Date currentDate = Calendar.getInstance(tz).getTime();
+                        long currentTime = currentDate.getTime();
+                        currentTime = currentTime - (1000 * 60 * 60 * 7);
+                        long minute = (currentTime / (1000 * 60)) % 60;
+                        long hour = (currentTime / (1000 * 60 * 60)) % 24;
+                        String AMPM = "AM";
+                        if (hour == 0){
+                            hour = 12;
+                        }
+                        else if (hour == 12){
+                            AMPM = "PM";
+                        }
+                        else if (hour > 12) {
+                            AMPM = "PM";
+                            hour = hour - 12;
+                        }
+                        String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        Event e = new Event(Color.argb(rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()), currentTime, eventName);
+
+                        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("Events").child(username);
+                        eventRef.push().setValue(e);
+
 
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
                         myTotalCalories = myTotalCalories + NewMETValue;
@@ -376,6 +411,30 @@ public class CalorieActivity extends AppCompatActivity {
                         mConditionRef.push().setValue(myMETValue);
 
                         modifyMostRecent(mySecondValue);
+
+                        Random rand = new Random();
+                        TimeZone tz = TimeZone.getDefault();
+                        Date currentDate = Calendar.getInstance(tz).getTime();
+                        long currentTime = currentDate.getTime();
+                        currentTime = currentTime - (1000 * 60 * 60 * 7);
+                        long minute = (currentTime / (1000 * 60)) % 60;
+                        long hour = (currentTime / (1000 * 60 * 60)) % 24;
+                        String AMPM = "AM";
+                        if (hour == 0){
+                            hour = 12;
+                        }
+                        else if (hour == 12){
+                            AMPM = "PM";
+                        }
+                        else if (hour > 12) {
+                            AMPM = "PM";
+                            hour = hour - 12;
+                        }
+                        String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        Event e = new Event(Color.argb(rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()), currentTime, eventName);
+
+                        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("Events").child(username);
+                        eventRef.push().setValue(e);
 
                         TotalCalories = (TextView)findViewById((R.id.TotalCalories));
                         myTotalCalories = myTotalCalories + NewMETValue;
