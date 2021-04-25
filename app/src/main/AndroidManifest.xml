@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
         <activity android:name=".CreateWorkout"/>
+
+        <activity
+            android:name=".ViewCommentsActivity"
+            android:label="@string/title_activity_view_comments"
+            android:theme="@style/Theme.KeepFit.NoActionBar"></activity>
+
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".authapp.PublicProfile" />
         <activity android:name=".authapp.ProfileActivity" />

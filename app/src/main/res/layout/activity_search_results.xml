@@ -90,7 +90,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/preset1" />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -225,1158 +224,1162 @@
                     android:text="Search"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <ImageButton
                 android:id="@+id/item1button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item1text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 1"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="item 1"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item1user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item1username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item1like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item1dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item1ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
+
 
 
             <ImageButton
                 android:id="@+id/item2button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item2text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 2"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 2"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item2user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item2username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item2like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item2dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item2ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item3button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item3text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 3"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 3"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item3user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item3username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item3like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item3dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item3ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item4button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item4text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 4"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 4"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item4user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item4username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item4like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item4dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item4ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item5button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item5text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 5"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 5"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item5user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item5username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item5like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item5dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item5ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item6button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item6text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 6"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 6"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item6user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item6username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item6like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item6dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item6ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item7button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item7text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="20dp"
                 android:text="item 7"
-                android:textSize="20dp" />
-
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item7user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item7username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item7like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item7dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item7ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item8button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item8text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 8"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 8"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item8user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item8username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item8like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item8dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item8ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item9button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item9text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 9"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 9"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item9user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item9username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item9like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item9dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item9ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item10button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item10text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 10"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 10"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item10user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item10username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item10like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item10dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item10ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item11button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item11text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 11"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 11"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item11user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item11username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item11like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item11dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item11ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item12button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item12text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 12"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 12"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item12user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item12username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item12like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item12dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item12ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item13button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item13text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 13"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 13"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item13user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item13username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item13like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item13dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
-
+            <Button
+                android:id="@+id/item13ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
             <ImageButton
                 android:id="@+id/item14button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item14text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 14"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 14"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item14user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item14username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item14like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item14dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item14ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item15button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item15text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 15"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 15"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item15user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item15username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item15like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item15dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item15ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
 
             <ImageButton
                 android:id="@+id/item16button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item16text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 16"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 16"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item16user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item16username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item16like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item16dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item16ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item17button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item17text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 17"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 17"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item17user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item17username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item17like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item17dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item17ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item18button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item18text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 18"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 18"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item18user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item18username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item18like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item18dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item18ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item19button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item19text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 19"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 19"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item19user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item19username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item19like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item19dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item19ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
 
             <ImageButton
                 android:id="@+id/item20button"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
-
+                android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/item20text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="item 20"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="item 20"
-                android:textSize="20dp" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal" >
                 <ImageButton
                     android:id="@+id/item20user"
+                    android:scaleType="centerCrop"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:scaleType="centerCrop" />
-
+                    android:layout_marginLeft="5dp"/>
                 <TextView
                     android:id="@+id/item20username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="item 1 username"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="item 1 username"
-                    android:textSize="15dp" />
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/item20like"
                     android:layout_width="60dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/like"
-                    android:textSize="11dp" />
-
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
                 <Button
                     android:id="@+id/item20dislike"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:text="@string/dislike"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item20ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
         </LinearLayout>
     </ScrollView>
 

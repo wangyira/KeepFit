@@ -278,6 +278,14 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item1ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
+            
+
 
             <ImageButton
                 android:id="@+id/item2button"
@@ -331,6 +339,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item2ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item3button"
                 android:scaleType="centerCrop"
@@ -382,6 +396,12 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item3ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item4button"
@@ -435,6 +455,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item4ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item5button"
                 android:scaleType="centerCrop"
@@ -487,6 +513,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item5ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item6button"
                 android:scaleType="centerCrop"
@@ -538,6 +570,12 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item6ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item7button"
@@ -592,6 +630,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item7ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item8button"
                 android:scaleType="centerCrop"
@@ -643,6 +687,12 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item8ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
 
             <ImageButton
                 android:id="@+id/item9button"
@@ -696,6 +746,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item9ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item10button"
                 android:scaleType="centerCrop"
@@ -748,6 +804,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item10ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item11button"
                 android:scaleType="centerCrop"
@@ -798,6 +860,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item11ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item12button"
                 android:scaleType="centerCrop"
@@ -848,6 +917,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item12ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item13button"
                 android:scaleType="centerCrop"
@@ -898,6 +974,11 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+            <Button
+                android:id="@+id/item13ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
             <ImageButton
                 android:id="@+id/item14button"
                 android:scaleType="centerCrop"
@@ -949,6 +1030,12 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/item14ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item15button"
                 android:scaleType="centerCrop"
@@ -999,6 +1086,14 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item15ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
+
             <ImageButton
                 android:id="@+id/item16button"
                 android:scaleType="centerCrop"
@@ -1049,6 +1144,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item16ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item17button"
                 android:scaleType="centerCrop"
@@ -1099,6 +1201,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item17ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item18button"
                 android:scaleType="centerCrop"
@@ -1149,6 +1258,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item18ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
             <ImageButton
                 android:id="@+id/item19button"
                 android:scaleType="centerCrop"
@@ -1199,6 +1315,14 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item19ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
+
             <ImageButton
                 android:id="@+id/item20button"
                 android:scaleType="centerCrop"
@@ -1249,6 +1373,13 @@
                     android:textSize="11dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/item20ViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Comments"/>
+
         </LinearLayout>
     </ScrollView>
 
