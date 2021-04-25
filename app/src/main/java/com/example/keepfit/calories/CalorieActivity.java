@@ -324,7 +324,14 @@ public class CalorieActivity extends AppCompatActivity {
                             AMPM = "PM";
                             hour = hour - 12;
                         }
-                        String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        String eventName = "";
+                        if (minute < 10){
+                            eventName = mySecondValue + " at " + hour + ":0" + minute + " " + AMPM;
+                        }
+                        else{
+                            eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        }
+                        //String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
                         Event e = new Event(Color.argb(rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()), currentTime, eventName);
 
                         DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("Events").child(username);
@@ -430,7 +437,14 @@ public class CalorieActivity extends AppCompatActivity {
                             AMPM = "PM";
                             hour = hour - 12;
                         }
-                        String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        String eventName = "";
+                        if (minute < 10){
+                            eventName = mySecondValue + " at " + hour + ":0" + minute + " " + AMPM;
+                        }
+                        else{
+                            eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
+                        }
+                        //String eventName = mySecondValue + " at " + hour + ":" + minute + " " + AMPM;
                         Event e = new Event(Color.argb(rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()), currentTime, eventName);
 
                         DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("Events").child(username);
