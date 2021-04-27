@@ -78,9 +78,36 @@
                     android:layout_height="50dp"/>
             </LinearLayout>
 
+            <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:id="@+id/top2_layer"
+            android:layout_height="30dp"
+            android:layout_marginTop="55dp">
+
+                <TextView
+                    android:id="@+id/next_exercise_view"
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:text="Next Exercise: "
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/reminder_view"
+                    android:layout_width="268dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="left"
+                    android:text="date/time/exercise name"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18dp" />
+            </LinearLayout>
             <com.github.sundeepk.compactcalendarview.CompactCalendarView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="85dp"
                 android:id="@+id/calendar"
                 android:layout_width="wrap_content"
                 android:paddingTop="100dp"

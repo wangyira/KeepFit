@@ -107,6 +107,10 @@ public class VideoUploadActivity extends AppCompatActivity {
             }
         });
 
+/*reminder
+search Events table for user's entries, sort by timeInMillis, get the first entry that occurs after current time
+* */
+
 
         compactCalendarView = (CompactCalendarView) findViewById(R.id.calendar);
 
