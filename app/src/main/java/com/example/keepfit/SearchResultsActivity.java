@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -539,56 +540,49 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
-
     private void getProfileResults(String input){
-        Log.e("getProfileResults", "input: " + input);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("UserInformation");
-        ref.orderByChild("username").equalTo(input).limitToFirst(20)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            UserInformation user = child.getValue(UserInformation.class);
-                            if(numProfiles < 3) {
-                                profileRefs.add(user.getReferenceTitle());
-                                profileUsernames.add(user.getUsername());
-                                numProfiles++;
-                            }
-                            else{break;}
-                        }
-                        //displayResults();
-                        getVideoResultsbyTitle(input);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot child : snapshot.getChildren()){
+                    UserInformation user = child.getValue(UserInformation.class);
+                    if(user.getUsername().toLowerCase().contains(input.toLowerCase())) {
+                        profileRefs.add(user.getReferenceTitle());
+                        profileUsernames.add(user.getUsername());
+                        numProfiles++;
                     }
+                }
+                //displayResults();
+                getVideoResultsbyTitle(input);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-        //getVideoResultsbyTitle(input);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     private void getJustProfileResults(String input){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("UserInformation");
-        ref.orderByChild("username").equalTo(input).limitToFirst(20)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            UserInformation user = child.getValue(UserInformation.class);
-                            if(numProfiles < 3) {
-                                profileRefs.add(user.getReferenceTitle());
-                                profileUsernames.add(user.getUsername());
-                                numProfiles++;
-                            }
-                            else{break;}
-                        }
-                        displayResults();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot child : snapshot.getChildren()){
+                    UserInformation user = child.getValue(UserInformation.class);
+                    if(user.getUsername().toLowerCase().contains(input.toLowerCase())) {
+                        profileRefs.add(user.getReferenceTitle());
+                        profileUsernames.add(user.getUsername());
+                        numProfiles++;
                     }
+                }
+                displayResults();
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     private void getVideoResultsbyTag(String input){
@@ -621,62 +615,59 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void getVideoResultsbyTitle(String input){
-        Log.e("getVideoResultsbyTitle", "input: " + input);
+        //get all video entries from database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Video References");
-        //ref.orderByChild("title").startAt(input).endAt(input+"\uf8ff").limitToFirst(20)
-        ref.orderByChild("title").equalTo(input).limitToFirst(20)
-                //ref.orderByChild("username").equalTo(input).limitToFirst(20)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            VideoReference video = child.getValue(VideoReference.class);
-                            if(numVideos < (20-numLivestreams-numProfiles)) {
-                                videoRefTitles.add(video.getReferenceTitle());
-                                videoDispTitles.add(video.getTitle());
-                                videoUploadingUser.add(video.getUploadingUser());
-                                videos.add(video);
-                                numVideos++;
-                            }
-                            else{break;}
-                        }
-                        //displayResults();
-                        getLivestreamResultsbyTitle(input);
-                    }
+        DatabaseReference allVideos = database.getReference("Video References");
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-        //getLivestreamResultsbyTitle(input);
+        allVideos.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //search through entries checking for substring ( String.contains() )
+                for(DataSnapshot videoSnapshot : snapshot.getChildren()){
+                    VideoReference video = videoSnapshot.getValue(VideoReference.class);
+                    //add all elements to corresponding arraylists
+                    if(video.getTitle().toLowerCase().contains(input.toLowerCase())){
+                        videoRefTitles.add(video.getReferenceTitle());
+                        videoDispTitles.add(video.getTitle());
+                        videoUploadingUser.add(video.getUploadingUser());
+                        videos.add(video);
+                        numVideos++;
+                    }
+                }
+                getLivestreamResultsbyTitle(input);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     private void getJustVideoResultsbyTitle(String input){
+        //get all video entries from database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Video References");
-        //ref.orderByChild("title").startAt(input).endAt(input+"\uf8ff").limitToFirst(20)
-        ref.orderByChild("title").equalTo(input).limitToFirst(20)
-                //ref.orderByChild("username").equalTo(input).limitToFirst(20)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            VideoReference video = child.getValue(VideoReference.class);
-                            if(numVideos < (20-numLivestreams-numProfiles)) {
-                                videoRefTitles.add(video.getReferenceTitle());
-                                videoDispTitles.add(video.getTitle());
-                                videoUploadingUser.add(video.getUploadingUser());
-                                videos.add(video);
-                                numVideos++;
-                            }
-                            else{break;}
-                        }
-                        displayResults();
-                    }
+        DatabaseReference allVideos = database.getReference("Video References");
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
+        allVideos.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //search through entries checking for substring ( String.contains() )
+                for(DataSnapshot videoSnapshot : snapshot.getChildren()){
+                    VideoReference video = videoSnapshot.getValue(VideoReference.class);
+                    //add all elements to corresponding arraylists
+                    if(video.getTitle().toLowerCase().contains(input.toLowerCase())){
+                        videoRefTitles.add(video.getReferenceTitle());
+                        videoDispTitles.add(video.getTitle());
+                        videoUploadingUser.add(video.getUploadingUser());
+                        videos.add(video);
+                        numVideos++;
+                    }
+                }
+                displayResults();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
 
@@ -714,34 +705,33 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void getLivestreamResultsbyTitle(String input){
-        Log.e("getLsResultsbyTitle", "input: " + input);
+        //get all video entries from database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Livestream Details");
-        ref.orderByChild("title").equalTo(input).limitToFirst(7)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            LivestreamMember livestream = child.getValue(LivestreamMember.class);
-                            if(numLivestreams < 20) {
-                                lsRefTitles.add(livestream.getReferenceTitle());
-                                lsDispTitles.add(livestream.getTitle());
-                                lsZoomLinks.add(livestream.getZoomLink());
+        DatabaseReference allLivestreams = database.getReference("Livestream Details");
 
-                                String uploadingUser = (String) livestream.getUploadingUser();
-                                livestreamUploadingUser.add(uploadingUser);
+        allLivestreams.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //search through entries checking for substring ( String.contains() )
+                for(DataSnapshot child : snapshot.getChildren()){
+                    LivestreamMember livestream = child.getValue(LivestreamMember.class);
+                    if(livestream.getTitle().toLowerCase().contains(input.toLowerCase())) {
+                        lsRefTitles.add(livestream.getReferenceTitle());
+                        lsDispTitles.add(livestream.getTitle());
+                        lsZoomLinks.add(livestream.getZoomLink());
 
-                                numLivestreams++;
-                            }
-                            else{break;}
-                        }
-                        displayResults();
+                        String uploadingUser = (String) livestream.getUploadingUser();
+                        livestreamUploadingUser.add(uploadingUser);
+
+                        numLivestreams++;
                     }
+                }
+                displayResults();
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-        //displayResults();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     private void displayResults(){
@@ -1289,6 +1279,8 @@ public class SearchResultsActivity extends AppCompatActivity {
             Toast.makeText(SearchResultsActivity.this, "Sorry. Comments are disabled for this video.", Toast.LENGTH_LONG).show();
         }
     }
+
+
 
     private Bitmap imgToBitmap(File file){
         byte[] bytes = null;
