@@ -29,17 +29,21 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.example.keepfit.authapp.ViewVideos;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,6 +80,11 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     LivestreamMember member;
     String[] exerciseTypes = {"Aerobic","Anaerobic","Flexibility","Stability"};
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+    private View view;
+
     //upload video
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     Uri videoURI;
@@ -92,6 +101,53 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_livestream);
+
+//        dl = (DrawerLayout)findViewById(R.id.drawer);
+//        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+//
+//        dl.addDrawerListener(t);
+//        t.syncState();
+//        view = findViewById(R.id.container3);
+//
+//        view.bringToFront();
+//
+//
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        nv = (NavigationView)findViewById(R.id.nv);
+//        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int id = item.getItemId();
+//                Intent i = new Intent(StartLivestreamActivity.this, ViewVideos.class);
+//                switch(id)
+//                {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+//                        break;
+//                    case R.id.navviewliked:
+//                        i.putExtra("type", "liked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewdisliked:
+//                        i.putExtra("type", "disliked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewwatched:
+//                        i.putExtra("type", "watched");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewuploaded:
+//                        i.putExtra("type", "uploaded");
+//                        startActivity(i);
+//                        break;
+//                    default:
+//                        return true;
+//                }
+//                return true;
+//
+//            }
+//        });
 
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -226,6 +282,15 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

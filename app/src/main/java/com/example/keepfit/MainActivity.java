@@ -2,7 +2,9 @@ package com.example.keepfit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,9 +31,11 @@ import android.widget.Toast;
 import com.example.keepfit.authapp.ProfileActivityEdits;
 import com.example.keepfit.authapp.PublicProfile;
 import com.example.keepfit.authapp.User;
+import com.example.keepfit.authapp.ViewVideos;
 import com.example.keepfit.calories.CalorieActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -110,11 +114,59 @@ public class MainActivity extends AppCompatActivity {
 
     //ReentrantLock lock = new ReentrantLock();
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dl = (DrawerLayout)findViewById(R.id.drawer);
+        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+
+        dl.addDrawerListener(t);
+        t.syncState();
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        nv = (NavigationView)findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Intent i = new Intent(MainActivity.this, ViewVideos.class);
+                switch(id)
+                {
+                    case R.id.account:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+                        break;
+                    case R.id.navviewliked:
+                        i.putExtra("type", "liked");
+                        startActivity(i);
+                        break;
+                    case R.id.navviewdisliked:
+                        i.putExtra("type", "disliked");
+                        startActivity(i);
+                        break;
+                    case R.id.navviewwatched:
+                        i.putExtra("type", "watched");
+                        startActivity(i);
+                        break;
+                    case R.id.navviewuploaded:
+                        i.putExtra("type", "uploaded");
+                        startActivity(i);
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+
+            }
+        });
+
 
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -269,6 +321,15 @@ public class MainActivity extends AppCompatActivity {
         getTopVideos();
         //getLivestreams();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     //search history

@@ -50,7 +50,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:background="@color/colorPrimaryDark">
+                android:background="@color/purple_200">
 
             </RelativeLayout>
 
