@@ -17,7 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="24dp"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
@@ -93,6 +93,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.375">
 
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:gravity="center_horizontal"
+            android:src="@drawable/welcome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
         <TextView
             android:id="@+id/register"
             android:layout_width="83dp"
@@ -118,25 +127,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:fontFamily="sans-serif-smallcaps"
-            android:textAlignment="center"
-            android:inputType="textPersonName"
-            android:text="@string/welcome"
-            android:textColor="#2196F3"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:typeface="sans"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center_horizontal" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <ProgressBar-->

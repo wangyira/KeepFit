@@ -13,6 +13,7 @@ import com.example.keepfit.StartLivestreamActivity;
 import com.example.keepfit.VideoActivity;
 import com.example.keepfit.VideoUploadActivity;
 import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.example.keepfit.authapp.ViewVideos;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,7 +22,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -31,6 +34,7 @@ import com.example.keepfit.R;
 
 import android.os.Bundle;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -105,6 +109,9 @@ public class CalorieActivity extends AppCompatActivity {
 
     private Calendar calendar = Calendar.getInstance(Locale.getDefault());
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     /*
     DatabaseReference mConditionRef = mRootRef.child("METValues");
@@ -163,10 +170,53 @@ public class CalorieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calorie);
+
+//        dl = (DrawerLayout)findViewById(R.id.drawer);
+//        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+//
+//        dl.addDrawerListener(t);
+//        t.syncState();
+//
+//
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        nv = (NavigationView)findViewById(R.id.nv);
+//        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int id = item.getItemId();
+//                Intent i = new Intent(CalorieActivity.this, ViewVideos.class);
+//                switch(id)
+//                {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+//                        break;
+//                    case R.id.navviewliked:
+//                        i.putExtra("type", "liked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewdisliked:
+//                        i.putExtra("type", "disliked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewwatched:
+//                        i.putExtra("type", "watched");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewuploaded:
+//                        i.putExtra("type", "uploaded");
+//                        startActivity(i);
+//                        break;
+//                    default:
+//                        return true;
+//                }
+//                return true;
+//
+//            }
+//        });
 
         numExerciseEntries = 0;
-
-        setContentView(R.layout.activity_calorie);
 
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -514,6 +564,15 @@ public class CalorieActivity extends AppCompatActivity {
         addItemstoArray();
         makeInvisible();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void resetViewHistory(){

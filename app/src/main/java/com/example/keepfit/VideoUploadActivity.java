@@ -9,11 +9,13 @@ import android.os.Bundle;
 
 import com.example.keepfit.authapp.ForgotPassword;
 import com.example.keepfit.authapp.ProfileActivityEdits;
+import com.example.keepfit.authapp.ViewVideos;
 import com.example.keepfit.calories.CalorieActivity;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,8 +27,10 @@ import com.google.firebase.firestore.core.OrderBy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -66,6 +70,9 @@ public class VideoUploadActivity extends AppCompatActivity {
     private String dateAsString;
     private int completed;
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
@@ -74,6 +81,51 @@ public class VideoUploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videoupload);
+
+//        dl = (DrawerLayout)findViewById(R.id.drawer);
+//        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+//
+//        dl.addDrawerListener(t);
+//        t.syncState();
+//
+//
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        nv = (NavigationView)findViewById(R.id.nv);
+//        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int id = item.getItemId();
+//                Intent i = new Intent(VideoUploadActivity.this, ViewVideos.class);
+//                switch(id)
+//                {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
+//                        break;
+//                    case R.id.navviewliked:
+//                        i.putExtra("type", "liked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewdisliked:
+//                        i.putExtra("type", "disliked");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewwatched:
+//                        i.putExtra("type", "watched");
+//                        startActivity(i);
+//                        break;
+//                    case R.id.navviewuploaded:
+//                        i.putExtra("type", "uploaded");
+//                        startActivity(i);
+//                        break;
+//                    default:
+//                        return true;
+//                }
+//                return true;
+//
+//            }
+//        });
+
 
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -298,6 +350,15 @@ id: reminder_view
 
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
     @NonNull
