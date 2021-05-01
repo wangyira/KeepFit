@@ -515,10 +515,35 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             //myFileSize --> size of file in KB
             int myFileSize = Integer.parseInt(String.valueOf(file.length()/1024));
 
+            //Get time of video
+
+            double doubleSeconds = -1;
+
+            Log.d("time2", "time2 is " + time2);
+
+            String[] myParsedString = time2.split(":");
+
+            if (myParsedString.length >= 1){
+
+
+                //Log.d("time2", "time2 is " + time2);
+
+                int myMinutes = (Integer.parseInt(myParsedString[0]))*60;
+                int mySeconds = (Integer.parseInt(myParsedString[1]));
+                doubleSeconds = (double) myMinutes + (double) mySeconds;
+            }
+
             //10000 KB = 10 MB
             if (myFileSize >  700){
                 Context context = getApplicationContext();
                 CharSequence text = "Sorry, but your video needs to be under 700 KB.";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+            else if (doubleSeconds > 420){
+                Context context = getApplicationContext();
+                CharSequence text = "Sorry, but your video needs to be under seven minutes.";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();

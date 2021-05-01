@@ -82,6 +82,18 @@
                         android:layout_marginLeft="55dp"
                         android:layout_width="50dp"
                         android:layout_height="50dp"/>
+                  
+                    <TextView
+                      android:id="@+id/next_exercise_view"
+                      android:layout_width="400dp"
+                      android:layout_height="50dp"
+                      android:layout_gravity="left"
+                      android:layout_marginLeft="10dp"
+                      android:layout_marginTop="10dp"
+                      android:text="Next Exercise: "
+                      android:textColor="@android:color/background_dark"
+                      android:textSize="18dp"
+                      android:textStyle="bold"/>
                 </LinearLayout>
 
                 <com.github.sundeepk.compactcalendarview.CompactCalendarView

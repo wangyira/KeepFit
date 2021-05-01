@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.core.OrderBy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -157,6 +159,52 @@ public class VideoUploadActivity extends AppCompatActivity {
                 }
                 return false;
             }
+        });
+        TextView nv = findViewById(R.id.next_exercise_view);
+        nv.setText("No upcoming exercises");
+
+/*reminder
+search Events table for user's entries, sort by timeInMillis, get the first entry that occurs after current time
+id: reminder_view
+* */
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        List<Event> addedEvents = new ArrayList<>();
+        DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference("Events");
+        eventsRef.child(username).orderByChild("timeInMillis")
+           .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String data ="";
+                boolean found = false;
+                if (snapshot != null) {
+                    Log.d("numberEntries", String.valueOf(snapshot.getChildrenCount()));
+                        for(DataSnapshot ds : snapshot.getChildren()){
+                            for(DataSnapshot child: ds.getChildren()) {
+                                if (child.getKey().equals("data")) {
+                                    data = child.getValue().toString();
+                                }
+                            }
+                            for(DataSnapshot child: ds.getChildren()){
+                                if(child.getKey().equals("timeInMillis")){
+                                    long time = Long.parseLong(child.getValue().toString());
+                                    Log.d("currentTime", String.valueOf(System.currentTimeMillis()));
+                                    Log.d("eventTime", String.valueOf(time));
+                                    if(time > System.currentTimeMillis()&&!found){
+                                        nv.setText("Next Exercise: " + data);
+                                        found = true;
+                                        //date/time/exercise name
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
 
