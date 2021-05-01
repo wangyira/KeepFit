@@ -120,7 +120,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
                     //SharedPreferences.Editor editor = sharedPreferences.edit();
                     //editor.putString("username", username);
                     //editor.apply();
-                    startActivity(new Intent(FirebaseMainActivity.this, ProfileActivityEdits.class));
+                    startActivity(new Intent(FirebaseMainActivity.this, MainActivity.class));
                 }
                 else{
                     Toast.makeText(FirebaseMainActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();
