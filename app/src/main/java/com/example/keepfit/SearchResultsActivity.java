@@ -177,11 +177,9 @@ public class SearchResultsActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
                 switch (menuItem.getItemId()){
-                    case R.id.nav_account:
-                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
-                        overridePendingTransition(0,0);
-                        return true;
                     case R.id.nav_search:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_calorie:
                         startActivity(new Intent(getApplicationContext(), CalorieActivity.class));

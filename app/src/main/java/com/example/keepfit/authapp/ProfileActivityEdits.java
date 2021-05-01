@@ -121,7 +121,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null)
+        if (user != null)
             userId = user.getUid();
         else userId = "";
         setContentView(R.layout.activity_edit_profile);
@@ -148,39 +148,41 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
         //mAuth = FirebaseAuth.getInstance();
 
+
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //Set account selected
-        bottomNavigationView.setSelectedItemId(R.id.nav_account);
+//        bottomNavigationView.setSelectedItemId(R.id.nav_search);
 
         //perform itemselectedlistener
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
-                switch (menuItem.getItemId()){
-                    case R.id.nav_account:
-                        return true;
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+//                    case R.id.nav_account:
+//                        return true;
                     case R.id.nav_search:
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.nav_calorie:
                         startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.nav_upload:
                         startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.nav_livestream:
                         startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
             }
         });
+
 
 //        Bundle b = getIntent().getExtras();
 //        if(b!=null){
@@ -272,12 +274,11 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                         FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     deleteAccount(username);
                                     Toast.makeText(ProfileActivityEdits.this, "Account Deleted.", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(ProfileActivityEdits.this, FirebaseMainActivity.class));
-                                }
-                                else{
+                                } else {
                                     Toast.makeText(ProfileActivityEdits.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -403,36 +404,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
-        getExerciseType();
 
-
-    }
-
-    private void getExerciseType(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("MostRecentTable");
-        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
-        String username = sharedPref.getString("username", null);
-        myReturnString = "0";
-        ref.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.getValue()!= null){
-                    myReturnString = snapshot.getValue().toString();
-                    Context context = getApplicationContext();
-                    CharSequence text = "Welcome, based on your exercise history, we suggest you do " + myReturnString;
-                    int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                    myReturnString = "0";
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void getFollowers(){

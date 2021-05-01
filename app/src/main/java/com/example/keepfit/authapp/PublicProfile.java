@@ -86,17 +86,13 @@ public class PublicProfile extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //Set account selected
-        bottomNavigationView.setSelectedItemId(R.id.nav_account);
+        //bottomNavigationView.setSelectedItemId(R.id.nav_account);
 
         //perform itemselectedlistener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
                 switch (menuItem.getItemId()){
-                    case R.id.nav_account:
-                        startActivity(new Intent(getApplicationContext(), ProfileActivityEdits.class));
-                        overridePendingTransition(0,0);
-                        return true;
                     case R.id.nav_search:
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0,0);
