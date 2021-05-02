@@ -1078,36 +1078,37 @@ public class MainActivity extends AppCompatActivity {
                 else if(liked == false){
                     Log.e("likedyes", "liked successful");
                     likeRef.push().setValue(refTitle);
+                    //update NumLikes
+                    //find video according to refTitle
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+                    userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot child : snapshot.getChildren()){
+                                        VideoReference video = child.getValue(VideoReference.class);
+                                        int numLikesTemp = video.getNumLikes();
+                                        numLikesTemp++;
+                                        String keyTemp = child.getKey();
+                                        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                                        //ref.setValue(numLikes);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                                        ref.setValue(numLikesTemp);
+                                        numLikes.get(j).setText("" + numLikesTemp);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
                 }
             }
         }, refTitle);
 
 
 
-        //update NumLikes
-        //find video according to refTitle
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
-        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            VideoReference video = child.getValue(VideoReference.class);
-                            int numLikesTemp = video.getNumLikes();
-                            numLikesTemp++;
-                            String keyTemp = child.getKey();
-                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
-                            //ref.setValue(numLikes);
 
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
-                            ref.setValue(numLikesTemp);
-                            numLikes.get(j).setText("" + numLikesTemp);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
     }
 
     public interface MyCallback {
@@ -1167,35 +1168,36 @@ public class MainActivity extends AppCompatActivity {
                 else if(disliked == false){
                     Log.e("dislikedyes", "disliked successful");
                     dislikeRef.push().setValue(refTitle);
+                    //update NumLikes
+                    //find video according to refTitle
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+                    userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot child : snapshot.getChildren()){
+                                        VideoReference video = child.getValue(VideoReference.class);
+                                        int numDislikesTemp = video.getNumDislikes();
+                                        numDislikesTemp++;
+                                        String keyTemp = child.getKey();
+                                        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                                        //ref.setValue(numLikes);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numDislikes");
+                                        ref.setValue(numDislikesTemp);
+                                        numDislikes.get(j).setText("" + numDislikesTemp);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
                 }
             }
         }, refTitle);
 
 
-        //update NumLikes
-        //find video according to refTitle
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
-        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            VideoReference video = child.getValue(VideoReference.class);
-                            int numDislikesTemp = video.getNumDislikes();
-                            numDislikesTemp++;
-                            String keyTemp = child.getKey();
-                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
-                            //ref.setValue(numLikes);
 
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numDislikes");
-                            ref.setValue(numDislikesTemp);
-                            numDislikes.get(j).setText("" + numDislikesTemp);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
     }
     public void readDataDislike(MyCallback2 myCallback2, String refTitle) {
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
