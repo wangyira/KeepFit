@@ -519,10 +519,11 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
 
             String[] myParsedString = time2.split(":");
 
-            if (myParsedString.length >= 1){
+            if (myParsedString.length > 1){
 
 
-                //Log.d("time2", "time2 is " + time2);
+                Log.d("time2", "time2 is " + time2);
+                Log.d("time2 parsed", "myParsedStringLength " + myParsedString.length);
 
                 int myMinutes = (Integer.parseInt(myParsedString[0]))*60;
                 int mySeconds = (Integer.parseInt(myParsedString[1]));
