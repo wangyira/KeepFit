@@ -51,6 +51,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 //import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -74,23 +76,25 @@ public class MainActivity extends AppCompatActivity {
     boolean disliked = false;
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
-    ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
+    //ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
     ArrayList<TextView> textViewsProfile = new ArrayList<TextView>();
-    ArrayList<Button> likes = new ArrayList<Button>();
-    ArrayList<Button> dislikes = new ArrayList<Button>();
+    ArrayList<ImageButton> likes = new ArrayList<ImageButton>();
+    ArrayList<ImageButton> dislikes = new ArrayList<ImageButton>();
     ArrayList<Button> viewCommentButtons = new ArrayList<Button>();
+    ArrayList<TextView> numLikes = new ArrayList<TextView>();
+    ArrayList<TextView> numDislikes = new ArrayList<TextView>();
 
     //ArrayList<VideoReference> allVideos  = new ArrayList<VideoReference>();
 
-    ArrayList<String> videoRefTitles = new ArrayList<String>();
-    ArrayList<String> videoDispTitles = new ArrayList<String>();
+    //ArrayList<String> videoRefTitles = new ArrayList<String>();
+    //ArrayList<String> videoDispTitles = new ArrayList<String>();
     ArrayList<String> lsRefTitles = new ArrayList<String>();
     ArrayList<String> lsDispTitles = new ArrayList<String>();
     ArrayList<String> lsZoomLinks = new ArrayList<String>();
 
-    ArrayList<String> videoUploadingUser = new ArrayList<String>();
+    //ArrayList<String> videoUploadingUser = new ArrayList<String>();
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
-    ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
+    //ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
     ArrayList<String> livestreamUplodingUserPic = new ArrayList<String>();
 
     ArrayList<Comment> videoComments = new ArrayList<Comment>();
@@ -451,21 +455,21 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot child : snapshot.getChildren()){
                     VideoReference video = child.getValue(VideoReference.class);
-                    videoRefTitles.add(video.getReferenceTitle());
-                    Log.e("refTitle", video.getReferenceTitle());
-                    videoDispTitles.add(video.getTitle());
-                    videoUploadingUser.add(video.getUploadingUser());
+                    //videoRefTitles.add(video.getReferenceTitle());
+                    //Log.e("refTitle", video.getReferenceTitle());
+                    //videoDispTitles.add(video.getTitle());
+                    //videoUploadingUser.add(video.getUploadingUser());
                     //videoAllowComments.add(video.getCommentsAllowed());
                     videos.add(video);
                     numVideos++;
-                    Log.e("numVideos", "" + numVideos);
+                    //Log.e("numVideos", "" + numVideos);
                 }
                 getLivestreams();
 
                 //flip order
-                flipOrderVideoDispTitles();
-                flipOrderVideoRefTitles();
-                flipOrderVideoUploadingUser();
+                //flipOrderVideoDispTitles();
+                //flipOrderVideoRefTitles();
+                //flipOrderVideoUploadingUser();
                 flipOrderVideos();
             }
 
@@ -474,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getVideos(){
+    /*private void getVideos(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Video References");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -499,7 +503,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
         //getLivestreams();
-    }
+    }*/
 
     private void getLivestreams(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -536,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("button clicked", "i="+j + ", name: " + videoDispTitles.get(j));
+                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
                     if(j < numVideos){ openNewActivityVideo(j); }
                     else{ openNewActivityLivestream(j); }
                 }
@@ -548,10 +552,10 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i < numVideos; i++) {
             //Log.e("i", ""+i);
             //Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
-            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videos.get(i).getReferenceTitle() + ".jpg");
             try {
                 final int j = i;
-                final File localFile = File.createTempFile(videoRefTitles.get(i), "jpg");
+                final File localFile = File.createTempFile(videos.get(i).getReferenceTitle(), "jpg");
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -560,16 +564,18 @@ public class MainActivity extends AppCompatActivity {
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
-                        Button bp = likes.get(j);
+                        ImageButton bp = likes.get(j);
                         //change color
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 liked = false;
-                                like(videoRefTitles.get(j));
+                                like(j);
                                 //   bp.setBackgroundColor(getResources().getColor(R.color.black));
-                                bp.setText("Liked");
-                                bp.setTextSize(9);
+                                //bp.setText("Liked");
+                                //bp.setTextSize(9);
+                                //bp.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                bp.setColorFilter(Color.argb(1, 243, 91, 4));
                             }
                         });
 
@@ -578,9 +584,9 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
                         String username = sharedPref.getString("username", null);
                         //Log.e("user", username);
-                        Log.e("videoRefTitle", videoRefTitles.get(j));
+                        Log.e("videoRefTitle", videos.get(j).getReferenceTitle());
                         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
-                        likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)
+                        likeRef.orderByValue().equalTo(videos.get(j).getReferenceTitle()).limitToFirst(1)
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -589,10 +595,15 @@ public class MainActivity extends AppCompatActivity {
                                             Log.e("key", child.getKey());
                                             Log.e("val", (String) child.getValue());
                                             if (child.getKey() != null) {
-                                                bp.setText("Liked");
-                                                bp.setTextSize(9);
+                                                Log.e("LIKED", "LIKED");
+                                                //bp.setText("Liked");
+                                                //bp.setTextSize(9);
+                                                //bp.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                                bp.setColorFilter(Color.argb(1, 243, 91, 4));
                                             } else {
-                                                bp.setText("Like");
+                                                Log.e("LIKE", "LIKE");
+                                                //bp.setText("Like");
+                                                bp.setBackgroundColor(getResources().getColor(R.color.yellow_200));
                                             }
                                         }
                                     }
@@ -602,22 +613,24 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         bp.setVisibility(View.VISIBLE); //show like button for all videos available
 
-                        Button dl = dislikes.get(j);
+                        ImageButton dl = dislikes.get(j);
                         //change color
                         dl.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 disliked = false;
-                                dislike(videoRefTitles.get(j));
+                                dislike(j);
                                 //   bp.setBackgroundColor(getResources().getColor(R.color.black));
-                                dl.setText("Disliked");
-                                dl.setTextSize(9);
+                                //dl.setText("Disliked");
+                                //dl.setTextSize(9);
+                                //dl.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                dl.setColorFilter(Color.argb(1, 243, 91, 4));
                             }
                         });
                         dl.setVisibility(View.VISIBLE);
                         //depending on whether the button is disliked or not, change button appearance
                         DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
-                        dislikeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)
+                        dislikeRef.orderByValue().equalTo(videos.get(j).getReferenceTitle()).limitToFirst(1)
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -625,10 +638,13 @@ public class MainActivity extends AppCompatActivity {
                                             Log.e("key", child.getKey());
                                             Log.e("val", (String) child.getValue());
                                             if (child.getKey() != null) {
-                                                dl.setText("Disliked");
-                                                dl.setTextSize(9);
+                                                //dl.setText("Disliked");
+                                                //dl.setTextSize(9);
+                                                //dl.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                                dl.setColorFilter(Color.argb(1, 243, 91, 4));
                                             } else {
-                                                dl.setText("Dislike");
+                                                //dl.setText("Dislike");
+                                                dl.setBackgroundColor(getResources().getColor(R.color.yellow_200));
                                             }
                                         }
                                     }
@@ -638,11 +654,26 @@ public class MainActivity extends AppCompatActivity {
                                 });
                         dl.setVisibility(View.VISIBLE); //show dislike button for all videos available
 
+
+
+                        //show num likes
+                        TextView numLikesTV = numLikes.get(j);
+                        Log.e("videos j=" + j, "" + videos.get(j).getTitle());
+                        Log.e("videos j=" + j, "" + videos.get(j).getNumLikes());
+                        numLikesTV.setText(""+videos.get(j).getNumLikes());
+                        numLikesTV.setVisibility(View.VISIBLE);
+
+                        //show num dislikes
+                        TextView numDislikesTV = numDislikes.get(j);
+                        numDislikesTV.setText(""+videos.get(j).getNumDislikes());
+                        numDislikesTV.setVisibility(View.VISIBLE);
+
+
                         //String ProfilerefTitle = videoUploadingUserPic.get(j);
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
                         //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                        ImageButton ibp = imageButtonsProfile.get(j);
+                        //ImageButton ibp = imageButtonsProfile.get(j);
                         /*try{
                             final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                             imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -653,15 +684,15 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }catch (Exception e){ }*/
-                        ibp.setVisibility(View.VISIBLE);
+                        //ibp.setVisibility(View.VISIBLE);
 
                         TextView tvp = textViewsProfile.get(j);
-                        tvp.setText(videoUploadingUser.get(j));
+                        tvp.setText(videos.get(j).getUploadingUser());
 
                         tvp.setVisibility(View.VISIBLE);
 
                         TextView tv = textViews.get(j);
-                        tv.setText(videoDispTitles.get(j));
+                        tv.setText(videos.get(j).getTitle());
                         tv.setVisibility(View.VISIBLE);
 
                         //display view comments button
@@ -701,7 +732,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                            ImageButton ibp = imageButtonsProfile.get(j);
+                            //ImageButton ibp = imageButtonsProfile.get(j);
                             /*try{
                                 final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                                 imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -712,7 +743,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
                             }catch (Exception e){ }*/
-                            ibp.setVisibility(View.VISIBLE);
+                            //ibp.setVisibility(View.VISIBLE);
 
                             TextView tvp = textViewsProfile.get(j);
                             tvp.setText(livestreamUploadingUser.get(j-numVideos));
@@ -774,7 +805,7 @@ public class MainActivity extends AppCompatActivity {
         textViews.add(findViewById(R.id.item19text));
         textViews.add(findViewById(R.id.item20text));
 
-        imageButtonsProfile.add(findViewById(R.id.item1user));
+        /*imageButtonsProfile.add(findViewById(R.id.item1user));
         imageButtonsProfile.add(findViewById(R.id.item2user));
         imageButtonsProfile.add(findViewById(R.id.item3user));
         imageButtonsProfile.add(findViewById(R.id.item4user));
@@ -793,7 +824,7 @@ public class MainActivity extends AppCompatActivity {
         imageButtonsProfile.add(findViewById(R.id.item17user));
         imageButtonsProfile.add(findViewById(R.id.item18user));
         imageButtonsProfile.add(findViewById(R.id.item19user));
-        imageButtonsProfile.add(findViewById(R.id.item20user));
+        imageButtonsProfile.add(findViewById(R.id.item20user));*/
 
         textViewsProfile.add(findViewById(R.id.item1username));
         textViewsProfile.add(findViewById(R.id.item2username));
@@ -880,6 +911,50 @@ public class MainActivity extends AppCompatActivity {
         viewCommentButtons.add(findViewById(R.id.item20ViewComments));
 
 
+        numLikes.add(findViewById(R.id.numLikes1));
+        numLikes.add(findViewById(R.id.numLikes2));
+        numLikes.add(findViewById(R.id.numLikes3));
+        numLikes.add(findViewById(R.id.numLikes4));
+        numLikes.add(findViewById(R.id.numLikes5));
+        numLikes.add(findViewById(R.id.numLikes6));
+        numLikes.add(findViewById(R.id.numLikes7));
+        numLikes.add(findViewById(R.id.numLikes8));
+        numLikes.add(findViewById(R.id.numLikes9));
+        numLikes.add(findViewById(R.id.numLikes10));
+        numLikes.add(findViewById(R.id.numLikes11));
+        numLikes.add(findViewById(R.id.numLikes12));
+        numLikes.add(findViewById(R.id.numLikes13));
+        numLikes.add(findViewById(R.id.numLikes14));
+        numLikes.add(findViewById(R.id.numLikes15));
+        numLikes.add(findViewById(R.id.numLikes16));
+        numLikes.add(findViewById(R.id.numLikes17));
+        numLikes.add(findViewById(R.id.numLikes18));
+        numLikes.add(findViewById(R.id.numLikes19));
+        numLikes.add(findViewById(R.id.numLikes20));
+
+
+        numDislikes.add(findViewById(R.id.numDislikes1));
+        numDislikes.add(findViewById(R.id.numDislikes2));
+        numDislikes.add(findViewById(R.id.numDislikes3));
+        numDislikes.add(findViewById(R.id.numDislikes4));
+        numDislikes.add(findViewById(R.id.numDislikes5));
+        numDislikes.add(findViewById(R.id.numDislikes6));
+        numDislikes.add(findViewById(R.id.numDislikes7));
+        numDislikes.add(findViewById(R.id.numDislikes8));
+        numDislikes.add(findViewById(R.id.numDislikes9));
+        numDislikes.add(findViewById(R.id.numDislikes10));
+        numDislikes.add(findViewById(R.id.numDislikes11));
+        numDislikes.add(findViewById(R.id.numDislikes12));
+        numDislikes.add(findViewById(R.id.numDislikes13));
+        numDislikes.add(findViewById(R.id.numDislikes14));
+        numDislikes.add(findViewById(R.id.numDislikes15));
+        numDislikes.add(findViewById(R.id.numDislikes16));
+        numDislikes.add(findViewById(R.id.numDislikes17));
+        numDislikes.add(findViewById(R.id.numDislikes18));
+        numDislikes.add(findViewById(R.id.numDislikes19));
+        numDislikes.add(findViewById(R.id.numDislikes20));
+
+
     }
 
     private void makeInvisible(){
@@ -895,26 +970,32 @@ public class MainActivity extends AppCompatActivity {
         for(TextView tv : textViews){
             tv.setVisibility(View.GONE);
         }
-        for(ImageButton ib : imageButtonsProfile){
+        /*for(ImageButton ib : imageButtonsProfile){
             ib.setVisibility(View.GONE);
-        }
+        }*/
         for(TextView tv : textViewsProfile){
             tv.setVisibility(View.GONE);
         }
-        for(Button l : likes){
+        for(ImageButton l : likes){
             l.setVisibility(View.GONE);
         }
-        for(Button dl : dislikes){
+        for(ImageButton dl : dislikes){
             dl.setVisibility(View.GONE);
         }
         for(Button vc : viewCommentButtons){
             vc.setVisibility(View.GONE);
         }
+        for(TextView nl : numLikes){
+            nl.setVisibility(View.GONE);
+        }
+        for(TextView ndl : numDislikes){
+            ndl.setVisibility(View.GONE);
+        }
     }
 
     public void openNewActivityVideo(int i){
-        Log.e("passing to VideoAct", "title: " + videoRefTitles.get(i));
-        String referenceTitle = videoRefTitles.get(i);
+        //Log.e("passing to VideoAct", "title: " + videoRefTitles.get(i));
+        String referenceTitle = videos.get(i).getReferenceTitle();
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra("referenceTitle",referenceTitle);
         startActivity(intent);
@@ -942,7 +1023,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getVideoUploadingUserPic(String username){
+    /*private void getVideoUploadingUserPic(String username){
         Log.d("username", username);
         DatabaseReference picRef = FirebaseDatabase.getInstance().getReference("UserInformation");
         picRef.orderByChild("username").equalTo(username)
@@ -959,21 +1040,21 @@ public class MainActivity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
 
-    }
+    }*/
 
     private void resetValues(){
         numVideos=0;
         numLivestreams=0;
 
-        videoRefTitles = new ArrayList<String>();
-        videoDispTitles = new ArrayList<String>();
+        //videoRefTitles = new ArrayList<String>();
+        //videoDispTitles = new ArrayList<String>();
         lsRefTitles = new ArrayList<String>();
         lsDispTitles = new ArrayList<String>();
         lsZoomLinks = new ArrayList<String>();
 
-        videoUploadingUser = new ArrayList<String>();
+        //videoUploadingUser = new ArrayList<String>();
         livestreamUploadingUser = new ArrayList<String>();
-        videoUploadingUserPic = new ArrayList<String>();
+        //videoUploadingUserPic = new ArrayList<String>();
         livestreamUplodingUserPic = new ArrayList<String>();
 
     }
@@ -982,7 +1063,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void like(String refTitle){
+    private void like(int j){
+        String refTitle = videos.get(j).getReferenceTitle();
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         Log.e("clicked-video", refTitle);
@@ -1019,6 +1101,7 @@ public class MainActivity extends AppCompatActivity {
 
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
                             ref.setValue(numLikesTemp);
+                            numLikes.get(j).setText("" + numLikesTemp);
                         }
                     }
 
@@ -1069,7 +1152,8 @@ public class MainActivity extends AppCompatActivity {
         void onCallback(Boolean disliked);
     }
 
-    private void dislike(String refTitle){
+    private void dislike(int j){
+        String refTitle = videos.get(j).getReferenceTitle();
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         Log.e("clicked-video", refTitle);
@@ -1086,6 +1170,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, refTitle);
+
+
+        //update NumLikes
+        //find video according to refTitle
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            VideoReference video = child.getValue(VideoReference.class);
+                            int numDislikesTemp = video.getNumDislikes();
+                            numDislikesTemp++;
+                            String keyTemp = child.getKey();
+                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                            //ref.setValue(numLikes);
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numDislikes");
+                            ref.setValue(numDislikesTemp);
+                            numDislikes.get(j).setText("" + numDislikesTemp);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
     }
     public void readDataDislike(MyCallback2 myCallback2, String refTitle) {
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
@@ -1135,7 +1245,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void flipOrderVideoRefTitles(){
+    /*private void flipOrderVideoRefTitles(){
         ArrayList<String> tempRefTitles = new ArrayList<String>();
         for(String entry : videoRefTitles){
             tempRefTitles.add(entry);
@@ -1169,7 +1279,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=tempRefTitles.size()-1; i >=0; i--){
             videoUploadingUser.add(tempRefTitles.get(i));
         }
-    }
+    }*/
 
     private void flipOrderVideos(){
         ArrayList<VideoReference> tempVideos = new ArrayList<VideoReference>();
@@ -1184,7 +1294,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void redirectToComments(int i){
-        String refTitle = videoRefTitles.get(i);
+        String refTitle = videos.get(i).getReferenceTitle();
         //if comments are allowed
         if(videos.get(i).getCommentsAllowed()){
             //get video from refTitle
