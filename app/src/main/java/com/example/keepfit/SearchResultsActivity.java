@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -67,12 +68,14 @@ import static java.lang.Math.min;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
+    boolean liked = false;
+    boolean disliked = false;
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
     ArrayList<ImageButton> imageButtonsProfile = new ArrayList<ImageButton>();
     ArrayList<TextView> textViewsProfile = new ArrayList<TextView>();
-    ArrayList<Button> likes = new ArrayList<Button>();
-    ArrayList<Button> dislikes = new ArrayList<Button>();
+    ArrayList<ImageButton> likes = new ArrayList<ImageButton>();
+    ArrayList<ImageButton> dislikes = new ArrayList<ImageButton>();
     ArrayList<Button> viewCommentButtons = new ArrayList<Button>();
 
 
@@ -88,6 +91,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
     ArrayList<String> videoUploadingUserPic = new ArrayList<String>();
     ArrayList<String> livestreamUplodingUserPic = new ArrayList<String>();
+    ArrayList<TextView> numLikes = new ArrayList<TextView>();
+    ArrayList<TextView> numDislikes = new ArrayList<TextView>();
 
     ArrayList<VideoReference> videos = new ArrayList<VideoReference>();
 
@@ -794,34 +799,28 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void displayResults(){
-        Log.e("displayResults", "displaying results");
+        Log.e("displayResults", "numVideos="+numVideos+", numLivestreams="+numLivestreams);
         for(int i=0; i < 20; i++){
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //.d("myTag", "@@@@@@@");
-                    if(j < numVideos){
-                        openNewActivityVideo(j);
-                    } else if ( j < numVideos+numLivestreams){
-                        openNewActivityLivestream(j);
-                    } else {
-                        openNewActivityUser(j);
-                    }
-
+                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+                    if(j < numVideos){ openNewActivityVideo(j); }
+                    else{ openNewActivityLivestream(j); }
                 }
             });
         }
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        //Log.e("NUM VIDEOS", ""+numVideos);
         for(int i=0; i < numVideos; i++) {
-            //Log.e("Printing Video", "Video: " + videoDispTitles.get(i));
-            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
-            //Log.e("videoRefTitle", "videoRefTitle: "+ videoRefTitles.get(i));
+            //Log.e("i", ""+i);
+            //Log.d("Printing Video", "Video: " + videoDispTitles.get(i));
+            StorageReference imageRef = storageRef.child("/thumbnail_images/" + videos.get(i).getReferenceTitle() + ".jpg");
             try {
                 final int j = i;
-                final File localFile = File.createTempFile(videoRefTitles.get(i), "jpg");
-                //Log.e("videoRefTitle 2", "videoRefTitle 2: "+ videoRefTitles.get(i));
+                final File localFile = File.createTempFile(videos.get(i).getReferenceTitle(), "jpg");
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -830,32 +829,116 @@ public class SearchResultsActivity extends AppCompatActivity {
                         Bitmap bm = imgToBitmap(localFile);
                         ib.setImageBitmap(bm);
                         ib.setVisibility(View.VISIBLE);
-
-                        Button bp = likes.get(j);
+                        ImageButton bp = likes.get(j);
                         //change color
-
                         bp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //Log.d("ONCLICK", "in ON click");
-                                like(videoRefTitles.get(j));
+                                liked = false;
+                                like(j);
+                                //   bp.setBackgroundColor(getResources().getColor(R.color.black));
+                                //bp.setText("Liked");
+                                //bp.setTextSize(9);
+                                //bp.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                bp.setColorFilter(Color.argb(1, 243, 91, 4));
                             }
                         });
-                        bp.setVisibility(View.VISIBLE);
 
-                        Button dl = dislikes.get(j);
+                        bp.setVisibility(View.VISIBLE);
+                        //depending on whether the button is liked or not, change button appearance
+                        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                        String username = sharedPref.getString("username", null);
+                        //Log.e("user", username);
+                        Log.e("videoRefTitle", videos.get(j).getReferenceTitle());
+                        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
+                        likeRef.orderByValue().equalTo(videos.get(j).getReferenceTitle()).limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        //Log.e("likedval", String.valueOf(likeRef.orderByValue().equalTo(videoRefTitles.get(j)).limitToFirst(1)));
+                                        for(DataSnapshot child : snapshot.getChildren()) {
+                                            Log.e("key", child.getKey());
+                                            Log.e("val", (String) child.getValue());
+                                            if (child.getKey() != null) {
+                                                Log.e("LIKED", "LIKED");
+                                                //bp.setText("Liked");
+                                                //bp.setTextSize(9);
+                                                //bp.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                                bp.setColorFilter(Color.argb(1, 243, 91, 4));
+                                            } else {
+                                                Log.e("LIKE", "LIKE");
+                                                //bp.setText("Like");
+                                                bp.setBackgroundColor(getResources().getColor(R.color.yellow_200));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+                        bp.setVisibility(View.VISIBLE); //show like button for all videos available
+
+                        ImageButton dl = dislikes.get(j);
                         //change color
                         dl.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) { dislike(videoRefTitles.get(j)); }
+                            public void onClick(View v) {
+                                disliked = false;
+                                dislike(j);
+                                //   bp.setBackgroundColor(getResources().getColor(R.color.black));
+                                //dl.setText("Disliked");
+                                //dl.setTextSize(9);
+                                //dl.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                dl.setColorFilter(Color.argb(1, 243, 91, 4));
+                            }
                         });
                         dl.setVisibility(View.VISIBLE);
+                        //depending on whether the button is disliked or not, change button appearance
+                        DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
+                        dislikeRef.orderByValue().equalTo(videos.get(j).getReferenceTitle()).limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot child : snapshot.getChildren()) {
+                                            Log.e("key", child.getKey());
+                                            Log.e("val", (String) child.getValue());
+                                            if (child.getKey() != null) {
+                                                //dl.setText("Disliked");
+                                                //dl.setTextSize(9);
+                                                //dl.setBackgroundColor(getResources().getColor(R.color.orange_500));
+                                                dl.setColorFilter(Color.argb(1, 243, 91, 4));
+                                            } else {
+                                                //dl.setText("Dislike");
+                                                dl.setBackgroundColor(getResources().getColor(R.color.yellow_200));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+                        dl.setVisibility(View.VISIBLE); //show dislike button for all videos available
+
+
+
+                        //show num likes
+                        TextView numLikesTV = numLikes.get(j);
+                        Log.e("videos j=" + j, "" + videos.get(j).getTitle());
+                        Log.e("videos j=" + j, "" + videos.get(j).getNumLikes());
+                        numLikesTV.setText(""+videos.get(j).getNumLikes());
+                        numLikesTV.setVisibility(View.VISIBLE);
+
+                        //show num dislikes
+                        TextView numDislikesTV = numDislikes.get(j);
+                        numDislikesTV.setText(""+videos.get(j).getNumDislikes());
+                        numDislikesTV.setVisibility(View.VISIBLE);
+
 
                         //String ProfilerefTitle = videoUploadingUserPic.get(j);
                         //Log.d("ProfilerefTitle", ProfilerefTitle);
                         //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                        ImageButton ibp = imageButtonsProfile.get(j);
+                        //ImageButton ibp = imageButtonsProfile.get(j);
                         /*try{
                             final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                             imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -863,21 +946,21 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                     Bitmap bmp = imgToBitmap(localFileP);
                                     ibp.setImageBitmap(bmp);
-
                                 }
                             });
                         }catch (Exception e){ }*/
-                        ibp.setVisibility(View.VISIBLE);
+                        //ibp.setVisibility(View.VISIBLE);
 
                         TextView tvp = textViewsProfile.get(j);
-                        tvp.setText(videoUploadingUser.get(j));
+                        tvp.setText(videos.get(j).getUploadingUser());
 
                         tvp.setVisibility(View.VISIBLE);
 
                         TextView tv = textViews.get(j);
-                        tv.setText(videoDispTitles.get(j));
+                        tv.setText(videos.get(j).getTitle());
                         tv.setVisibility(View.VISIBLE);
 
+                        //display view comments button
                         Button vc = viewCommentButtons.get(j);
                         vc.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -893,20 +976,18 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
 
         //display livestreams
-        for(int i=0; i < numLivestreams; i++) {
-            Log.d("storage", "&&&&&&&& " + numLivestreams);
-            StorageReference lsimageRef = storageRef.child("/livestream_thumbnail_images/" + lsRefTitles.get(i));
+        for(int i=numVideos; i < numVideos+numLivestreams; i++) {
+            StorageReference lsimageRef = storageRef.child("/livestream_thumbnail_images/" + lsRefTitles.get(i - numVideos));
             try {
                 final int j = i;
-                Log.d("storage", "aaaaaaaa " + i + ", " + lsRefTitles.get(i));
                 if(numLivestreams>0){
-                    final File localFile = File.createTempFile(lsRefTitles.get(i), "jpg");
+                    final File localFile = File.createTempFile(lsRefTitles.get(i - numVideos), "jpg");
 
                     lsimageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
 
-                            ImageButton ib = imageButtons.get(j + numVideos);
+                            ImageButton ib = imageButtons.get(j);
 
                             Bitmap bm = imgToBitmap(localFile);
                             ib.setImageBitmap(bm);
@@ -916,27 +997,25 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                             //StorageReference imageRefProf = storageRef.child("/profilepictures/" + ProfilerefTitle);
 
-                            ImageButton ibp = imageButtonsProfile.get(j + numVideos);
+                            //ImageButton ibp = imageButtonsProfile.get(j);
                             /*try{
                                 final File localFileP = File.createTempFile(ProfilerefTitle, "jpg");
                                 imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-
                                         Bitmap bmp = imgToBitmap(localFileP);
                                         ibp.setImageBitmap(bmp);
-
                                     }
                                 });
                             }catch (Exception e){ }*/
-                            ibp.setVisibility(View.VISIBLE);
+                            //ibp.setVisibility(View.VISIBLE);
 
-                            TextView tvp = textViewsProfile.get(j+numVideos);
-                            tvp.setText(livestreamUploadingUser.get(j));
+                            TextView tvp = textViewsProfile.get(j);
+                            tvp.setText(livestreamUploadingUser.get(j-numVideos));
                             tvp.setVisibility(View.VISIBLE);
 
-                            TextView tv = textViews.get(j+numVideos);
-                            tv.setText("LIVESTREAM: " + lsDispTitles.get(j));
+                            TextView tv = textViews.get(j);
+                            tv.setText("LIVESTREAM: " + lsDispTitles.get(j - numVideos));
                             tv.setVisibility(View.VISIBLE);
                         }
                     });
@@ -946,32 +1025,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                 Log.d("error", e.getMessage());
             }
         }
-
-        //display profiles
-        for(int i=0; i < numProfiles; i++){
-            Log.e("display profile", "user: " + profileUsernames.get(i));
-            StorageReference PimageRef = storageRef.child("/profilepictures/" + profileRefs.get(i) );
-
-            try{
-                final int j=i;
-                final File localFile = File.createTempFile(profileRefs.get(i), "jpg");
-                PimageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        ImageButton ib = imageButtons.get(j+numVideos+numLivestreams);
-
-                        Bitmap bm = imgToBitmap(localFile);
-                        ib.setImageBitmap(bm);
-                        ib.setVisibility(View.VISIBLE);
-
-                        TextView tv = textViews.get(j+numVideos+numLivestreams);
-                        tv.setText("USER: " + profileUsernames.get(j));
-                        tv.setVisibility(View.VISIBLE);
-                    }
-                });
-            } catch(Exception e){ }
-        }
-
     }
 
     private void addItemstoArray(){
@@ -1017,7 +1070,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         textViews.add(findViewById(R.id.item19text));
         textViews.add(findViewById(R.id.item20text));
 
-        imageButtonsProfile.add(findViewById(R.id.item1user));
+        /*imageButtonsProfile.add(findViewById(R.id.item1user));
         imageButtonsProfile.add(findViewById(R.id.item2user));
         imageButtonsProfile.add(findViewById(R.id.item3user));
         imageButtonsProfile.add(findViewById(R.id.item4user));
@@ -1036,7 +1089,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         imageButtonsProfile.add(findViewById(R.id.item17user));
         imageButtonsProfile.add(findViewById(R.id.item18user));
         imageButtonsProfile.add(findViewById(R.id.item19user));
-        imageButtonsProfile.add(findViewById(R.id.item20user));
+        imageButtonsProfile.add(findViewById(R.id.item20user));*/
 
         textViewsProfile.add(findViewById(R.id.item1username));
         textViewsProfile.add(findViewById(R.id.item2username));
@@ -1121,6 +1174,49 @@ public class SearchResultsActivity extends AppCompatActivity {
         viewCommentButtons.add(findViewById(R.id.item18ViewComments));
         viewCommentButtons.add(findViewById(R.id.item19ViewComments));
         viewCommentButtons.add(findViewById(R.id.item20ViewComments));
+
+        numLikes.add(findViewById(R.id.numLikes1));
+        numLikes.add(findViewById(R.id.numLikes2));
+        numLikes.add(findViewById(R.id.numLikes3));
+        numLikes.add(findViewById(R.id.numLikes4));
+        numLikes.add(findViewById(R.id.numLikes5));
+        numLikes.add(findViewById(R.id.numLikes6));
+        numLikes.add(findViewById(R.id.numLikes7));
+        numLikes.add(findViewById(R.id.numLikes8));
+        numLikes.add(findViewById(R.id.numLikes9));
+        numLikes.add(findViewById(R.id.numLikes10));
+        numLikes.add(findViewById(R.id.numLikes11));
+        numLikes.add(findViewById(R.id.numLikes12));
+        numLikes.add(findViewById(R.id.numLikes13));
+        numLikes.add(findViewById(R.id.numLikes14));
+        numLikes.add(findViewById(R.id.numLikes15));
+        numLikes.add(findViewById(R.id.numLikes16));
+        numLikes.add(findViewById(R.id.numLikes17));
+        numLikes.add(findViewById(R.id.numLikes18));
+        numLikes.add(findViewById(R.id.numLikes19));
+        numLikes.add(findViewById(R.id.numLikes20));
+
+
+        numDislikes.add(findViewById(R.id.numDislikes1));
+        numDislikes.add(findViewById(R.id.numDislikes2));
+        numDislikes.add(findViewById(R.id.numDislikes3));
+        numDislikes.add(findViewById(R.id.numDislikes4));
+        numDislikes.add(findViewById(R.id.numDislikes5));
+        numDislikes.add(findViewById(R.id.numDislikes6));
+        numDislikes.add(findViewById(R.id.numDislikes7));
+        numDislikes.add(findViewById(R.id.numDislikes8));
+        numDislikes.add(findViewById(R.id.numDislikes9));
+        numDislikes.add(findViewById(R.id.numDislikes10));
+        numDislikes.add(findViewById(R.id.numDislikes11));
+        numDislikes.add(findViewById(R.id.numDislikes12));
+        numDislikes.add(findViewById(R.id.numDislikes13));
+        numDislikes.add(findViewById(R.id.numDislikes14));
+        numDislikes.add(findViewById(R.id.numDislikes15));
+        numDislikes.add(findViewById(R.id.numDislikes16));
+        numDislikes.add(findViewById(R.id.numDislikes17));
+        numDislikes.add(findViewById(R.id.numDislikes18));
+        numDislikes.add(findViewById(R.id.numDislikes19));
+        numDislikes.add(findViewById(R.id.numDislikes20));
     }
 
     private void makeInvisible(){
@@ -1142,14 +1238,20 @@ public class SearchResultsActivity extends AppCompatActivity {
         for(TextView tv : textViewsProfile){
             tv.setVisibility(View.GONE);
         }
-        for(Button l : likes){
+        for(ImageButton l : likes){
             l.setVisibility(View.GONE);
         }
-        for(Button dl : dislikes){
+        for(ImageButton dl : dislikes){
             dl.setVisibility(View.GONE);
         }
         for(Button vc : viewCommentButtons){
             vc.setVisibility(View.GONE);
+        }
+        for(TextView nl : numLikes){
+            nl.setVisibility(View.GONE);
+        }
+        for(TextView ndl : numDislikes){
+            ndl.setVisibility(View.GONE);
         }
     }
 
@@ -1247,50 +1349,174 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
-    private void like(String refTitle){
+    private void like(int j){
+        String refTitle = videos.get(j).getReferenceTitle();
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
-        //String userID = getUserID(username);
-        //getUserID(username);
+        Log.e("clicked-video", refTitle);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
-        likeRef.push().setValue(refTitle);
+        readDataLike(new MainActivity.MyCallback() {
+            @Override
+            public void onCallback(Boolean liked) {
+                if(liked == true) {
+                    Log.e("alreadyliked", "already liked - do nothing");
+                }
+                else if(liked == false){
+                    Log.e("likedyes", "liked successful");
+                    likeRef.push().setValue(refTitle);
+                    //update NumLikes
+                    //find video according to refTitle
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+                    userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot child : snapshot.getChildren()){
+                                        VideoReference video = child.getValue(VideoReference.class);
+                                        int numLikesTemp = video.getNumLikes();
+                                        numLikesTemp++;
+                                        String keyTemp = child.getKey();
+                                        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                                        //ref.setValue(numLikes);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
+                                        ref.setValue(numLikesTemp);
+                                        numLikes.get(j).setText("" + numLikesTemp);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+                }
+            }
+        }, refTitle);
 
 
 
-        //update NumLikes
-        //find video according to refTitle
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
-        userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+
+    }
+
+    public interface MyCallback {
+        void onCallback(Boolean liked);
+    }
+
+    public void readDataLike(MainActivity.MyCallback myCallback, String refTitle) {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
+        likeRef.orderByValue().equalTo(refTitle).limitToFirst(1)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot child : snapshot.getChildren()){
-                            VideoReference video = child.getValue(VideoReference.class);
-                            int numLikesTemp = video.getNumLikes();
-                            Log.e("numLikes!!!!", "" + video.getNumLikes() + ", " + numLikesTemp);
-                            numLikesTemp++;
-                            Log.e("incremented", "" + numLikesTemp);
-                            String keyTemp = child.getKey();
-                            //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
-                            //ref.setValue(numLikes);
+                        if(snapshot.exists()) {
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                if (child.getKey() != null) {
+                                    //if liked, don't add it
+                                    Log.e("key", child.getKey());
+                                    Log.e("val", (String) child.getValue());
+                                    liked = true;
+                                    Log.e("liked?", String.valueOf(liked));
+                                    myCallback.onCallback(liked);
 
-                            Log.e("keyTemp", keyTemp);
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numLikes");
-                            Log.e("numLikes", ""+numLikesTemp);
-                            ref.setValue(numLikesTemp);
+                                }
+                            }
+                        }
+                        else {
+                            liked = false;
+                            myCallback.onCallback(liked);
                         }
                     }
 
+
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
                 });
+
+    }
+    public interface MyCallback2 {
+        void onCallback(Boolean disliked);
     }
 
-    private void dislike(String refTitle){
+    private void dislike(int j){
+        String refTitle = videos.get(j).getReferenceTitle();
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        Log.e("clicked-video", refTitle);
+        DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
+        readDataDislike(new MainActivity.MyCallback2() {
+            @Override
+            public void onCallback(Boolean disliked) {
+                if(disliked == true) {
+                    Log.e("alreadydisliked", "already disliked - do nothing");
+                }
+                else if(disliked == false){
+                    Log.e("dislikedyes", "disliked successful");
+                    dislikeRef.push().setValue(refTitle);
+                    //update NumLikes
+                    //find video according to refTitle
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Video References");
+                    userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot child : snapshot.getChildren()){
+                                        VideoReference video = child.getValue(VideoReference.class);
+                                        int numDislikesTemp = video.getNumDislikes();
+                                        numDislikesTemp++;
+                                        String keyTemp = child.getKey();
+                                        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(child.getKey()).child("numLikes");
+                                        //ref.setValue(numLikes);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Video References").child(keyTemp).child("numDislikes");
+                                        ref.setValue(numDislikesTemp);
+                                        numDislikes.get(j).setText("" + numDislikesTemp);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+                }
+            }
+        }, refTitle);
+
+
+
+    }
+    public void readDataDislike(MainActivity.MyCallback2 myCallback2, String refTitle) {
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         DatabaseReference dislikeRef = FirebaseDatabase.getInstance().getReference("Dislikes").child(username);
-        dislikeRef.push().setValue(refTitle);
+        dislikeRef.orderByValue().equalTo(refTitle).limitToFirst(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                if (child.getKey() != null) {
+                                    //if liked, don't add it
+                                    Log.e("key", child.getKey());
+                                    Log.e("val", (String) child.getValue());
+                                    disliked = true;
+                                    Log.e("liked?", String.valueOf(disliked));
+                                    myCallback2.onCallback(disliked);
+
+                                }
+                            }
+                        }
+                        else {
+                            disliked = false;
+                            myCallback2.onCallback(disliked);
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
     }
 
     private void getUserID(String username){
