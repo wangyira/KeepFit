@@ -3,6 +3,7 @@ package com.example.keepfit;
 public class VideoReference {
     private String difficulty;
     private int numLikes;
+    private int numDislikes;
     private String referenceTitle;
     private String tag;
     private String time;
@@ -13,6 +14,7 @@ public class VideoReference {
     public VideoReference(String diff, Integer nl, String rt, String ta, String tim, String titl, String uu, Boolean ac){
         difficulty = diff;
         numLikes = nl;
+        numDislikes = 0;
         referenceTitle = rt;
         tag = ta;
         time = tim;
@@ -53,5 +55,7 @@ public class VideoReference {
     }
 
     public Boolean getCommentsAllowed(){ return commentsAllowed; }
+
+    public int getNumDislikes(){ return numDislikes; }
 
 }
