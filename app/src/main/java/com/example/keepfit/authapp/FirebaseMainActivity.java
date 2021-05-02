@@ -1,5 +1,6 @@
 package com.example.keepfit.authapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -120,6 +122,39 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
                     //SharedPreferences.Editor editor = sharedPreferences.edit();
                     //editor.putString("username", username);
                     //editor.apply();
+                    String userId;
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null)
+                        userId = user.getUid();
+                    else userId = "";
+                    DatabaseReference dbreference = FirebaseDatabase.getInstance().getReference("UserInformation");
+
+                    dbreference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            UserInformation info = snapshot.getValue(UserInformation.class);
+                            if (info != null) {
+                                String weight = info.weight;
+                                String username = info.username;
+                                String email = info.email;
+                                String referenceTitle = info.referenceTitle;
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("main", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("referenceTitle", referenceTitle);
+                                editor.putString("weight", weight);
+                                editor.putString("username", username);
+                                editor.putString("email", email);
+                                editor.apply();
+                                editor.commit();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     startActivity(new Intent(FirebaseMainActivity.this, MainActivity.class));
                 }
                 else{

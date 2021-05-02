@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
     int numLivestreams = 0;
 
     String userID = new String();
-    String myReturnString;
-
 
     //String input = new String();
 
@@ -316,37 +314,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //getVideos();
-        getExerciseType();
         getTopVideos();
         //getLivestreams();
 
-    }
-
-    private void getExerciseType(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("MostRecentTable");
-        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
-        String username = sharedPref.getString("username", null);
-        myReturnString = "0";
-        ref.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.getValue()!= null){
-                    myReturnString = snapshot.getValue().toString();
-                    Context context = getApplicationContext();
-                    CharSequence text = "Welcome, based on your exercise history, we suggest you do " + myReturnString;
-                    int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                    myReturnString = "0";
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     @Override

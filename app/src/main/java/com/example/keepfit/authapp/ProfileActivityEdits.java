@@ -326,14 +326,14 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
                     String email = info.email;
                     String referenceTitle = info.referenceTitle;
 
-                    SharedPreferences sharedPreferences = getSharedPreferences("main", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("referenceTitle", referenceTitle);
-                    editor.putString("weight", weight);
-                    editor.putString("username", username);
-                    editor.putString("email", email);
-                    editor.apply();
-                    editor.commit();
+//                    SharedPreferences sharedPreferences = getSharedPreferences("main", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("referenceTitle", referenceTitle);
+//                    editor.putString("weight", weight);
+//                    editor.putString("username", username);
+//                    editor.putString("email", email);
+//                    editor.apply();
+//                    editor.commit();
 
                     getFollowers();
 
