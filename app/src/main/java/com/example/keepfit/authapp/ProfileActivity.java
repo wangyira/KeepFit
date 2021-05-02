@@ -230,6 +230,15 @@ public class ProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILENAME, MODE_PRIVATE);
         String sharedemail = sharedPreferences.getString(EMAIL, "");
 
+        SharedPreferences sharedPreferences2 = getSharedPreferences("main", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences2.edit();
+        editor.putString("referenceTitle", url);
+        editor.putString("weight", weight);
+        editor.putString("username", username);
+        editor.putString("email", sharedemail);
+        editor.apply();
+        editor.commit();
+
 //        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 //

@@ -62,14 +62,16 @@ public class CreateWorkout extends AppCompatActivity {
 //                        overridePendingTransition(0,0);
 //                        return true;
                     case R.id.nav_search:
-//                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-//                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_calorie:
                         startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_upload:
+                        startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_livestream:
                         startActivity(new Intent(getApplicationContext(), StartLivestreamActivity.class));

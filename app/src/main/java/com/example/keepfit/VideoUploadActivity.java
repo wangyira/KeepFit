@@ -309,6 +309,8 @@ id: reminder_view
             @Override
             public void onClick(View v) {
                 compactCalendarView.removeAllEvents();
+                deleteFromFirebase();
+                startActivity(new Intent(getApplicationContext(), VideoUploadActivity.class));
             }
         });
 
@@ -346,6 +348,13 @@ id: reminder_view
 
 
 
+    }
+
+    private void deleteFromFirebase(){
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference("Events");
+        eventsRef.child(username).removeValue();
     }
 
     @Override

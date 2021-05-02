@@ -567,7 +567,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 liked = false;
                                 like(videoRefTitles.get(j));
-                             //   bp.setBackgroundColor(getResources().getColor(R.color.black));
+                                //   bp.setBackgroundColor(getResources().getColor(R.color.black));
                                 bp.setText("Liked");
                                 bp.setTextSize(9);
                             }
@@ -650,7 +650,6 @@ public class MainActivity extends AppCompatActivity {
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                     Bitmap bmp = imgToBitmap(localFileP);
                                     ibp.setImageBitmap(bmp);
-
                                 }
                             });
                         }catch (Exception e){ }*/
@@ -708,10 +707,8 @@ public class MainActivity extends AppCompatActivity {
                                 imageRefProf.getFile(localFileP).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-
                                         Bitmap bmp = imgToBitmap(localFileP);
                                         ibp.setImageBitmap(bmp);
-
                                     }
                                 });
                             }catch (Exception e){ }*/
@@ -991,17 +988,17 @@ public class MainActivity extends AppCompatActivity {
         Log.e("clicked-video", refTitle);
         DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("Likes").child(username);
         readDataLike(new MyCallback() {
-                    @Override
-                    public void onCallback(Boolean liked) {
-                        if(liked == true) {
-                            Log.e("alreadyliked", "already liked - do nothing");
-                        }
-                        else if(liked == false){
-                            Log.e("likedyes", "liked successful");
-                            likeRef.push().setValue(refTitle);
-                        }
-                    }
-                }, refTitle);
+            @Override
+            public void onCallback(Boolean liked) {
+                if(liked == true) {
+                    Log.e("alreadyliked", "already liked - do nothing");
+                }
+                else if(liked == false){
+                    Log.e("likedyes", "liked successful");
+                    likeRef.push().setValue(refTitle);
+                }
+            }
+        }, refTitle);
 
 
 
@@ -1056,8 +1053,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         else {
-                                liked = false;
-                                myCallback.onCallback(liked);
+                            liked = false;
+                            myCallback.onCallback(liked);
                         }
                     }
 
