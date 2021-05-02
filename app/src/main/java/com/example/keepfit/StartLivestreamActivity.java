@@ -531,9 +531,9 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             }
 
             //10000 KB = 10 MB
-            if (myFileSize >  700){
+            if (myFileSize >  10000){
                 Context context = getApplicationContext();
-                CharSequence text = "Sorry, but your video needs to be under 700 KB.";
+                CharSequence text = "Sorry, but your video needs to be under 10000 KB.";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
