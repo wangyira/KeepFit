@@ -546,13 +546,13 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                             //}
 
-                            Log.e("DONE", "DONE");
+                            //Log.e("DONE", "DONE");
 
 
                             //DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("1");
                             //newRef.setValue(input);
 
-                            Log.e("!", "!");
+                            //Log.e("!", "!");
 
 
 
@@ -805,9 +805,10 @@ public class SearchResultsActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+                    //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
                     if(j < numVideos){ openNewActivityVideo(j); }
-                    else{ openNewActivityLivestream(j); }
+                    else if(j < numVideos + numLivestreams){ openNewActivityLivestream(j); }
+                    else{openNewActivityUser(j);}
                 }
             });
         }
@@ -1024,6 +1025,31 @@ public class SearchResultsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("error", e.getMessage());
             }
+        }
+        
+        //display profiles
+        for(int i=0; i < numProfiles; i++){
+            Log.e("display profile", "user: " + profileUsernames.get(i));
+            StorageReference PimageRef = storageRef.child("/profilepictures/" + profileRefs.get(i) );
+
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(profileRefs.get(i), "jpg");
+                PimageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j+numVideos+numLivestreams);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j+numVideos+numLivestreams);
+                        tv.setText("USER: " + profileUsernames.get(j));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch(Exception e){ }
         }
     }
 
