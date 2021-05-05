@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> lsRefTitles = new ArrayList<String>();
     ArrayList<String> lsDispTitles = new ArrayList<String>();
     ArrayList<String> lsZoomLinks = new ArrayList<String>();
+    ArrayList<Integer> lsCurrPeople = new ArrayList<Integer>();
+    ArrayList<Integer> lsMaxPeople = new ArrayList<Integer>();
+
 
     //ArrayList<String> videoUploadingUser = new ArrayList<String>();
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
@@ -517,6 +520,8 @@ public class MainActivity extends AppCompatActivity {
                         lsRefTitles.add(livestream.getReferenceTitle());
                         lsDispTitles.add(livestream.getTitle());
                         lsZoomLinks.add(livestream.getZoomLink());
+                        lsCurrPeople.add(livestream.getCurrentNumberOfPeople());
+                        lsMaxPeople.add(livestream.getMaxNumberOfPeople());
 
                         String uploadingUser = (String) livestream.getUploadingUser();
                         livestreamUploadingUser.add(uploadingUser);
@@ -541,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+
                     if(j < numVideos){ openNewActivityVideo(j); }
                     else{ openNewActivityLivestream(j); }
                 }
@@ -1002,8 +1008,41 @@ public class MainActivity extends AppCompatActivity {
     }
     public void openNewActivityLivestream(int i){
         String zoomLink = lsZoomLinks.get(i-numVideos);
+        String refTitle = lsRefTitles.get(i-numVideos);
+
+        //check max number of ppl
+        int currPeople = lsCurrPeople.get(i-numVideos);
+        int maxPeople = lsMaxPeople.get(i-numVideos);
+        if(currPeople + 1 <= maxPeople){
+            //Log.e("livestream not full",Integer.toString(currPeople)+" "+Integer.toString(maxPeople));
+
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Livestream Details");
+            userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot child : snapshot.getChildren()){
+                                String keyTemp = child.getKey();
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Livestream Details").child(keyTemp).child("currentNumberOfPeople");
+                                ref.setValue(currPeople + 1);
+                                redirectLivestream(zoomLink);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+        }
+        else{
+            Toast.makeText(this, "Livestream is currently full, please come back later or join another livestream.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void redirectLivestream(String zoomLink){
+        //redirect
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
+        Log.e("not full zoom",zoomLink);
         startActivity(intent);
     }
 
@@ -1051,6 +1090,8 @@ public class MainActivity extends AppCompatActivity {
         lsRefTitles = new ArrayList<String>();
         lsDispTitles = new ArrayList<String>();
         lsZoomLinks = new ArrayList<String>();
+        lsCurrPeople = new ArrayList<Integer>();
+        lsMaxPeople = new ArrayList<Integer>();
 
         //videoUploadingUser = new ArrayList<String>();
         livestreamUploadingUser = new ArrayList<String>();
