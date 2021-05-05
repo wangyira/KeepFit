@@ -540,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+                    //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
                     if(j < numVideos){ openNewActivityVideo(j); }
                     else{ openNewActivityLivestream(j); }
                 }
