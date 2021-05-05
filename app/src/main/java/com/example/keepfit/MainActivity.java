@@ -546,14 +546,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
-                    if(j < numVideos){
-                        Log.e("opening","newactivityvideo");
-                        openNewActivityVideo(j);
-                    }
-                    else{
-                        Log.e("opening","newactivitylivestream");
-                        openNewActivityLivestream(j);
-                    }
+
+                    if(j < numVideos){ openNewActivityVideo(j); }
+                    else{ openNewActivityLivestream(j); }
                 }
             });
         }
