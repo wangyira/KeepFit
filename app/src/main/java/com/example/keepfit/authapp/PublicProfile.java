@@ -34,12 +34,15 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -50,7 +53,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +68,8 @@ public class PublicProfile extends AppCompatActivity {
     //private FirebaseUser user;
 
     private ImageView pfp;
-    private TextView username, name, followingnumber, followersnumber;
+    private TextView username, name, followingnumber, followersnumber, uploadedVideos, exerciseHistory;
+    private ListView exerciseListView;
     private ToggleButton followbutton;
 
     private String userProfileToDisplay;
@@ -76,6 +82,9 @@ public class PublicProfile extends AppCompatActivity {
     ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
     ArrayList<TextView> textViews = new ArrayList<TextView>();
     int numVideos;
+
+    private List<String> mutableExercises = new ArrayList<>();
+    private ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +134,21 @@ public class PublicProfile extends AppCompatActivity {
         followingnumber = findViewById(R.id.followingnumber);
         followersnumber = findViewById(R.id.followersnumber);
 
+        uploadedVideos = findViewById(R.id.viewUploadedVideos);
+        exerciseHistory = findViewById(R.id.viewExerciseHistory);
+
+        exerciseListView = findViewById(R.id.exerciseList);
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, mutableExercises);
+        exerciseListView.setAdapter(adapter);
+
 
         userProfileToDisplay = getIntent().getStringExtra("username");
         numVideos = 0;
         addItemstoArray();
         makeInvisible();
-        search();
+        addExercises();
+        exerciseHistory.setTypeface(exerciseHistory.getTypeface(), Typeface.BOLD);
+        //getVideoResultsbyTitle();
 
         //username of the person whose profile we are displaying -- send a string called "username" when creating intent
 
@@ -278,13 +296,63 @@ public class PublicProfile extends AppCompatActivity {
                 }
             }
         });
+
+        uploadedVideos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exerciseHistory.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                uploadedVideos.setTypeface(uploadedVideos.getTypeface(), Typeface.BOLD);
+                mutableExercises.clear();
+                adapter.notifyDataSetChanged();
+                getVideoResultsbyTitle();
+            }
+        });
+
+        exerciseHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadedVideos.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                exerciseHistory.setTypeface(exerciseHistory.getTypeface(), Typeface.BOLD);
+                makeInvisible(); //hide the videos
+                mutableExercises.clear();
+                addExercises();
+            }
+        });
     }
 
-    private void search(){
-        getVideoResultsbyTitle();
+    private void addExercises(){
+        Log.d("here","in addExercises");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("CaloriesTable");
+        ref.orderByChild("username").equalTo(userProfileToDisplay).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                if(results!=null){
+                    for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                        String caloriesString = entry.getValue().get("myCaloriesBurned");
+                        double caloriesDouble = Double.parseDouble(caloriesString);
+                        DecimalFormat df = new DecimalFormat("###.##");
+                        caloriesString = df.format(caloriesDouble);
+                        mutableExercises.add(entry.getValue().get("exerciseTitle") + " || " + caloriesString + " Calories Burned");
+                    }
+                }
+                Log.d("addedExercises", String.valueOf(mutableExercises.size()));
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
 
     private void getVideoResultsbyTitle(){
+        videoDispTitles.clear();
+        videoRefTitles.clear();
+        numVideos = 0;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Video References");
         ref.orderByChild("uploadingUser").equalTo(userProfileToDisplay).limitToFirst(10)
@@ -295,7 +363,7 @@ public class PublicProfile extends AppCompatActivity {
                         if(results!=null){
                             for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
                                 if(numVideos < 10){
-                                    videoRefTitles.add(entry.getValue().get("reference title"));
+                                    videoRefTitles.add(entry.getValue().get("referenceTitle"));
                                     videoDispTitles.add(entry.getValue().get("title"));
                                     numVideos++;
                                 }
@@ -313,6 +381,7 @@ public class PublicProfile extends AppCompatActivity {
 
     private void displayResults(){
         for(int i=0; i < numVideos; i++){
+            Log.d("inDisplayResults", String.valueOf(i));
             final int j = i;
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -325,6 +394,7 @@ public class PublicProfile extends AppCompatActivity {
         //display video results
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         for(int i=0; i < numVideos; i++) {
+            Log.d("videoRefTitles", String.valueOf(i) + " " + videoRefTitles.get(i));
             StorageReference imageRef = storageRef.child("/thumbnail_images/" + videoRefTitles.get(i) + ".jpg");
             try {
                 final int j = i;
@@ -332,6 +402,7 @@ public class PublicProfile extends AppCompatActivity {
                 imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Log.d("displaying", String.valueOf(j));
                         ImageButton ib = imageButtons.get(j);
 
                         Bitmap bm = imgToBitmap(localFile);
