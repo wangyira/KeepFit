@@ -182,17 +182,39 @@
                 android:layout_marginTop="220dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="@string/uploadedVideos"
-                    android:textSize="18dp" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/exercise_history"
+                        android:id="@+id/viewExerciseHistory"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="85dp"
+                        android:text="@string/uploadedVideos"
+                        android:id="@+id/viewUploadedVideos"
+                        android:textSize="18dp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/exerciseList"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </ListView>
 
                     <ImageButton
                         android:id="@+id/it1btn"
