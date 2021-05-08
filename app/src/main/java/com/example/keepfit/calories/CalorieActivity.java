@@ -94,6 +94,8 @@ public class CalorieActivity extends AppCompatActivity {
     Button ViewHistory;
     Button DeleteHistory;
 
+    Button SitUpPage;
+
     double myTotalCalories;
 
     ArrayList<String> exerciseTitleList = new ArrayList<String>();
@@ -245,6 +247,16 @@ public class CalorieActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        SitUpPage = (Button) findViewById(R.id.situp);
+        SitUpPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SitUpActivity.class));
+                overridePendingTransition(0,0);
+
             }
         });
 
