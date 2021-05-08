@@ -76,7 +76,7 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
     private Button btnEditName, btnEditPhoneNumber, btnEditBirthday, btnEditGender, btnEditWeight, btnEditHeight, btnChangePass, btnLogout, btnviewLiked, btnviewUploaded, btnviewWatched, btnviewDisliked, btnDeleteAccount, btnWipeWatchHistory;
     private ImageView imageView;
 
-    private TextView followingnumber, followersnumber;
+    private Button followingnumber, followersnumber;
 
     private Uri filePath;
 
@@ -404,7 +404,25 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
             }
         });
 
+        followersnumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ProfileActivityEdits.this, FollowInfo.class);
+                i.putExtra("type", "followers");
+                i.putExtra("usertype", "personal");
+                startActivity(i);
+            }
+        });
 
+        followingnumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ProfileActivityEdits.this, FollowInfo.class);
+                i.putExtra("type", "following");
+                i.putExtra("usertype", "personal");
+                startActivity(i);
+            }
+        });
     }
 
     private void getFollowers(){

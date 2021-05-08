@@ -40,6 +40,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -68,10 +69,11 @@ public class PublicProfile extends AppCompatActivity {
     //private FirebaseUser user;
 
     private ImageView pfp;
-    private TextView username, name, followingnumber, followersnumber, uploadedVideos, exerciseHistory;
+    private TextView username, name, uploadedVideos, exerciseHistory;
     private ListView exerciseListView;
     private ToggleButton followbutton;
 
+    private Button followingnumber, followersnumber;
     private String userProfileToDisplay;
     private String nameToDisplay;
     private String uid;
@@ -316,6 +318,26 @@ public class PublicProfile extends AppCompatActivity {
                 makeInvisible(); //hide the videos
                 mutableExercises.clear();
                 addExercises();
+            }
+        });
+
+        followersnumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PublicProfile.this, FollowInfo.class);
+                i.putExtra("type", "followers");
+                i.putExtra("usertype", userProfileToDisplay);
+                startActivity(i);
+            }
+        });
+
+        followingnumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PublicProfile.this, FollowInfo.class);
+                i.putExtra("type", "following");
+                i.putExtra("usertype", userProfileToDisplay);
+                startActivity(i);
             }
         });
     }
