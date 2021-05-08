@@ -52,6 +52,8 @@ public class SitUpActivity extends AppCompatActivity {
     long startTime = 0;
     long timeInPause = 0;
 
+    Double myTotalCalories;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -134,7 +136,10 @@ public class SitUpActivity extends AppCompatActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CalorieActivity.class));
+
+                Intent intent = new Intent(getApplicationContext(), CalorieActivity.class);
+                intent.putExtra("TotalCalories", myTotalCalories);
+                startActivity(intent);
                 overridePendingTransition(0,0);
 
             }
@@ -218,6 +223,10 @@ public class SitUpActivity extends AppCompatActivity {
 
                 mConditionRef.push().setValue(myMETValue);
 
+                Bundle myBundle = getIntent().getExtras();
+                myTotalCalories = myBundle.getDouble("TotalCalories") + NewMETValue;
+
+
                 modifyMostRecent2("Sit-Up");
 
                 Random rand = new Random();
@@ -275,7 +284,7 @@ public class SitUpActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         timerMyHandler.removeCallbacks(timerMyRunnable);
-        Button b = (Button)findViewById(R.id.startstop);
+        Button b = (Button)findViewById(R.id.startstop2);
         b.setText("start");
     }
 }
