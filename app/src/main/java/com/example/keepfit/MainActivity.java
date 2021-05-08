@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     String userID = new String();
     String myReturnString;
-
+    Switch videoSwitch;
 
     //String input = new String();
 
@@ -241,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
 
         search1 = findViewById(R.id.searchBtn1);
 
+        videoSwitch = findViewById(R.id.switch1);
+
         //hide the 5 search keyword and button by default
         for(TextView tv : searchTextViews){
             tv.setVisibility(View.GONE);
@@ -322,9 +325,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //getVideos();
+        videoSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetValues();
+                makeInvisible();
+
+                if (videoSwitch.isChecked()){ //sort by people you follow
+                    Log.e("before1","getVideos");
+                    getVideos();
+                    Log.e("after1","getVideos");
+                }
+                else{ // order by like
+                    getTopVideos();
+                    Log.e("getTopVid","1");
+                }
+            }
+        });
+
         getExerciseType();
-        getTopVideos();
+
+        if (videoSwitch.isChecked()){ //sort by people you follow
+            Log.e("before2","getVideos");
+            getVideos();
+            Log.e("after2","getVideos");
+
+        }
+        else{ // order by like
+            getTopVideos();
+            Log.e("getTopVid","2");
+        }
+        //getVideos();
+        //getExerciseType();
+        //getTopVideos();
         //getLivestreams();
 
     }
@@ -481,32 +514,63 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*private void getVideos(){
+    private void getVideos(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Video References");
-        myRef.addValueEventListener(new ValueEventListener() {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference followRef = database.getReference("Following").child(username);
+
+
+        followRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot child : snapshot.getChildren()){
-                    VideoReference video = child.getValue(VideoReference.class);
-                    if(numVideos < (20-numLivestreams)) {
-                        videoRefTitles.add(video.getReferenceTitle());
-                        videoDispTitles.add(video.getTitle());
-                        videoUploadingUser.add(video.getUploadingUser());
-                        numVideos++;
-                    }
-                    else{break;}
+                for(DataSnapshot child : snapshot.getChildren()) {
+
+                    String currUsername = child.getValue().toString();
+                    //Log.e("currUsername",currUsername);
+
+                    DatabaseReference videoRef = database.getReference("Video References");
+                    videoRef.orderByChild("uploadingUser").equalTo(currUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                            //Log.e("snapshotKey", snapshot2.getKey().toString());
+
+                            for(DataSnapshot child2 : snapshot2.getChildren()) {
+                                String videoKey = child2.getKey();
+                                //Log.e("videoKey", videoKey); //right
+
+                                videoRef.child(videoKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                        VideoReference video = snapshot3.getValue(VideoReference.class);
+                                        //Log.e("video title following", video.getReferenceTitle());
+                                        videos.add(video);
+                                        numVideos++;
+                                        displayResults();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
-                //displayResults();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-            }
 
+            }
         });
-        //getLivestreams();
-    }*/
+    }
 
     private void getLivestreams(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -1098,6 +1162,7 @@ public class MainActivity extends AppCompatActivity {
         //videoUploadingUserPic = new ArrayList<String>();
         livestreamUplodingUserPic = new ArrayList<String>();
 
+        videos = new ArrayList<VideoReference>();
     }
 
     private void sortVideosByNumLikes(){
