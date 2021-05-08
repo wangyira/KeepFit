@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <Button
                         android:id="@+id/followersnumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -70,6 +70,7 @@
                         android:gravity="center"
                         android:text="0"
                         android:textColor="@color/purple_700"
+                        android:background="@color/fui_transparent"
                         android:textSize="20dp" />
 
                     <TextView
@@ -107,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <Button
                         android:id="@+id/followingnumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -118,6 +119,7 @@
                         android:gravity="center"
                         android:text="0"
                         android:textColor="@color/purple_700"
+                        android:background="@color/fui_transparent"
                         android:textSize="20dp" />
 
                     <TextView

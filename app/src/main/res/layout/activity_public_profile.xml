@@ -87,34 +87,33 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginLeft="0dp"
-                                android:layout_marginTop="10dp"
                                 android:text="Name"
                                 android:textColor="@color/white"
-                                android:textSize="25dp"
+                                android:textSize="20dp"
                                 android:gravity="center"/>
 
-                            <TextView
+                            <Button
                                 android:id="@+id/followersnumber"
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginLeft="0dp"
-                                android:layout_marginTop="10dp"
                                 android:text="0"
                                 android:textColor="@color/white"
                                 android:textSize="20dp"
+                                android:background="@color/fui_transparent"
                                 android:gravity="center"/>
 
-                            <TextView
+                            <Button
                                 android:id="@+id/followingnumber"
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
                                 android:layout_marginLeft="0dp"
-                                android:layout_marginTop="10dp"
                                 android:text="0"
                                 android:textColor="@color/white"
                                 android:textSize="20dp"
+                                android:background="@color/fui_transparent"
                                 android:gravity="center"/>
 
 
@@ -132,7 +131,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginLeft="0dp"
-                                android:layout_marginTop="5dp"
                                 android:textColor="@color/white"
                                 android:textSize="15dp"
                                 android:text="Username"
@@ -144,10 +142,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginLeft="0dp"
-                                android:layout_marginTop="0dp"
                                 android:text="Followers:"
                                 android:textColor="@color/white"
-                                android:textSize="10dp"
+                                android:textSize="11dp"
                                 android:gravity="center"/>
 
                             <TextView
@@ -156,9 +153,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginTop="0dp"
                                 android:textColor="@color/white"
-                                android:textSize="10dp"
+                                android:textSize="11dp"
                                 android:text="Following:"
                                 android:gravity="center"/>
 
