@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> lsRefTitles = new ArrayList<String>();
     ArrayList<String> lsDispTitles = new ArrayList<String>();
     ArrayList<String> lsZoomLinks = new ArrayList<String>();
+    ArrayList<Integer> lsCurrPeople = new ArrayList<Integer>();
+    ArrayList<Integer> lsMaxPeople = new ArrayList<Integer>();
+
 
     //ArrayList<String> videoUploadingUser = new ArrayList<String>();
     ArrayList<String> livestreamUploadingUser = new ArrayList<String>();
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     String userID = new String();
     String myReturnString;
-
+    Switch videoSwitch;
 
     //String input = new String();
 
@@ -238,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
 
         search1 = findViewById(R.id.searchBtn1);
 
+        videoSwitch = findViewById(R.id.switch1);
+
         //hide the 5 search keyword and button by default
         for(TextView tv : searchTextViews){
             tv.setVisibility(View.GONE);
@@ -319,9 +325,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //getVideos();
+        videoSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetValues();
+                makeInvisible();
+
+                if (videoSwitch.isChecked()){ //sort by people you follow
+                    Log.e("before1","getVideos");
+                    getVideos();
+                    Log.e("after1","getVideos");
+                }
+                else{ // order by like
+                    getTopVideos();
+                    Log.e("getTopVid","1");
+                }
+            }
+        });
+
         getExerciseType();
-        getTopVideos();
+
+        if (videoSwitch.isChecked()){ //sort by people you follow
+            Log.e("before2","getVideos");
+            getVideos();
+            Log.e("after2","getVideos");
+
+        }
+        else{ // order by like
+            getTopVideos();
+            Log.e("getTopVid","2");
+        }
+        //getVideos();
+        //getExerciseType();
+        //getTopVideos();
         //getLivestreams();
 
     }
@@ -480,32 +516,63 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*private void getVideos(){
+    private void getVideos(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Video References");
-        myRef.addValueEventListener(new ValueEventListener() {
+        SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        DatabaseReference followRef = database.getReference("Following").child(username);
+
+
+        followRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot child : snapshot.getChildren()){
-                    VideoReference video = child.getValue(VideoReference.class);
-                    if(numVideos < (20-numLivestreams)) {
-                        videoRefTitles.add(video.getReferenceTitle());
-                        videoDispTitles.add(video.getTitle());
-                        videoUploadingUser.add(video.getUploadingUser());
-                        numVideos++;
-                    }
-                    else{break;}
+                for(DataSnapshot child : snapshot.getChildren()) {
+
+                    String currUsername = child.getValue().toString();
+                    //Log.e("currUsername",currUsername);
+
+                    DatabaseReference videoRef = database.getReference("Video References");
+                    videoRef.orderByChild("uploadingUser").equalTo(currUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                            //Log.e("snapshotKey", snapshot2.getKey().toString());
+
+                            for(DataSnapshot child2 : snapshot2.getChildren()) {
+                                String videoKey = child2.getKey();
+                                //Log.e("videoKey", videoKey); //right
+
+                                videoRef.child(videoKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                        VideoReference video = snapshot3.getValue(VideoReference.class);
+                                        //Log.e("video title following", video.getReferenceTitle());
+                                        videos.add(video);
+                                        numVideos++;
+                                        displayResults();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
-                //displayResults();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-            }
 
+            }
         });
-        //getLivestreams();
-    }*/
+    }
 
     private void getLivestreams(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -519,6 +586,8 @@ public class MainActivity extends AppCompatActivity {
                         lsRefTitles.add(livestream.getReferenceTitle());
                         lsDispTitles.add(livestream.getTitle());
                         lsZoomLinks.add(livestream.getZoomLink());
+                        lsCurrPeople.add(livestream.getCurrentNumberOfPeople());
+                        lsMaxPeople.add(livestream.getMaxNumberOfPeople());
 
                         String uploadingUser = (String) livestream.getUploadingUser();
                         livestreamUploadingUser.add(uploadingUser);
@@ -542,7 +611,8 @@ public class MainActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+                    //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+
                     if(j < numVideos){ openNewActivityVideo(j); }
                     else{ openNewActivityLivestream(j); }
                 }
@@ -1004,8 +1074,41 @@ public class MainActivity extends AppCompatActivity {
     }
     public void openNewActivityLivestream(int i){
         String zoomLink = lsZoomLinks.get(i-numVideos);
+        String refTitle = lsRefTitles.get(i-numVideos);
+
+        //check max number of ppl
+        int currPeople = lsCurrPeople.get(i-numVideos);
+        int maxPeople = lsMaxPeople.get(i-numVideos);
+        if(currPeople + 1 <= maxPeople){
+            //Log.e("livestream not full",Integer.toString(currPeople)+" "+Integer.toString(maxPeople));
+
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Livestream Details");
+            userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot child : snapshot.getChildren()){
+                                String keyTemp = child.getKey();
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Livestream Details").child(keyTemp).child("currentNumberOfPeople");
+                                ref.setValue(currPeople + 1);
+                                redirectLivestream(zoomLink);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+        }
+        else{
+            Toast.makeText(this, "Livestream is currently full, please come back later or join another livestream.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void redirectLivestream(String zoomLink){
+        //redirect
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
+        Log.e("not full zoom",zoomLink);
         startActivity(intent);
     }
 
@@ -1053,12 +1156,15 @@ public class MainActivity extends AppCompatActivity {
         lsRefTitles = new ArrayList<String>();
         lsDispTitles = new ArrayList<String>();
         lsZoomLinks = new ArrayList<String>();
+        lsCurrPeople = new ArrayList<Integer>();
+        lsMaxPeople = new ArrayList<Integer>();
 
         //videoUploadingUser = new ArrayList<String>();
         livestreamUploadingUser = new ArrayList<String>();
         //videoUploadingUserPic = new ArrayList<String>();
         livestreamUplodingUserPic = new ArrayList<String>();
 
+        videos = new ArrayList<VideoReference>();
     }
 
     private void sortVideosByNumLikes(){

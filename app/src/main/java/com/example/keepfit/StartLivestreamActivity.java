@@ -373,6 +373,10 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
             Toast.makeText(this, "max # of people cannot be empty", Toast.LENGTH_SHORT).show();
             return "ERROR";
         }
+        if(Integer.parseInt(peopleText) <= 1){
+            Toast.makeText(this, "max # of people should be greater than 1", Toast.LENGTH_SHORT).show();
+            return "ERROR";
+        }
         if(selectedType == ""){
             Toast.makeText(this, "please select an exercise type", Toast.LENGTH_SHORT).show();
             return "ERROR";
@@ -397,6 +401,7 @@ public class StartLivestreamActivity extends AppCompatActivity implements Adapte
                     public void onSuccess(UploadTask.TaskSnapshot imageTaskSnapshot) {
                         member.setTitle(titleText);
                         member.setMaxNumberOfPeople(Integer.parseInt(peopleText));
+                        member.setCurrentNumberOfPeople(1);//livestream started by host, 1 person(the host) is currently in the livestream
                         member.setExerciseType(selectedType);
                         member.setEndTime(timeText);
                         member.setZoomLink(zoomText);

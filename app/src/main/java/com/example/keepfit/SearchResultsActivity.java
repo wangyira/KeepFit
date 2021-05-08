@@ -84,6 +84,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     ArrayList<String> lsRefTitles = new ArrayList<String>();
     ArrayList<String> lsDispTitles = new ArrayList<String>();
     ArrayList<String> lsZoomLinks = new ArrayList<String>();
+    ArrayList<Integer> lsCurrPeople = new ArrayList<Integer>();
+    ArrayList<Integer> lsMaxPeople = new ArrayList<Integer>();
     ArrayList<String> profileRefs = new ArrayList<String>();
     ArrayList<String> profileUsernames = new ArrayList<String>();
 
@@ -546,13 +548,13 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                             //}
 
-                            Log.e("DONE", "DONE");
+                            //Log.e("DONE", "DONE");
 
 
                             //DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("SearchHistory").child(key).child("searchHistory").child("1");
                             //newRef.setValue(input);
 
-                            Log.e("!", "!");
+                            //Log.e("!", "!");
 
 
 
@@ -746,9 +748,12 @@ public class SearchResultsActivity extends AppCompatActivity {
                         for(DataSnapshot child : snapshot.getChildren()){
                             LivestreamMember livestream = child.getValue(LivestreamMember.class);
                             if(numLivestreams < 20) {
+                                Log.e("WHAT DOES THIS DO","?");
                                 lsRefTitles.add(livestream.getReferenceTitle());
                                 lsDispTitles.add(livestream.getTitle());
                                 lsZoomLinks.add(livestream.getZoomLink());
+                                lsCurrPeople.add(livestream.getCurrentNumberOfPeople());
+                                lsMaxPeople.add(livestream.getMaxNumberOfPeople());
 
                                 String uploadingUser = (String) livestream.getUploadingUser();
                                 livestreamUploadingUser.add(uploadingUser);
@@ -780,9 +785,12 @@ public class SearchResultsActivity extends AppCompatActivity {
                 for(DataSnapshot child : snapshot.getChildren()){
                     LivestreamMember livestream = child.getValue(LivestreamMember.class);
                     if(livestream.getTitle().toLowerCase().contains(input.toLowerCase())) {
+                        Log.e("EMPTY STRING","here");
                         lsRefTitles.add(livestream.getReferenceTitle());
                         lsDispTitles.add(livestream.getTitle());
                         lsZoomLinks.add(livestream.getZoomLink());
+                        lsCurrPeople.add(livestream.getCurrentNumberOfPeople());
+                        lsMaxPeople.add(livestream.getMaxNumberOfPeople());
 
                         String uploadingUser = (String) livestream.getUploadingUser();
                         livestreamUploadingUser.add(uploadingUser);
@@ -805,9 +813,11 @@ public class SearchResultsActivity extends AppCompatActivity {
             imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+                    //Log.e("button clicked", "i="+j + ", name: " + videos.get(j).getTitle());
+
                     if(j < numVideos){ openNewActivityVideo(j); }
-                    else{ openNewActivityLivestream(j); }
+                    else if(j < numVideos + numLivestreams){ openNewActivityLivestream(j); }
+                    else{openNewActivityUser(j);}
                 }
             });
         }
@@ -1024,6 +1034,31 @@ public class SearchResultsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("error", e.getMessage());
             }
+        }
+        
+        //display profiles
+        for(int i=0; i < numProfiles; i++){
+            Log.e("display profile", "user: " + profileUsernames.get(i));
+            StorageReference PimageRef = storageRef.child("/profilepictures/" + profileRefs.get(i) );
+
+            try{
+                final int j=i;
+                final File localFile = File.createTempFile(profileRefs.get(i), "jpg");
+                PimageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageButton ib = imageButtons.get(j+numVideos+numLivestreams);
+
+                        Bitmap bm = imgToBitmap(localFile);
+                        ib.setImageBitmap(bm);
+                        ib.setVisibility(View.VISIBLE);
+
+                        TextView tv = textViews.get(j+numVideos+numLivestreams);
+                        tv.setText("USER: " + profileUsernames.get(j));
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                });
+            } catch(Exception e){ }
         }
     }
 
@@ -1271,19 +1306,51 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
     public void openNewActivityLivestream(int i){
-        //REMOVE THIS!!!
-        /*if(i >= numVideos+numLivestreams){
-            String zoomLink = "https://google.com";
-            Intent intent = new Intent(this, LivestreamActivity.class);
-            intent.putExtra("zoomLink", zoomLink);
-            startActivity(intent);
-            return;
-        }*/
-
-
         String zoomLink = lsZoomLinks.get(i-numVideos);
+        Log.e("i-numVideos",Integer.toString(i-numVideos));
+        String refTitle = lsRefTitles.get(i-numVideos);
+
+        //check max number of ppl
+        int maxPeople = lsMaxPeople.get(i-numVideos);
+        int currPeople = lsCurrPeople.get(i-numVideos);
+
+        if(currPeople + 1 <= maxPeople){
+            Log.e("livestream not full",Integer.toString(currPeople)+" "+Integer.toString(maxPeople));
+
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Livestream Details");
+            userRef.orderByChild("referenceTitle").equalTo(refTitle).limitToFirst(1)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot child : snapshot.getChildren()){
+                                LivestreamMember live = child.getValue(LivestreamMember.class);
+                                int numPplTemp = live.getCurrentNumberOfPeople();
+                                Log.e("before increment",Integer.toString(numPplTemp));
+
+                                numPplTemp++;
+                                String keyTemp = child.getKey();
+
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Livestream Details").child(keyTemp).child("currentNumberOfPeople");
+                                ref.setValue(numPplTemp);
+                                Log.e("incrememnt ppl",Integer.toString(numPplTemp));
+                                redirectLivestream(zoomLink);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+        }
+        else{
+            Toast.makeText(this, "Livestream is currently full, please come back later or join another livestream.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void redirectLivestream(String zoomLink){
+        //redirect
         Intent intent = new Intent(this, LivestreamActivity.class);
         intent.putExtra("zoomLink", zoomLink);
+        Log.e("not full zoom",zoomLink);
+
         startActivity(intent);
     }
     public void openNewActivityUser(int i){
@@ -1339,6 +1406,9 @@ public class SearchResultsActivity extends AppCompatActivity {
         lsRefTitles = new ArrayList<String>();
         lsDispTitles = new ArrayList<String>();
         lsZoomLinks = new ArrayList<String>();
+        lsCurrPeople = new ArrayList<Integer>();
+        lsMaxPeople = new ArrayList<Integer>();
+
         profileRefs = new ArrayList<String>();
         profileUsernames = new ArrayList<String>();
 

@@ -28,6 +28,7 @@
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".authapp.PublicProfile" />
         <activity android:name=".authapp.ProfileActivity" />
+        <activity android:name=".authapp.FollowInfo" />
         <activity android:name=".MainActivity" />
         <activity android:name=".authapp.ForgotPassword" />
         <activity android:name=".authapp.ProfileActivityEdits" />

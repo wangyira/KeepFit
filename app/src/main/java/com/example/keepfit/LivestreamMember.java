@@ -3,6 +3,7 @@ package com.example.keepfit;
 public class LivestreamMember {
     private String title;
     private int maxNumberOfPeople;
+    private int currNumberOfPeople;
     private String type;
     private String endTime;
     private String zoomLink;
@@ -27,6 +28,14 @@ public class LivestreamMember {
 
     public void setMaxNumberOfPeople(int ppl){
         this.maxNumberOfPeople = ppl;
+    }
+
+    public int getCurrentNumberOfPeople(){
+        return currNumberOfPeople;
+    }
+
+    public void setCurrentNumberOfPeople(int ppl){
+        this.currNumberOfPeople = ppl;
     }
 
     public String getExerciseType(){
