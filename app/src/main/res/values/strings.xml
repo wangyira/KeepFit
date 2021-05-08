@@ -104,5 +104,9 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="Open">open drawer</string>
     <string name="Close">close drawer</string>
+
+    <string name="title_activity_sit_up">SitUpActivity</string>
+
     <string name="exercise_history">Exercise History</string>
+
 </resources>

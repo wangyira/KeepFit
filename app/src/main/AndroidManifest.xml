@@ -16,13 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepFit">
-        <activity android:name=".CreateWorkout"/>
-
+        <activity
+            android:name=".calories.SitUpActivity"
+            android:label="@string/title_activity_sit_up"
+            android:theme="@style/Theme.KeepFit.NoActionBar"></activity>
+        <activity android:name=".CreateWorkout" />
         <activity
             android:name=".ViewCommentsActivity"
             android:label="@string/title_activity_view_comments"
-            android:theme="@style/Theme.KeepFit.NoActionBar"></activity>
-
+            android:theme="@style/Theme.KeepFit.NoActionBar" />
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".authapp.PublicProfile" />
         <activity android:name=".authapp.ProfileActivity" />
@@ -34,8 +36,7 @@
         <activity android:name=".calories.CalorieActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".VideoUploadActivity" />
-        <activity android:name=".authapp.ViewVideos" />
-        <!-- android:name=".ui.login.LoginActivity" -->
+        <activity android:name=".authapp.ViewVideos" /> <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->

@@ -367,12 +367,14 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference ref = database.getReference("MostRecentTable");
         SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
+        Log.d("myUsername", username);
         myReturnString = "0";
         ref.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.getValue()!= null){
                     myReturnString = snapshot.getValue().toString();
+                    Log.d("myReturnString", username + " " + myReturnString);
                     Context context = getApplicationContext();
                     CharSequence text = "Welcome, based on your exercise history, we suggest you do " + myReturnString;
                     int duration = Toast.LENGTH_LONG;

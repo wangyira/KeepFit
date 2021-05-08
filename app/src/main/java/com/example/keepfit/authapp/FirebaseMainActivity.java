@@ -147,6 +147,8 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
                                 editor.putString("email", email);
                                 editor.apply();
                                 editor.commit();
+
+                                startActivity(new Intent(FirebaseMainActivity.this, MainActivity.class));
                             }
                         }
 
@@ -155,7 +157,7 @@ public class FirebaseMainActivity extends AppCompatActivity implements View.OnCl
 
                         }
                     });
-                    startActivity(new Intent(FirebaseMainActivity.this, MainActivity.class));
+
                 }
                 else{
                     Toast.makeText(FirebaseMainActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();

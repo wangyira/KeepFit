@@ -94,6 +94,8 @@ public class CalorieActivity extends AppCompatActivity {
     Button ViewHistory;
     Button DeleteHistory;
 
+    Button SitUpPage;
+
     double myTotalCalories;
 
     ArrayList<String> exerciseTitleList = new ArrayList<String>();
@@ -218,6 +220,21 @@ public class CalorieActivity extends AppCompatActivity {
 
         numExerciseEntries = 0;
 
+        Bundle myBundle = getIntent().getExtras();
+        if (getIntent().hasExtra("TotalCalories")){
+            myTotalCalories = myBundle.getDouble("TotalCalories");
+            Log.d("getTotalCalories", String.valueOf(myTotalCalories));
+
+            TotalCalories = (TextView)findViewById((R.id.TotalCalories));
+            BigDecimal bd = new BigDecimal(Double.toString(myTotalCalories));
+            myTotalCalories = bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
+            String myDisplayValue = Double.toString(myTotalCalories);
+            TotalCalories.setText(myDisplayValue + " Total Calories Burned!");
+        }
+        else{
+            myTotalCalories = 0;
+        }
+
         //navbar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -248,7 +265,20 @@ public class CalorieActivity extends AppCompatActivity {
             }
         });
 
-        myTotalCalories = 0;
+        SitUpPage = (Button) findViewById(R.id.situp);
+        SitUpPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), SitUpActivity.class);
+                intent.putExtra("TotalCalories",myTotalCalories);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+
+            }
+        });
+
+
 
         timerTextView = (TextView) findViewById(R.id.myTimer);
 
@@ -683,6 +713,51 @@ public class CalorieActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snapshot1: snapshot.getChildren()){
                     snapshot1.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        ref = database.getReference("MostRecentTable");
+        ref.child(username).addListenerForSingleValueEvent((new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        }));
+
+        ref = database.getReference("Events");
+        ref.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long Time = Calendar.getInstance(Locale.getDefault()).getTimeInMillis();
+
+                Log.d("myTime", String.valueOf(Time));
+
+                for (DataSnapshot snapshot1: snapshot.getChildren()){
+                    Log.d("mySnapshot", String.valueOf(snapshot1.child("timeInMillis").getValue()));
+
+                    for(DataSnapshot child2 : snapshot1.getChildren()){
+                        //Log.d("child3", child3.toString());
+                        if(child2.getKey().equals("timeInMillis")){
+
+                            if ( Long.parseLong(child2.getValue().toString()) < Time){
+
+                                snapshot1.getRef().removeValue();
+                            }
+
+                        }
+                    }
+
                 }
             }
 
