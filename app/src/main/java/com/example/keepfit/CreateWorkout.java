@@ -137,7 +137,12 @@ public class CreateWorkout extends AppCompatActivity {
             exerciseInfo += time + "AM";
         }
         else{
-            String newTime = (Integer.valueOf(hour[0]) - 12) + ":" + hour[1];
+            String newTime;
+            if((Integer.valueOf(hour[0]) - 12) == 0){
+                newTime = "12:" + hour[1];
+            }
+            else
+                newTime = (Integer.valueOf(hour[0]) - 12) + ":" + hour[1];
             exerciseInfo += newTime + "PM";
         }
 
