@@ -609,6 +609,8 @@ public class ViewVideos extends AppCompatActivity {
                         for (DataSnapshot ds: snapshot.getChildren()) {
                             ds.getRef().removeValue();
                             numVideos--;
+                            getIntent().putExtra("type", "uploaded");
+                            startActivity(getIntent());
                         }
                     }
                     @Override
