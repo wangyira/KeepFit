@@ -479,7 +479,28 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
         FirebaseDatabase.getInstance().getReference("Followers").child(username).removeValue();
         FirebaseDatabase.getInstance().getReference("Following").child(username).removeValue();
 
-        //remove from follower/following lists of other users
+        //remove from CaloriesTable
+        ref = FirebaseDatabase.getInstance().getReference("CaloriesTable");
+        ref.orderByChild("username").equalTo(username).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    ds.getRef().removeValue();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        //remove from MostRecentTable
+        FirebaseDatabase.getInstance().getReference("MostRecentTable").child(username).removeValue();
+
+        //remove from Video History
+        FirebaseDatabase.getInstance().getReference("Video History").child(username).removeValue();
+
+
+        //remove from follower lists of other users
         ref = FirebaseDatabase.getInstance().getReference("Followers");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -509,9 +530,36 @@ public class ProfileActivityEdits extends AppCompatActivity implements DialogExa
 
             }
         });
-        //remove from following table
-        ref = FirebaseDatabase.getInstance().getReference("Following").child(username);
-        ref.getRef().removeValue();
+        //remove from following list of other users
+        ref = FirebaseDatabase.getInstance().getReference("Following");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, Map<String, String>> results = (Map<String, Map<String, String>>) snapshot.getValue();
+                for(Map.Entry<String, Map<String, String>> entry : results.entrySet()){
+                    String user = entry.getKey();
+                    DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("Following").child(user);
+                    newRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ds: snapshot.getChildren()){
+                                if(ds.getValue().equals(username)){
+                                    ds.getRef().removeValue();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         // delete the user's livestreams
         ref = FirebaseDatabase.getInstance().getReference("Livestream Details");
