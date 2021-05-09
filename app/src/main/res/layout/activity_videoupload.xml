@@ -49,10 +49,11 @@
             tools:context=".CalendarActivity">
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/main_content">
+                android:id="@+id/main_content"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -90,7 +91,6 @@
                     android:layout_height="50dp"
                     android:layout_gravity="left"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="70dp"
                     android:text="Next Exercise: "
                     android:textColor="@android:color/background_dark"
                     android:textSize="18dp"
@@ -98,7 +98,6 @@
 
                 <com.github.sundeepk.compactcalendarview.CompactCalendarView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:layout_marginTop="100dp"
                     android:id="@+id/calendar"
                     android:layout_width="wrap_content"
                     android:paddingTop="100dp"
@@ -148,23 +147,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/calendar_control_buttons"
-                    android:layout_marginLeft="150dp"
                     android:layout_marginTop="20dp"
                     android:text="Workouts"
                     android:textColor="@android:color/background_dark"
-                    android:layout_centerHorizontal="true"
-                    android:textAlignment="center"
                     android:textSize="20dp"
-                    android:gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"/>
+                <LinearLayout
+                    android:id="@+id/eventInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal">
 
+                </LinearLayout>
 
-                <ListView
-                    android:layout_below="@id/clickedDay"
-                    android:id="@+id/eventsList"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </ListView>
+<!--                <ListView-->
+<!--                    android:layout_below="@id/clickedDay"-->
+<!--                    android:id="@+id/eventsList"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content">-->
+<!--                </ListView>-->
 
 
 
@@ -185,8 +188,7 @@
                 <!--                android:layout_centerHorizontal="true"-->
                 <!--                android:layout_height="wrap_content">-->
                 <!--            </CalendarView>-->
-
-            </RelativeLayout>
+            </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

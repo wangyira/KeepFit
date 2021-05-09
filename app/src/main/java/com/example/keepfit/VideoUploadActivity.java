@@ -30,16 +30,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -208,7 +211,7 @@ id: reminder_view
 
         compactCalendarView.removeAllEvents();
 
-        final ListView eventsListView = findViewById(R.id.eventsList);
+       // final ListView eventsListView = findViewById(R.id.eventsList);
         final ToggleButton showCalendarWithAnimationBut = findViewById(R.id.slide_calendar);
         final Button removeAllEventsBut = findViewById(R.id.remove_all_events);
         final Button addEvent = findViewById(R.id.addEvent);
@@ -217,7 +220,7 @@ id: reminder_view
         displayDateTv.setVisibility(View.GONE);
 
         final ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, mutableEvents);
-        eventsListView.setAdapter(adapter);
+        //eventsListView.setAdapter(adapter);
 
         compactCalendarView.setUseThreeLetterAbbreviation(false);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
@@ -269,13 +272,94 @@ id: reminder_view
                 displayDateTv.setText("Workouts on " + dateAsString + ":");
                 displayDateTv.setVisibility(View.VISIBLE);
 
-                if(events!=null){
-                    mutableEvents.clear();
-                    for (Event event : events) {
-                        mutableEvents.add((String) event.getData());
-                    }
-                    adapter.notifyDataSetChanged();
+                //eventInfo
+                LinearLayout ll2 = (LinearLayout)findViewById(R.id.eventInfo);
+                ll2.removeAllViews();
+                for(Event event: events){
+                    LinearLayout ll = new LinearLayout(VideoUploadActivity.this);
+                    ll.setOrientation(LinearLayout.HORIZONTAL);
+                    ll.setGravity(Gravity.CENTER_HORIZONTAL);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(10, 10, 0, 0);
+                    TextView tv = new TextView(VideoUploadActivity.this);
+                    tv.setText((String) event.getData());
+                    tv.setTextColor(ContextCompat.getColor(VideoUploadActivity.this, R.color.black));
+                    tv.setTextSize(20);
+                    Button b = new Button(VideoUploadActivity.this);
+                    b.setText("Delete Event");
+                    b.setPadding(10, 0,10, 0);
+                    b.setBackgroundColor(ContextCompat.getColor(VideoUploadActivity.this, R.color.yellow_200));
+                    ll.addView(tv, lp);
+                    ll.addView(b, lp);
+                    b.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            SharedPreferences sharedPref = getSharedPreferences("main", Context.MODE_PRIVATE);
+                            String username = sharedPref.getString("username", null);
+                            DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference("Events");
+                            //if event data = data in firebase, remove
+                            eventsRef.child(username)
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String data2 ="";
+                                            boolean found2 = false;
+                                            if (snapshot != null) {
+                                                Log.d("numberEntries", String.valueOf(snapshot.getChildrenCount()));
+                                                for(DataSnapshot child : snapshot.getChildren()){
+                                                    String currKey = child.getKey();
+                                                    for(DataSnapshot child2: child.getChildren()) {
+                                                        if (child2.getKey().equals("data")) {
+                                                            data2 = child2.getValue().toString();
+                                                        }
+                                                    }
+                                                    for(DataSnapshot child3: child.getChildren()){
+                                                        if(data2 == event.getData() && !found2){
+                                                            //found matching event in firebase
+                                                            found2 = true;
+                                                            Log.d("currKey", currKey);
+                                                            eventsRef.child(username).child(currKey).removeValue();
+                                                            startActivity(new Intent(getApplicationContext(),VideoUploadActivity.class));
+                                                            overridePendingTransition(0,0);
+                                                        }
+                                                    }
+                                                }
+                                                /*for(DataSnapshot child : snapshot.getChildren()){
+                                                    String data = "";
+                                                    String currKey = child.getKey();
+                                                    for(DataSnapshot child2 : child.getChildren()){
+                                                        if(child2.getKey().equals("data")){
+                                                            data = child2.getValue().toString();
+                                                            if(data == event.getData()){
+                                                                //found matching event in firebase
+                                                                found2 = true;
+                                                            }
+                                                        }
+                                                    }
+                                                    if(found2 == true){
+                                                        Log.d("currKey", currKey);
+                                                        //eventsRef.child(username).child(currKey).removeValue();
+                                                    }
+                                                }
+                                                */
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) { }
+                                    });
+                        }
+                    });
+                    ll2.addView(ll, lp);
+
                 }
+//                if(events!=null){
+//                    mutableEvents.clear();
+//                    for (Event event : events) {
+//                        mutableEvents.add((String) event.getData());
+//                    }
+//                    adapter.notifyDataSetChanged();
+//                }
 
 
                 Log.d("hi", "Day was clicked: " + dateClicked + " with events " + events);
